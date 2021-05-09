@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31220.234
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaApps.Common", "src\common\MediaApps.Common\MediaApps.Common.csproj", "{71CF1A5D-0E71-44E9-B3E2-95623565A1F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediaApps.Series.Core", "src\series\MediaApps.Series.Core\MediaApps.Series.Core.csproj", "{CB430ABF-73D4-4F82-83BB-762803DA671B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{71CF1A5D-0E71-44E9-B3E2-95623565A1F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71CF1A5D-0E71-44E9-B3E2-95623565A1F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71CF1A5D-0E71-44E9-B3E2-95623565A1F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71CF1A5D-0E71-44E9-B3E2-95623565A1F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB430ABF-73D4-4F82-83BB-762803DA671B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB430ABF-73D4-4F82-83BB-762803DA671B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB430ABF-73D4-4F82-83BB-762803DA671B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB430ABF-73D4-4F82-83BB-762803DA671B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A52E178F-901F-47BD-8974-5E0D9750B5F2}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,9 @@
+<Project>
+  <Import Project="dependencies.props" />
+  
+  <PropertyGroup>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	<LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  
+</Project>
