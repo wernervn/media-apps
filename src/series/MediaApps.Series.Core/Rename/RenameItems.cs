@@ -1,0 +1,8 @@
+﻿using System.Collections.Generic;
+
+namespace MediaApps.Series.Core.Rename
+{
+    public class RenameItems : List<RenameItem>
+    {
+    }
+}
