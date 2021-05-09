@@ -66,7 +66,7 @@ namespace MediaApps.Series.Core
 
         public static string[] ToArray(string field)
         {
-            char[] DELIM = "|".ToCharArray();
+            var DELIM = "|".ToCharArray();
             return field != null ? field.Split(DELIM, StringSplitOptions.RemoveEmptyEntries) : new string[] { };
         }
 

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WVN.SimpleMapper" Version="1.0.1" />
+    <PackageReference Include="WVN.TvDb.API" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\MediaApps.Common\MediaApps.Common.csproj" />
+    <ProjectReference Include="..\MediaApps.Series.Core\MediaApps.Series.Core.csproj" />
+  </ItemGroup>
+
+</Project>
