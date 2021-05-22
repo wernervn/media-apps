@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MediaApps.Series.Core", "sr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpisodeScraper.TvDbSharper", "src\series\EpisodeScraper.TvDbSharper\EpisodeScraper.TvDbSharper.csproj", "{EC117D85-8128-44CC-BA92-886F214788AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EpisodeScraper", "src\series\EpisodeScraper\EpisodeScraper.csproj", "{D4552B80-D189-44C8-93A7-6D4452E8E65A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpisodeScraper", "src\series\EpisodeScraper\EpisodeScraper.csproj", "{D4552B80-D189-44C8-93A7-6D4452E8E65A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeriesNavigator", "src\series\SeriesNavigator\SeriesNavigator.csproj", "{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{D4552B80-D189-44C8-93A7-6D4452E8E65A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D4552B80-D189-44C8-93A7-6D4452E8E65A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D4552B80-D189-44C8-93A7-6D4452E8E65A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
