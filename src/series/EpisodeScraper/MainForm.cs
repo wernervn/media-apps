@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using EpisodeScraper.Configuration;
 using EpisodeScraper.TvDbSharper;
+using MediaApps.Common.Extensions;
 using MediaApps.Common.Helpers;
+using MediaApps.Series.Core;
 using MediaApps.Series.Core.Mede8er;
+using Microsoft.WindowsAPICodePack.Dialogs;
 using WVN.Configuration;
 using WVN.WinForms.Extensions;
 
@@ -35,6 +39,7 @@ namespace EpisodeScraper
         #region Open/Close
         private void MainForm_Load(object sender, System.EventArgs e)
         {
+            RestoreFormPosition();
             if (Directory.Exists(_seriesFolder))
             {
                 LoadFolders(_seriesFolder);
@@ -44,16 +49,18 @@ namespace EpisodeScraper
             lvwFiles.StateImageList = IMG;
             tvwFolder.ImageList = IMG;
 
-            this.ResetLastPosition();
+            //this.ResetLastPosition();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            this.SaveLastPosition();
+            //this.SaveLastPosition();
 
             _settings.AppConfiguration.SeriesFolder = _seriesFolder;
-            // Save
+            _settings.AppConfiguration.LastSize = Size;
+            _settings.AppConfiguration.LastLocation = Location;
             AppSettingsManager.SaveSettings(_settings);
+
         }
 
         #endregion Open/Close
@@ -102,7 +109,7 @@ namespace EpisodeScraper
                 }
                 if (seasonFolder)
                 {
-                    SetStatus("'{0}' contains {1} episode(s)", folder, FileUtil.GetFiles(folder, Core.Constants.VIDEO_EXTENSIONS).Count());
+                    SetStatus("'{0}' contains {1} episode(s)", folder, IOHelper.GetFiles(folder, Core.Constants.VIDEO_EXTENSIONS).Count());
                 }
             }
             else
@@ -186,7 +193,7 @@ namespace EpisodeScraper
                 {
                     var tvdbId = search.TvdbId;
                     //create files
-                    await SeriesHelper.GetSeriesInfo(_tvdb, folder, search.TvdbId, false);
+                    await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, search.TvdbId, false);
                     //override selected poster
                     var poster = Path.Combine(folder, "folder.jpg");
                     var image = ImageHelper.ResizeImage(search.Poster, 157, 237);
@@ -219,7 +226,7 @@ namespace EpisodeScraper
         private async Task GetSeriesData(bool includeSeasons)
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
-            await SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons);
+            await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons);
             LoadAllFiles(folder);
             SetStatus($"Loaded series metadata for '{folder}'");
         }
@@ -251,7 +258,7 @@ namespace EpisodeScraper
             object tag = tvwFolder.SelectedNode.Tag;
             if (tag != null && Directory.Exists(tag.ToString()))
             {
-                Utils.Launch("explorer.exe", tag.ToString().DoubleQuote());
+                Core.SeriesHelper.Launch("explorer.exe", tag.ToString().DoubleQuote());
             }
         }
 
@@ -276,6 +283,25 @@ namespace EpisodeScraper
         #endregion Menus
 
         #region Helpers
+        private void RestoreFormPosition()
+        {
+            if (_settings.AppConfiguration.LastSize != new Size(0, 0))
+            {
+                Size = _settings.AppConfiguration.LastSize;
+            }
+
+            //move to last position
+            if (_settings.AppConfiguration.LastLocation != new Point(0, 0))
+            {
+                var location = _settings.AppConfiguration.LastLocation;
+                if (location.X >= 0 && location.Y >= 0)
+                {
+                    Location = _settings.AppConfiguration.LastLocation;
+                }
+            }
+        }
+
+
         private void AddIcon(string fileName, string extension)
         {
             if (!IMG.Images.ContainsKey(extension) && !string.IsNullOrEmpty(extension))
@@ -341,7 +367,30 @@ namespace EpisodeScraper
 
         #region Events
         private void lvwFiles_SelectedIndexChanged(object sender, EventArgs e)
-    => mniMede8erSetWatched.Enabled = SelectedEpisode();
+            => mniMede8erSetWatched.Enabled = SelectedEpisode();
+
+        private void MniFileExit_Click(object sender, EventArgs e)
+            => Close();
+
+        private void SelectFolderToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var dialog = new CommonOpenFileDialog
+            {
+                InitialDirectory = _seriesFolder,
+                IsFolderPicker = true
+            })
+            {
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    _seriesFolder = dialog.FileName;
+                    UpdateSeriesFolder(_seriesFolder);
+                    LoadFolders(_seriesFolder);
+                }
+            }
+        }
+
+        private void UpdateSeriesFolder(string seriesFolder)
+            => _seriesFolder = seriesFolder;
 
         #endregion
 
@@ -369,7 +418,6 @@ namespace EpisodeScraper
                 return renamer.GetSeasonData;
             }
         }
-
 
         #endregion
     }
