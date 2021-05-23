@@ -70,6 +70,8 @@ namespace EpisodeScraper
             else
             {
                 newItem.ForeColor = Color.Red;
+                newItem.BackColor = Color.Yellow;
+                newItem.Font = new Font(newItem.Font, FontStyle.Bold);
             }
         }
 
