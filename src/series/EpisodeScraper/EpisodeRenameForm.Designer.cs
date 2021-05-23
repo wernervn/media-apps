@@ -60,7 +60,7 @@ namespace EpisodeScraper
             this.chkGetSeasonData.TabIndex = 3;
             this.chkGetSeasonData.Text = "Get season data when dialog closes";
             this.chkGetSeasonData.UseVisualStyleBackColor = true;
-            this.chkGetSeasonData.CheckedChanged += new System.EventHandler(this.chkGetSeasonData_CheckedChanged);
+            this.chkGetSeasonData.CheckedChanged += new System.EventHandler(this.ChkGetSeasonData_CheckedChanged);
             // 
             // btnRename
             // 

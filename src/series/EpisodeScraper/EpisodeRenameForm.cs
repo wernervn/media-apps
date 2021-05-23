@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using EpisodeScraper.TvDbSharper;
 using MediaApps.Common.Helpers;
 using MediaApps.Series.Core.Models;
 
@@ -39,7 +41,7 @@ namespace EpisodeScraper
 
         private void InitialiseData()
         {
-            _files = TvDbSharper.SeasonHelper.GetEpisodes(_folderPath).Select(f => new FileInfo(f).Name).ToList();
+            _files = SeasonHelper.GetEpisodeFiles(_folderPath).Select(f => new FileInfo(f).Name);
             LoadEpisodes();
         }
 
@@ -59,11 +61,15 @@ namespace EpisodeScraper
             var newItem = lvwEpisodes.Items.Add(key, newName, 0);
             _ = newItem.SubItems.Add($"{episode.FirstAired:yyyy-MM-dd}");
             var found = _files.SingleOrDefault(f => f.Contains(key, StringComparison.OrdinalIgnoreCase));
-            if (found != null)
+            if (found is not null)
             {
                 _ = newItem.SubItems.Add(found);
                 var renamed = string.Concat(newName, Path.GetExtension(found));
                 _ = newItem.SubItems.Add(renamed);
+            }
+            else
+            {
+                newItem.ForeColor = Color.Red;
             }
         }
 
@@ -76,14 +82,14 @@ namespace EpisodeScraper
 
         private void RenameSelected()
         {
-            var files = TvDbSharper.SeasonHelper.GetEpisodes(_folderPath).Select(f => new FileInfo(f).Name).ToList();
-            var subtitles = TvDbSharper.SeasonHelper.GetSubtitles(_folderPath).ToList();
+            var files = SeasonHelper.GetEpisodeFiles(_folderPath).Select(f => new FileInfo(f).Name).ToList();
+            var subtitles = SeasonHelper.GetSubtitleFiles(_folderPath).ToList();
 
-            TvDbSharper.SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, files);
-            TvDbSharper.SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, subtitles);
+            SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, files);
+            SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, subtitles);
         }
 
-        private void chkGetSeasonData_CheckedChanged(object sender, EventArgs e)
+        private void ChkGetSeasonData_CheckedChanged(object sender, EventArgs e)
             => GetSeasonData = chkGetSeasonData.Checked;
     }
 }

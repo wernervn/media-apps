@@ -131,7 +131,7 @@ namespace EpisodeScraper.TvDbSharper
 
         public static Dictionary<string, string> GetExistingEpisodeThumbs(string seasonPath)
         {
-            var episodes = GetEpisodes(seasonPath).ToDictionary(k => k, v => string.Empty);
+            var episodes = GetEpisodeFiles(seasonPath).ToDictionary(k => k, v => string.Empty);
             var keys = episodes.Keys.ToList();
             foreach (var episode in keys)
             {
@@ -154,7 +154,7 @@ namespace EpisodeScraper.TvDbSharper
 
         public static Dictionary<string, string> GetExistingEpisodeXml(string seasonPath)
         {
-            var episodes = GetEpisodes(seasonPath).ToDictionary(v => v, k => string.Empty);
+            var episodes = GetEpisodeFiles(seasonPath).ToDictionary(v => v, k => string.Empty);
             var keys = episodes.Keys.ToList();
             foreach (var episode in keys)
             {
@@ -207,17 +207,17 @@ namespace EpisodeScraper.TvDbSharper
         private static string CData(string text)
             => $"<![CDATA[{text}]]>";
 
-        public static IEnumerable<string> GetEpisodes(string path)
-            => IOHelper.GetFiles(path, Constants.VIDEO_EXTENSIONS, SearchOption.TopDirectoryOnly).ToList();
+        public static IEnumerable<string> GetEpisodeFiles(string path)
+            => IOHelper.GetFiles(path, Constants.VIDEO_EXTENSIONS, SearchOption.TopDirectoryOnly);
 
-        public static IEnumerable<string> GetSubtitles(string path)
-            => IOHelper.GetFiles(path, Constants.SUBTITLES, SearchOption.TopDirectoryOnly).ToList();
+        public static IEnumerable<string> GetSubtitleFiles(string path)
+            => IOHelper.GetFiles(path, Constants.SUBTITLES, SearchOption.TopDirectoryOnly);
 
         public static async Task RenameFiles(TvDbWrapper api, string seriesName, string seasonPath)
         {
             var episodes = await GetEpisodes(api, seasonPath).ConfigureAwait(false);
-            var files = GetEpisodes(seasonPath).Select(f => new FileInfo(f).Name);
-            var subtitles = GetSubtitles(seasonPath);
+            var files = GetEpisodeFiles(seasonPath).Select(f => new FileInfo(f).Name);
+            var subtitles = GetSubtitleFiles(seasonPath);
 
             RenameEpisodeFiles(seriesName, seasonPath, episodes, files);
             RenameEpisodeFiles(seriesName, seasonPath, episodes, subtitles);
