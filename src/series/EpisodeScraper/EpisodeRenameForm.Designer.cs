@@ -70,7 +70,7 @@ namespace EpisodeScraper
             this.btnRename.TabIndex = 2;
             this.btnRename.Text = "Rename episodes";
             this.btnRename.UseVisualStyleBackColor = true;
-            this.btnRename.Click += new System.EventHandler(this.btnRename_Click);
+            this.btnRename.Click += new System.EventHandler(this.BtnRename_Click);
             // 
             // lvwEpisodes
             // 

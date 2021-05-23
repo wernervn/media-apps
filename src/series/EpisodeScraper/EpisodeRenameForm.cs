@@ -19,7 +19,9 @@ namespace EpisodeScraper
         private string _seriesName;
         private IEnumerable<string> _files;
 
-        public bool GetSeasonData;
+        private bool _getSeasonData;
+
+        public bool GetSeasonData { get => _getSeasonData; private set => _getSeasonData = value; }
 
         public EpisodeRenameForm()
         {
@@ -32,7 +34,7 @@ namespace EpisodeScraper
             _episodes = episodes.ToList();
             _seriesName = seriesName;
             InitialiseData();
-            _ = ShowDialog();
+            ShowDialog();
         }
 
         private void InitialiseData()
@@ -49,7 +51,7 @@ namespace EpisodeScraper
 
         private void LoadEpisode(Episode episode)
         {
-            //TODO: use RnameContainer
+            //TODO: use RenameContainer
 
             var episodeNumber = episode.EpisodeNumber.Value;
             var key = string.Format(KEY, episode.SeasonNumber, episodeNumber);
@@ -65,10 +67,10 @@ namespace EpisodeScraper
             }
         }
 
-        private void btnRename_Click(object sender, EventArgs e)
+        private void BtnRename_Click(object sender, EventArgs e)
         {
             RenameSelected();
-            _ = MessageBox.Show("Rename completed", "Done", MessageBoxButtons.OK);
+            MessageBox.Show("Rename completed", "Done", MessageBoxButtons.OK);
             InitialiseData();
         }
 

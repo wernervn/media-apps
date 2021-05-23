@@ -17,13 +17,13 @@ namespace EpisodeScraper.TvDbSharper
 
         public async Task WriteSeasonViewXml(string fileName)
         {
-            const string resourceName = "EpisodeScraper.Core.Resources.SeasonView.xml";
+            const string resourceName = "MediaApps.Series.Core.Resources.SeasonView.xml";
             await _resourceHelper.WriteResourceToFile(resourceName, fileName).ConfigureAwait(false);
         }
 
         public async Task WriteSeriesViewXml(string fileName)
         {
-            const string resourceName = "EpisodeScraper.Core.Resources.SeriesView.xml";
+            const string resourceName = "MediaApps.Series.Core.Resources.SeriesView.xml";
             await _resourceHelper.WriteResourceToFile(resourceName, fileName).ConfigureAwait(false);
         }
     }

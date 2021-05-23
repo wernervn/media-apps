@@ -50,7 +50,6 @@ namespace EpisodeScraper.TvDbSharper
             }
 
             //fanart image
-            //var fanartImages = api.BannerImages(banners, BannerType.fanart).ToArray();
             var fanartImages = await api.GetArtworkPaths(fullRec.Series.Id, BannerType.fanart);
             var fanart = Path.Combine(seriesPath, "fanart.jpg");
             if (!File.Exists(fanart) && fanartImages.Any())

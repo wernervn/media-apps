@@ -69,7 +69,7 @@ namespace SeriesNavigator
             this.thumbsSeries.Size = new System.Drawing.Size(200, 706);
             this.thumbsSeries.TabIndex = 3;
             this.thumbsSeries.ThumbClick += new System.EventHandler<SeriesNavigator.Thumbs.ThumbClickEventArgs>(this.ThumbSelected);
-            this.thumbsSeries.ThumbEnter += new System.EventHandler<SeriesNavigator.Thumbs.ThumbEnterEventArgs>(this.thumbsSeries_ThumbEnter);
+            this.thumbsSeries.ThumbEnter += new System.EventHandler<SeriesNavigator.Thumbs.ThumbEnterEventArgs>(this.ThumbsSeries_ThumbEnter);
             //
             // thumbsSeasons
             //
@@ -81,7 +81,7 @@ namespace SeriesNavigator
             this.thumbsSeasons.Size = new System.Drawing.Size(175, 662);
             this.thumbsSeasons.TabIndex = 4;
             this.thumbsSeasons.ThumbClick += new System.EventHandler<SeriesNavigator.Thumbs.ThumbClickEventArgs>(this.ThumbSelected);
-            this.thumbsSeasons.ThumbEnter += new System.EventHandler<SeriesNavigator.Thumbs.ThumbEnterEventArgs>(this.thumbsSeasons_ThumbEnter);
+            this.thumbsSeasons.ThumbEnter += new System.EventHandler<SeriesNavigator.Thumbs.ThumbEnterEventArgs>(this.ThumbsSeasons_ThumbEnter);
             //
             // thumbsEpisodes
             //
@@ -93,7 +93,7 @@ namespace SeriesNavigator
             this.thumbsEpisodes.Size = new System.Drawing.Size(153, 621);
             this.thumbsEpisodes.TabIndex = 5;
             this.thumbsEpisodes.ThumbClick += new System.EventHandler<SeriesNavigator.Thumbs.ThumbClickEventArgs>(this.ThumbSelected);
-            this.thumbsEpisodes.ThumbEnter += new System.EventHandler<SeriesNavigator.Thumbs.ThumbEnterEventArgs>(this.thumbsEpisodes_ThumbEnter);
+            this.thumbsEpisodes.ThumbEnter += new System.EventHandler<SeriesNavigator.Thumbs.ThumbEnterEventArgs>(this.ThumbsEpisodes_ThumbEnter);
             //
             // frmMain
             //

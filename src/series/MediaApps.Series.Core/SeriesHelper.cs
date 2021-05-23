@@ -88,7 +88,7 @@ namespace MediaApps.Series.Core
                 psi.Arguments = args;
             }
             var p = new Process { StartInfo = psi };
-            _ = p.Start();
+            p.Start();
         }
     }
 }

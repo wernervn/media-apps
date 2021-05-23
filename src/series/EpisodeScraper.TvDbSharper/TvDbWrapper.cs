@@ -13,8 +13,7 @@ namespace EpisodeScraper.TvDbSharper
     public partial class TvDbWrapper
     {
         private readonly TvDbClient _client;
-        private bool _authenticated;
-        private string _apiKey;
+        private readonly string _apiKey;
 
         public TvDbWrapper(string apiKey)
         {
@@ -23,34 +22,15 @@ namespace EpisodeScraper.TvDbSharper
             _apiKey = apiKey;
         }
 
-        private async Task Authenticate()
-        {
-            if (!_authenticated)
-            {
-                try
-                {
-                    await _client.AuthenticateAsync(_apiKey).ConfigureAwait(false);
-                    _authenticated = true;
-                }
-                catch (Exception ex)
-                {
-                    throw;
-                }
-            }
-        }
         #region Get series
         public async Task<IEnumerable<SearchResultItem>> SearchSeries(string criteria)
         {
-            //await Authenticate();
-
             var found = (await _client.SearchSeriesByNameAsync(criteria).ConfigureAwait(false)/*.ConfigureAwait(false)*/).Data;
             return found.Select(Map).ToList();
         }
 
         public async Task<SeriesBase> GetSeriesBaseRecord(int seriesId)
         {
-            //await Authenticate();
-
             var baseRec = (await _client.GetSeriesAsync(seriesId).ConfigureAwait(false)).Data;
             var series = Map(baseRec);
 
@@ -74,10 +54,8 @@ namespace EpisodeScraper.TvDbSharper
 
         public async Task<SeriesFull> GetSeriesFullRecord(int seriesId)
         {
-            //await Authenticate();
-
             var baseRec = await GetSeriesBaseRecord(seriesId).ConfigureAwait(false);
-            var allEpisodes = (await _client.GetAllEpisodesAsync(seriesId).ConfigureAwait(false));
+            var allEpisodes = await _client.GetAllEpisodesAsync(seriesId).ConfigureAwait(false);
             var episodeList = allEpisodes.Select(Map).ToList();
             return new SeriesFull { Series = baseRec, Episodes = episodeList };
         }
@@ -90,8 +68,6 @@ namespace EpisodeScraper.TvDbSharper
 
         public async Task<IEnumerable<Banner>> GetSeriesBanners(int seriesId)
         {
-            //await Authenticate();
-
             try
             {
                 var banners = (await _client.GetImagesAsync(seriesId, GetImageQuery(BannerType.season)).ConfigureAwait(false)).Data;
@@ -108,8 +84,6 @@ namespace EpisodeScraper.TvDbSharper
 
         public async Task<IEnumerable<Banner>> GetArtwork(int seriesId, BannerType bannerType)
         {
-            //await Authenticate();
-
             try
             {
                 var images = (await _client.GetImagesAsync(seriesId, GetImageQuery(bannerType)).ConfigureAwait(false)).Data;
@@ -178,7 +152,6 @@ namespace EpisodeScraper.TvDbSharper
 
         public async Task<Episode> GetEpisode(int episodeId)
         {
-            //await Authenticate();
             var episode = (await _client.GetEpisodeAsync(episodeId).ConfigureAwait(false)).Data;
             return Map(episode);
         }
@@ -191,7 +164,6 @@ namespace EpisodeScraper.TvDbSharper
 
         private async Task<IEnumerable<Episode>> SearchEpisodes(int seriesId, Dto.Series.EpisodeQuery query)
         {
-            //await Authenticate();
             var records = (await _client.GetEpisodesAsync(seriesId, page: 1, query).ConfigureAwait(false)).Data;
             return records.Select(Map);
         }

@@ -11,7 +11,12 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpisodeScraper.TvDbSharper"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EpisodeScraper", "src\series\EpisodeScraper\EpisodeScraper.csproj", "{D4552B80-D189-44C8-93A7-6D4452E8E65A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SeriesNavigator", "src\series\SeriesNavigator\SeriesNavigator.csproj", "{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SeriesNavigator", "src\series\SeriesNavigator\SeriesNavigator.csproj", "{CC5732F8-2C66-40DD-ABBD-5C29E4775AAE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D8121DE1-0A9B-49B0-B82F-CEFE459DFC62}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

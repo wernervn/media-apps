@@ -4,4 +4,8 @@
     <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="..\..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
 </Project>

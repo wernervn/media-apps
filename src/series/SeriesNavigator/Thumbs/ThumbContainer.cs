@@ -105,7 +105,6 @@ namespace SeriesNavigator.Thumbs
         private List<ThumbView> AllThumbs()
             => Controls.All<ThumbView>().ToList();
 
-
         public void SetSelectedIndex(int index)
         {
             var selected = ThumbImageAtIndex(index);
@@ -200,6 +199,15 @@ namespace SeriesNavigator.Thumbs
             OnThumbClick(ea);
         }
 
+        private void SelectThumbImage(Predicate<ThumbView> predicate)
+        {
+            var selected = AllThumbs().Find(predicate)?.ThumbImage;
+            if (selected != null)
+            {
+                SelectThumbImage(selected);
+            }
+        }
+
         private void Last()
         {
             if (Controls.Count > 0)
@@ -244,15 +252,6 @@ namespace SeriesNavigator.Thumbs
 
             var newRow = Math.Max(_selectedItem.Row - 1, 0);
             SelectThumbImage(ctrl => ctrl.Row == newRow && ctrl.Column == _selectedItem.Column);
-        }
-
-        private void SelectThumbImage(Predicate<ThumbView> predicate)
-        {
-            var selected = AllThumbs().Find(predicate)?.ThumbImage;
-            if (selected != null)
-            {
-                SelectThumbImage(selected);
-            }
         }
 
         private void Previous()

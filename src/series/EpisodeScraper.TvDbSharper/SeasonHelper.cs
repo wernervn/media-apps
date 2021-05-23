@@ -8,6 +8,7 @@ using MediaApps.Series.Core.Models;
 using MediaApps.Series.Core.Rename;
 using MediaApps.Common.Helpers;
 using Core = MediaApps.Series.Core;
+using System.Diagnostics;
 
 namespace EpisodeScraper.TvDbSharper
 {
@@ -39,36 +40,37 @@ namespace EpisodeScraper.TvDbSharper
             var seasonEpisodes = fullRec.Episodes.Where(ep => ep.CombinedSeason == seasonNo);
 
             if (!seasonEpisodes.Any())
+            {
                 return;
+            }
 
+            var bytesSaved = 0;
             foreach (var key in thumbs.Keys)
             {
                 //key sample : C:\BT\Series\Ray Donovan\Season 5\Ray Donovan.S05E06.Shelley Duvall.mkv
-                int episodeNo = Core.SeriesHelper.GetSeasonEpisodeFromName(key);
+                var episodeNo = Core.SeriesHelper.GetSeasonEpisodeFromName(key);
                 //resolve episode from seasonEpisodes
                 var episode = seasonEpisodes.First(ep => ep.EpisodeNumber == episodeNo);
                 var episodeFileName = episode.FileName;
 
                 // thumbnails
-                if (thumbs[key] == string.Empty)
+                if (thumbs[key]?.Length == 0 && !string.IsNullOrEmpty(episodeFileName))
                 {
-                    if (!string.IsNullOrEmpty(episodeFileName)) //no thumb for episode
+                    //get banner TVDB filename
+                    //get image using filename
+                    var data = await api.GetImage(episodeFileName).ConfigureAwait(false);
+                    if (data?.Length > 0)
                     {
-                        //get banner TVDB filename
-                        //get image using filename
-                        var data = await api.GetImage(episodeFileName).ConfigureAwait(false);
-                        if (data?.Length > 0)
-                        {
-                            var reduced = ImageHelper.ReduceImageSize(data);
+                        var reduced = ImageHelper.ReduceImageSize(data);
 
-                            if (reduced?.Length > 0)
-                            {
-                                //save image using episode name
-                                var extension = Path.GetExtension(key);
-                                var newExtension = Path.GetExtension(episodeFileName);
-                                var imgFile = Path.ChangeExtension(key, newExtension);
-                                File.WriteAllBytes(imgFile, reduced);
-                            }
+                        if (reduced?.Length > 0)
+                        {
+                            bytesSaved += data.Length - reduced.Length;
+                            //save image using episode name
+                            var extension = Path.GetExtension(key);
+                            var newExtension = Path.GetExtension(episodeFileName);
+                            var imgFile = Path.ChangeExtension(key, newExtension);
+                            File.WriteAllBytes(imgFile, reduced);
                         }
                     }
                 }
@@ -81,16 +83,15 @@ namespace EpisodeScraper.TvDbSharper
                     File.WriteAllText(xmlPath, xml);
                 }
             }
+            Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
 
             //get season thumb
             var seasonThumb = Path.Combine(seasonPath, Constants.SERIES_SEASON_THUMB);
-            if (File.Exists(seasonThumb))
+            if (File.Exists(seasonThumb) && new FileInfo(seasonThumb).Length == 0)
             {
-                if (new FileInfo(seasonThumb).Length == 0)
-                {
-                    File.Delete(seasonThumb);
-                }
+                File.Delete(seasonThumb);
             }
+
             if (!File.Exists(seasonPath))
             {
                 var epi = seasonEpisodes.First();

@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MediaApps.Common.Helpers;
 using MediaApps.Series.Core.Mede8er;
@@ -23,10 +20,10 @@ namespace SeriesNavigator
         private readonly AppSettings _settings = AppSettingsManager.GetSettings<AppSettings>();
 
         private string _currentFolder;
+        private string _seriesFolder;
         private SeriesView _currentView;
         private List<ThumbImage> _thumbCache;
-        private int _selectedIndex = -1;
-
+        private int _selectedIndex;
 
         public frmMain(string[] args)
         {
@@ -51,20 +48,17 @@ namespace SeriesNavigator
 
         private void InitialiseConfiguration()
         {
+            _seriesFolder = _settings.AppConfiguration.SeriesFolder;
             Styles.SelectedBackColour = _settings.AppConfiguration.SelectedBackColour;
             Styles.SelectedForeColour = _settings.AppConfiguration.SelectedForeColour;
         }
 
         private void frmMain_Resize(object sender, EventArgs e)
-        {
-            ResizeThumbs();
-        }
+            => ResizeThumbs();
 
         #region Series info
         private SeriesMetadata GetSeriesMetadata(string path)
-        {
-            return MediaApps.Series.Core.SeriesHelper.GetSeriesMetadata(path);
-        }
+            => MediaApps.Series.Core.SeriesHelper.GetSeriesMetadata(path);
 
         private string GetSeriesDescription(string path)
         {
@@ -92,12 +86,6 @@ namespace SeriesNavigator
             return data?.Movie == null ? string.Empty : $"{data.Movie.EpisodePlot} ({data.Movie.Rating})";
         }
 
-        private string GetEpisodeDescription(string path)
-        {
-            var data = GetEpisodeMetadata(path);
-            return data?.Movie?.EpisodePlot;
-        }
-
         private string GetEpisodeThumb(string episode)
         {
             var imagePath = Path.ChangeExtension(episode, "jpg");
@@ -117,16 +105,11 @@ namespace SeriesNavigator
 
         #region Shut-down
         private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            SaveAppSettings();
-        }
+            => SaveAppSettings();
 
         private void SaveAppSettings()
         {
-            //AddOrUpdateAppSetting("AppSettings:SeriesFolder", _appSettings.SeriesFolder);
-            //AddOrUpdateAppSetting("AppSettings:SelectedBackColour", _appSettings.SelectedBackColour.Name);
-            //AddOrUpdateAppSetting("AppSettings:SelectedForeColour", _appSettings.SelectedForeColour.Name);
-            _settings.AppConfiguration.SeriesFolder = _currentFolder;
+            _settings.AppConfiguration.SeriesFolder = _seriesFolder;
             _settings.AppConfiguration.SelectedBackColour = Styles.SelectedBackColour;
             _settings.AppConfiguration.SelectedForeColour = Styles.SelectedForeColour;
             AppSettingsManager.SaveSettings(_settings);
@@ -158,7 +141,7 @@ namespace SeriesNavigator
                 case Keys.F5:
                     RefreshSeries();
                     return true;
-                case (Keys.Control | Keys.S):
+                case Keys.Control | Keys.S:
                     UpdateSettings();
                     return true;
             }
@@ -196,9 +179,7 @@ namespace SeriesNavigator
         }
 
         private void ShowPath()
-        {
-            MessageBox.Show(_currentFolder, "Path");
-        }
+            => MessageBox.Show(_currentFolder, "Path");
 
         private void UpdateSettings()
         {
@@ -207,7 +188,7 @@ namespace SeriesNavigator
                 if (settings.ShowDialog() == DialogResult.OK)
                 {
                     var appSettings = settings.AppSettings;
-                    _settings.AppConfiguration.SeriesFolder = appSettings.AppConfiguration.SeriesFolder;
+                    _seriesFolder = appSettings.AppConfiguration.SeriesFolder;
                     Styles.SelectedBackColour = appSettings.AppConfiguration.SelectedBackColour;
                     Styles.SelectedForeColour = appSettings.AppConfiguration.SelectedForeColour;
 
@@ -231,23 +212,23 @@ namespace SeriesNavigator
             thumbsSeries.Clear();
             lblHeader.Text = string.Empty;
             lblDescription.Text = string.Empty;
-            using (var timedAction = new TimedAction("Loading series", LoadSeriesThumbs)) { }
+            using var timedAction = new TimedAction("Loading series", LoadSeriesThumbs);
         }
 
         private void LoadSeriesThumbs()
         {
             thumbsSeries.Visible = false;
-            List<string> folders = Directory.GetDirectories(_currentFolder).ToList();
+            var folders = Directory.GetDirectories(_seriesFolder).ToList();
 
-            int index = 0; //start indexing from 0 (zero)
+            var index = 0; //start indexing from 0 (zero)
             if (_thumbCache == null)
             {
-                _thumbCache = folders.Select(folder =>
+                _thumbCache = folders.ConvertAll(folder =>
                   {
                       var imagePath = GetSeriesSeasonThumb(folder);
                       var ratedDescription = RatedDescription(folder);
                       return new ThumbImage(imagePath, folder, index++, ratedDescription, _currentView);
-                  }).ToList();
+                  });
             }
             thumbsSeries.AddRange(_thumbCache);
         }
@@ -263,14 +244,14 @@ namespace SeriesNavigator
 
             _currentView = SeriesView.Seasons;
             thumbsSeasons.Clear();
-            LoadSeasonThumbs();
+            using var timedAction = new TimedAction("Loading episodes", LoadSeasonThumbs);
         }
 
         private void LoadSeasonThumbs()
         {
-            List<string> folders = Directory.GetDirectories(_currentFolder, "Season *").ToList();
+            var folders = Directory.GetDirectories(_currentFolder, "Season *");
 
-            int index = 0; //start indexing from 0 (zero)
+            var index = 0; //start indexing from 0 (zero)
             var thumbs = folders.Select(folder =>
             {
                 var imagePath = GetSeriesSeasonThumb(folder);
@@ -291,14 +272,14 @@ namespace SeriesNavigator
 
             _currentView = SeriesView.Episodes;
             thumbsEpisodes.Clear();
-            LoadEpisodeThumbs();
+            using var timedAction = new TimedAction("Loading episodes", LoadEpisodeThumbs);
         }
 
         private void LoadEpisodeThumbs()
         {
-            List<string> episodes = IOHelper.GetFiles(_currentFolder, MediaApps.Series.Core.Constants.VIDEO_EXTENSIONS).ToList();
+            var episodes = IOHelper.GetFiles(_currentFolder, MediaApps.Series.Core.Constants.VIDEO_EXTENSIONS);
 
-            int index = 0; //start indexing from 0 (zero)
+            var index = 0; //start indexing from 0 (zero)
             var thumbs = episodes.Select(episode =>
             {
                 var imagePath = GetEpisodeThumb(episode);
@@ -318,20 +299,17 @@ namespace SeriesNavigator
             lblHeader.Text = e.ItemName;
         }
 
-
-        private void thumbsSeries_ThumbEnter(object sender, ThumbEnterEventArgs e)
+        private void ThumbsSeries_ThumbEnter(object sender, ThumbEnterEventArgs e)
         {
             _selectedIndex = e.Index; //restore to this thumb on returning to this container
             //navigate from series to seasons
             LoadSeasons(e.Path);
         }
 
-        private void thumbsSeasons_ThumbEnter(object sender, ThumbEnterEventArgs e)
-        {
-            LoadEpisodes(e.Path);
-        }
+        private void ThumbsSeasons_ThumbEnter(object sender, ThumbEnterEventArgs e)
+            => LoadEpisodes(e.Path);
 
-        private void thumbsEpisodes_ThumbEnter(object sender, ThumbEnterEventArgs e)
+        private void ThumbsEpisodes_ThumbEnter(object sender, ThumbEnterEventArgs e)
         {
             var video = e.Path;
             var startInfo = new ProcessStartInfo(video) { WindowStyle = ProcessWindowStyle.Maximized };
@@ -342,9 +320,7 @@ namespace SeriesNavigator
 
         #region Helpers
         private void NoSeries()
-        {
-            lblHeader.Text = $"No series found at: {_currentFolder}";
-        }
+            => lblHeader.Text = $"No series found at: {_currentFolder}";
 
         private void ShowOnly(ThumbContainer toShow)
         {
@@ -355,9 +331,7 @@ namespace SeriesNavigator
         }
 
         private void ResizeThumbs()
-        {
-            this.SuspendLayoutDuringAction(() => MoveControls(new Control[] { thumbsSeries, thumbsSeasons, thumbsEpisodes }, GetThumbSpace()));
-        }
+            => this.SuspendLayoutDuringAction(() => MoveControls(new Control[] { thumbsSeries, thumbsSeasons, thumbsEpisodes }, GetThumbSpace()));
 
         private Rectangle GetThumbSpace()
         {
@@ -369,9 +343,7 @@ namespace SeriesNavigator
         }
 
         private void MoveControls(Control[] controls, Rectangle rect)
-        {
-            Array.ForEach(controls, ctrl => ctrl.HideDuringAction(() => ctrl.MoveControl(rect)));
-        }
+            => Array.ForEach(controls, ctrl => ctrl.HideDuringAction(() => ctrl.MoveControl(rect)));
 
         private string RatedDescription(string path)
         {

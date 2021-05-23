@@ -48,19 +48,14 @@ namespace EpisodeScraper
             lvwFiles.LargeImageList = IMG;
             lvwFiles.StateImageList = IMG;
             tvwFolder.ImageList = IMG;
-
-            //this.ResetLastPosition();
         }
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            //this.SaveLastPosition();
-
             _settings.AppConfiguration.SeriesFolder = _seriesFolder;
             _settings.AppConfiguration.LastSize = Size;
             _settings.AppConfiguration.LastLocation = Location;
             AppSettingsManager.SaveSettings(_settings);
-
         }
 
         #endregion Open/Close
@@ -195,9 +190,9 @@ namespace EpisodeScraper
                     //create files
                     await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, search.TvdbId, false);
                     //override selected poster
-                    var poster = Path.Combine(folder, "folder.jpg");
-                    var image = ImageHelper.ResizeImage(search.Poster, 157, 237);
-                    File.WriteAllBytes(poster, image);
+                    var posterFile = Path.Combine(folder, "folder.jpg");
+                    var image = ImageHelper.ReduceImageSize(search.Poster);
+                    File.WriteAllBytes(posterFile, image);
                     LoadAllFiles(folder);
 
                     tvwFolder.SelectedNode.ImageKey = HAS_ID_KEY;
