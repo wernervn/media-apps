@@ -14,11 +14,11 @@ namespace EpisodeScraper
     public partial class SearchForm : Form
     {
         private readonly TvDbWrapper _api;
-        private List<string> _posters = new List<string>();
-        private List<byte[]> _posterData = new List<byte[]>();
+        private List<string> _posters = new();
+        private List<byte[]> _posterData = new();
         private int _posterIndex = 0;
-        private List<string> _fanart = new List<string>();
-        private List<byte[]> _fanartData = new List<byte[]>();
+        private List<string> _fanart = new();
+        private List<byte[]> _fanartData = new();
         private int _fanartIndex = 0;
 
         public SearchForm(TvDbWrapper api, string series)
@@ -26,8 +26,6 @@ namespace EpisodeScraper
             InitializeComponent();
             _api = api;
             txtName.Text = series;
-            //DoSearch().GetAwaiter().GetResult();
-            //DoSearch();
         }
 
         public string TvdbId { get; private set; }
@@ -36,7 +34,7 @@ namespace EpisodeScraper
         public byte[] FanArt { get; private set; }
 
         private async void Search(object sender, EventArgs e)
-            => await DoSearch();
+            => await DoSearch().ConfigureAwait(false);
 
         private async Task DoSearch()
         {
@@ -44,7 +42,7 @@ namespace EpisodeScraper
             var search = txtName.Text;
             try
             {
-                var result = await _api.SearchSeries(search);
+                var result = await _api.SearchSeries(search).ConfigureAwait(true);
                 foreach (var item in result)
                 {
                     var i = lvwResult.Items.Add(item.SeriesName);
