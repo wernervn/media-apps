@@ -119,7 +119,7 @@ namespace EpisodeScraper
             this.refreshToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.refreshToolStripMenuItem.Size = new System.Drawing.Size(224, 34);
             this.refreshToolStripMenuItem.Text = "Refresh";
-            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.mniViewRefresh_Click);
+            this.refreshToolStripMenuItem.Click += new System.EventHandler(this.MniViewRefresh_Click);
             //
             // mniTVDB
             //
@@ -157,7 +157,7 @@ namespace EpisodeScraper
             | System.Windows.Forms.Keys.S)));
             this.mniTvdbGetSeriesMetadata.Size = new System.Drawing.Size(379, 34);
             this.mniTvdbGetSeriesMetadata.Text = "Get series metadata";
-            this.mniTvdbGetSeriesMetadata.Click += new System.EventHandler(this.mniTvdbGetSeriesMetadata_Click);
+            this.mniTvdbGetSeriesMetadata.Click += new System.EventHandler(this.MniTvdbGetSeriesMetadata_Click);
             //
             // toolStripMenuItem2
             //
@@ -170,7 +170,7 @@ namespace EpisodeScraper
             this.mniTvdbGetAllMetadata.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
             this.mniTvdbGetAllMetadata.Size = new System.Drawing.Size(379, 34);
             this.mniTvdbGetAllMetadata.Text = "Get &all seasons metadata";
-            this.mniTvdbGetAllMetadata.Click += new System.EventHandler(this.mniTvdbGetAllMetadata_Click);
+            this.mniTvdbGetAllMetadata.Click += new System.EventHandler(this.MniTvdbGetAllMetadata_Click);
             //
             // mniTvdbGetMetadata
             //
@@ -178,7 +178,7 @@ namespace EpisodeScraper
             this.mniTvdbGetMetadata.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M)));
             this.mniTvdbGetMetadata.Size = new System.Drawing.Size(379, 34);
             this.mniTvdbGetMetadata.Text = "Get &season metadata";
-            this.mniTvdbGetMetadata.Click += new System.EventHandler(this.mniTvdbGetMetadata_Click);
+            this.mniTvdbGetMetadata.Click += new System.EventHandler(this.MniTvdbGetMetadata_Click);
             //
             // mniTvdbRenameEpisodes
             //
@@ -186,7 +186,7 @@ namespace EpisodeScraper
             this.mniTvdbRenameEpisodes.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
             this.mniTvdbRenameEpisodes.Size = new System.Drawing.Size(379, 34);
             this.mniTvdbRenameEpisodes.Text = "Rename episodes";
-            this.mniTvdbRenameEpisodes.Click += new System.EventHandler(this.mniTvdbRenameEpisodes_Click);
+            this.mniTvdbRenameEpisodes.Click += new System.EventHandler(this.MniTvdbRenameEpisodes_Click);
             //
             // mniTvdbRenameEpisodesUI
             //
@@ -194,7 +194,7 @@ namespace EpisodeScraper
             this.mniTvdbRenameEpisodesUI.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.U)));
             this.mniTvdbRenameEpisodesUI.Size = new System.Drawing.Size(379, 34);
             this.mniTvdbRenameEpisodesUI.Text = "Rename episode (UI)";
-            this.mniTvdbRenameEpisodesUI.Click += new System.EventHandler(this.mniTvdbRenameEpisodesUI_Click);
+            this.mniTvdbRenameEpisodesUI.Click += new System.EventHandler(this.MniTvdbRenameEpisodesUI_Click);
             //
             // mniTvdbClearMetadata
             //
@@ -202,7 +202,7 @@ namespace EpisodeScraper
             this.mniTvdbClearMetadata.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.mniTvdbClearMetadata.Size = new System.Drawing.Size(379, 34);
             this.mniTvdbClearMetadata.Text = "Clear Season metadata";
-            this.mniTvdbClearMetadata.Click += new System.EventHandler(this.mniTvdbClearMetadata_Click);
+            this.mniTvdbClearMetadata.Click += new System.EventHandler(this.MniTvdbClearMetadata_Click);
             //
             // mniMede8er
             //
@@ -219,7 +219,7 @@ namespace EpisodeScraper
             this.mniMede8erSetWatched.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
             this.mniMede8erSetWatched.Size = new System.Drawing.Size(378, 34);
             this.mniMede8erSetWatched.Text = "Set &watched";
-            this.mniMede8erSetWatched.Click += new System.EventHandler(this.mniMede8erSetWatched_Click);
+            this.mniMede8erSetWatched.Click += new System.EventHandler(this.MniMede8erSetWatched_Click);
             //
             // mniMede8erSetFolderWatched
             //
@@ -229,7 +229,7 @@ namespace EpisodeScraper
             | System.Windows.Forms.Keys.W)));
             this.mniMede8erSetFolderWatched.Size = new System.Drawing.Size(378, 34);
             this.mniMede8erSetFolderWatched.Text = "Set folder watched";
-            this.mniMede8erSetFolderWatched.Click += new System.EventHandler(this.mniMede8erSetFolderWatched_Click);
+            this.mniMede8erSetFolderWatched.Click += new System.EventHandler(this.MniMede8erSetFolderWatched_Click);
             //
             // STB
             //
@@ -277,7 +277,7 @@ namespace EpisodeScraper
             this.ctxExplore.Name = "ctxExplore";
             this.ctxExplore.Size = new System.Drawing.Size(181, 32);
             this.ctxExplore.Text = "Explore here";
-            this.ctxExplore.Click += new System.EventHandler(this.ctxExplore_Click);
+            this.ctxExplore.Click += new System.EventHandler(this.CtxExplore_Click);
             //
             // splitter1
             //

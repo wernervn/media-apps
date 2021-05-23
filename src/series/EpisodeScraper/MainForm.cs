@@ -92,10 +92,10 @@ namespace EpisodeScraper
                 LoadAllFiles(folder);
                 lvwFiles.ResizeColumnsAll();
 
-                bool seriesFolder = node.IsSeriesFolder();
-                bool seasonFolder = node.IsSeasonFolder();
-                bool hasId = HasId(folder); //must check parent dir of season dir for ID
-                var hasParentId = (seasonFolder) && ParentHasId(folder);
+                var seriesFolder = node.IsSeriesFolder();
+                var seasonFolder = node.IsSeasonFolder();
+                var hasId = HasId(folder); //must check parent dir of season dir for ID
+                var hasParentId = seasonFolder && ParentHasId(folder);
                 SetAvailableMethods(seriesFolder, seasonFolder, hasId, hasParentId);
 
                 if (seriesFolder)
@@ -109,19 +109,24 @@ namespace EpisodeScraper
             }
             else
             {
-                _ = MessageBox.Show("The folder no longer exists. It has either been moved or deleted.", "Folder doesn't exist", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("The folder no longer exists. It has either been moved or deleted.", "Folder doesn't exist", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void TvwFolder_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             //if the subfolder is a dummy folder, remove it and add any real folder
-            TreeNode node = e.Node;
+            var node = e.Node;
             if (node.Nodes.Count == 1 && node.Nodes[0].Text == "dummy" && e.Node.Nodes[0].Tag == null)
             {
                 e.Node.Nodes.Clear();
                 tvwFolder.LoadFolders(node, node.Tag.ToString(), Constants.FOLDER_KEY);
             }
+        }
+
+        private void InvokeUI(Action a)
+        {
+            this.BeginInvoke(new MethodInvoker(a));
         }
 
         private void LoadAllFiles(string path)
@@ -186,7 +191,6 @@ namespace EpisodeScraper
             {
                 if (search.ShowDialog() == DialogResult.OK)
                 {
-                    var tvdbId = search.TvdbId;
                     //create files
                     await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, search.TvdbId, false);
                     //override selected poster
@@ -201,35 +205,35 @@ namespace EpisodeScraper
             }
         }
 
-        private async void mniTvdbGetMetadata_Click(object sender, EventArgs e)
-            => await GetSeasonData();
+        private async void MniTvdbGetMetadata_Click(object sender, EventArgs e)
+            => await GetSeasonData().ConfigureAwait(false);
 
-        private async void mniTvdbGetSeriesMetadata_Click(object sender, EventArgs e)
-            => await GetSeriesData(false);
+        private async void MniTvdbGetSeriesMetadata_Click(object sender, EventArgs e)
+            => await GetSeriesData(false).ConfigureAwait(false);
 
-        private async void mniTvdbGetAllMetadata_Click(object sender, EventArgs e)
-            => await GetSeriesData(false);
+        private async void MniTvdbGetAllMetadata_Click(object sender, EventArgs e)
+            => await GetSeriesData(false).ConfigureAwait(false);
 
         private async Task GetSeasonData()
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
-            await SeasonHelper.GetEpisodeMetadata(_tvdb, folder);
-            LoadAllFiles(folder);
+            await SeasonHelper.GetEpisodeMetadata(_tvdb, folder).ConfigureAwait(false);
+            InvokeUI(() => LoadAllFiles(folder));
             SetStatus($"Loaded season metadata for '{folder}'");
         }
 
         private async Task GetSeriesData(bool includeSeasons)
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
-            await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons);
-            LoadAllFiles(folder);
+            await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons).ConfigureAwait(false);
+            InvokeUI(() => LoadAllFiles(folder));
             SetStatus($"Loaded series metadata for '{folder}'");
         }
 
-        private void mniViewRefresh_Click(object sender, EventArgs e)
+        private void MniViewRefresh_Click(object sender, EventArgs e)
             => LoadFolders(_seriesFolder);
 
-        private void mniMede8erSetWatched_Click(object sender, EventArgs e)
+        private void MniMede8erSetWatched_Click(object sender, EventArgs e)
         {
             if (SelectedEpisode())
             {
@@ -241,29 +245,29 @@ namespace EpisodeScraper
             }
         }
 
-        private void mniMede8erSetFolderWatched_Click(object sender, EventArgs e)
+        private void MniMede8erSetFolderWatched_Click(object sender, EventArgs e)
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
             Mede8erHelper.SetFolderWatched(folder);
             LoadAllFiles(folder);
         }
 
-        private void ctxExplore_Click(object sender, EventArgs e)
+        private void CtxExplore_Click(object sender, EventArgs e)
         {
-            object tag = tvwFolder.SelectedNode.Tag;
-            if (tag != null && Directory.Exists(tag.ToString()))
+            var tag = tvwFolder.SelectedNode.Tag;
+            if (tag is not null && Directory.Exists(tag.ToString()))
             {
                 Core.SeriesHelper.Launch("explorer.exe", tag.ToString().DoubleQuote());
             }
         }
 
-        private async void mniTvdbRenameEpisodes_Click(object sender, EventArgs e)
+        private async void MniTvdbRenameEpisodes_Click(object sender, EventArgs e)
         {
             await RenameEpisodes();
             await GetSeasonData();
         }
 
-        private async void mniTvdbRenameEpisodesUI_Click(object sender, EventArgs e)
+        private async void MniTvdbRenameEpisodesUI_Click(object sender, EventArgs e)
         {
             var getSeasonData = await RenameEpisodesUI();
             if (getSeasonData)
@@ -272,7 +276,7 @@ namespace EpisodeScraper
             }
         }
 
-        private void mniTvdbClearMetadata_Click(object sender, EventArgs e)
+        private void MniTvdbClearMetadata_Click(object sender, EventArgs e)
             => ClearSeasonMetadata();
 
         #endregion Menus
