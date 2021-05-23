@@ -42,20 +42,27 @@ namespace EpisodeScraper
         {
             lvwResult.Items.Clear();
             var search = txtName.Text;
-            var result = await _api.SearchSeries(search);
-            foreach (var item in result)
+            try
             {
-                var i = lvwResult.Items.Add(item.SeriesName);
-                _ = i.SubItems.Add(item.IdString);
+                var result = await _api.SearchSeries(search);
+                foreach (var item in result)
+                {
+                    var i = lvwResult.Items.Add(item.SeriesName);
+                    _ = i.SubItems.Add(item.IdString);
+                }
+                lvwResult.ResizeColumnsAll();
+                if (lvwResult.Items.Count > 0)
+                {
+                    lvwResult.Items[0].Selected = true;
+                }
             }
-            lvwResult.ResizeColumnsAll();
-            if (lvwResult.Items.Count > 0)
+            catch (Exception ex)
             {
-                lvwResult.Items[0].Selected = true;
+                MessageBox.Show($"Error search for series {search}\r\n{ex.Message}");
             }
         }
 
-        private async void lvwResult_SelectedIndexChanged(object sender, EventArgs e)
+        private async void LvwResult_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnAccept.Enabled = lvwResult.SelectedItems.Count == 1;
             if (lvwResult.SelectedItems.Count > 0)
@@ -69,7 +76,7 @@ namespace EpisodeScraper
             }
         }
 
-        private void btnAccept_Click(object sender, EventArgs e)
+        private void BtnAccept_Click(object sender, EventArgs e)
         {
             TvdbId = lvwResult.SelectedItems[0].SubItems[1].Text;
             DialogResult = DialogResult.OK;
@@ -80,7 +87,7 @@ namespace EpisodeScraper
             var banners = await _api.GetArtwork(seriesId, BannerType.poster);
             _posters = _api.BannerImages(banners, BannerType.poster).ToList();
             _posterData = new List<byte[]>(_posters.Count);
-            for (int i = 0; i < _posters.Count; i++)
+            for (var i = 0; i < _posters.Count; i++)
             {
                 _posterData.Add(null);
             }
@@ -96,7 +103,7 @@ namespace EpisodeScraper
                 var banners = await _api.GetArtwork(seriesId, BannerType.season);
                 _fanart = _api.BannerImages(banners, BannerType.season).ToList(); //fanart, episode, poster, actors, season, and series.
                 _fanartData = new List<byte[]>(_fanart.Count);
-                for (int i = 0; i < _fanart.Count; i++)
+                for (var i = 0; i < _fanart.Count; i++)
                 {
                     _fanartData.Add(null);
                 }
@@ -124,7 +131,7 @@ namespace EpisodeScraper
 
             var originalImage = poster == null ? null : Image.FromStream(new MemoryStream(poster));
             Poster = poster;
-            byte[] resized = ImageHelper.ResizeImage(poster, originalImage.Width, originalImage.Height);
+            var resized = ImageHelper.ResizeImage(poster, originalImage.Width, originalImage.Height);
             if (poster.LongLength > resized.LongLength)
             {
                 picPoster.Image = Image.FromStream(new MemoryStream(resized));
@@ -149,7 +156,7 @@ namespace EpisodeScraper
 
             picFanArt.Image = fanart == null ? null : Image.FromStream(new MemoryStream(fanart));
             FanArt = fanart;
-            byte[] resized = ImageHelper.ResizeImage(fanart, picFanArt.Image.Width, picFanArt.Image.Height);
+            var resized = ImageHelper.ResizeImage(fanart, picFanArt.Image.Width, picFanArt.Image.Height);
             if (fanart?.LongLength > resized.LongLength)
             {
                 picFanArt.Image = Image.FromStream(new MemoryStream(resized));
@@ -221,7 +228,7 @@ namespace EpisodeScraper
         private async void SearchForm_Load(object sender, EventArgs e)
         {
             Application.DoEvents();
-            await DoSearch();
+            this.InvokeUI(async () => await DoSearch().ConfigureAwait(false));
         }
     }
 }

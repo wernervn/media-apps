@@ -108,7 +108,7 @@
             this.lvwResult.TabIndex = 4;
             this.lvwResult.UseCompatibleStateImageBehavior = false;
             this.lvwResult.View = System.Windows.Forms.View.Details;
-            this.lvwResult.SelectedIndexChanged += new System.EventHandler(this.lvwResult_SelectedIndexChanged);
+            this.lvwResult.SelectedIndexChanged += new System.EventHandler(this.LvwResult_SelectedIndexChanged);
             // 
             // colName
             // 
@@ -129,7 +129,7 @@
             this.btnAccept.TabIndex = 5;
             this.btnAccept.Text = "Accept";
             this.btnAccept.UseVisualStyleBackColor = true;
-            this.btnAccept.Click += new System.EventHandler(this.btnAccept_Click);
+            this.btnAccept.Click += new System.EventHandler(this.BtnAccept_Click);
             // 
             // btnCancel
             // 
