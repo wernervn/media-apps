@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -53,8 +52,7 @@ namespace EpisodeScraper
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             _settings.AppConfiguration.SeriesFolder = _seriesFolder;
-            _settings.AppConfiguration.LastSize = Size;
-            _settings.AppConfiguration.LastLocation = Location;
+            _settings.AppConfiguration.WindowState = this.GetWindowState();
             AppSettingsManager.SaveSettings(_settings);
         }
 
@@ -122,11 +120,6 @@ namespace EpisodeScraper
                 e.Node.Nodes.Clear();
                 tvwFolder.LoadFolders(node, node.Tag.ToString(), Constants.FOLDER_KEY);
             }
-        }
-
-        private void InvokeUI(Action a)
-        {
-            this.BeginInvoke(new MethodInvoker(a));
         }
 
         private void LoadAllFiles(string path)
@@ -218,7 +211,7 @@ namespace EpisodeScraper
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
             await SeasonHelper.GetEpisodeMetadata(_tvdb, folder).ConfigureAwait(false);
-            InvokeUI(() => LoadAllFiles(folder));
+            this.InvokeUI(() => LoadAllFiles(folder));
             SetStatus($"Loaded season metadata for '{folder}'");
         }
 
@@ -226,7 +219,7 @@ namespace EpisodeScraper
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
             await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons).ConfigureAwait(false);
-            InvokeUI(() => LoadAllFiles(folder));
+            this.InvokeUI(() => LoadAllFiles(folder));
             SetStatus($"Loaded series metadata for '{folder}'");
         }
 
@@ -257,22 +250,22 @@ namespace EpisodeScraper
             var tag = tvwFolder.SelectedNode.Tag;
             if (tag is not null && Directory.Exists(tag.ToString()))
             {
-                Core.SeriesHelper.Launch("explorer.exe", tag.ToString().DoubleQuote());
+                Core.SeriesIOHelper.Launch("explorer.exe", tag.ToString().DoubleQuote());
             }
         }
 
         private async void MniTvdbRenameEpisodes_Click(object sender, EventArgs e)
         {
-            await RenameEpisodes();
-            await GetSeasonData();
+            await RenameEpisodes().ConfigureAwait(true);
+            await GetSeasonData().ConfigureAwait(true);
         }
 
         private async void MniTvdbRenameEpisodesUI_Click(object sender, EventArgs e)
         {
-            var getSeasonData = await RenameEpisodesUI();
+            var getSeasonData = await RenameEpisodesUI().ConfigureAwait(false);
             if (getSeasonData)
             {
-                await GetSeasonData();
+                this.InvokeUI(async () => await GetSeasonData().ConfigureAwait(false));
             }
         }
 
@@ -284,22 +277,12 @@ namespace EpisodeScraper
         #region Helpers
         private void RestoreFormPosition()
         {
-            if (_settings.AppConfiguration.LastSize != new Size(0, 0))
+            if (_settings.AppConfiguration.WindowState is null)
             {
-                Size = _settings.AppConfiguration.LastSize;
+                _settings.AppConfiguration.WindowState = new();
             }
-
-            //move to last position
-            if (_settings.AppConfiguration.LastLocation != new Point(0, 0))
-            {
-                var location = _settings.AppConfiguration.LastLocation;
-                if (location.X >= 0 && location.Y >= 0)
-                {
-                    Location = _settings.AppConfiguration.LastLocation;
-                }
-            }
+            this.SetWindowState(_settings.AppConfiguration.WindowState);
         }
-
 
         private void AddIcon(string fileName, string extension)
         {
@@ -341,7 +324,8 @@ namespace EpisodeScraper
         private void SetStatus(string status, params object[] args)
         {
             Console.WriteLine(status, args);
-            lblStatus.Text = string.Format(status, args);
+
+            this.InvokeUI(() => lblStatus.Text = string.Format(status, args));
         }
 
         private void ClearSeasonMetadata()
@@ -398,7 +382,7 @@ namespace EpisodeScraper
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
             var seriesFolder = new DirectoryInfo(folder).Parent.FullName;
-            var seriesName = Core.SeriesHelper.GetSeriesMetadata(seriesFolder).Series.Title;
+            var seriesName = Core.SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
 
             await SeasonHelper.RenameFiles(api: _tvdb, seriesName: seriesName, seasonPath: folder);
             LoadAllFiles(folder);
@@ -411,7 +395,7 @@ namespace EpisodeScraper
                 var folder = tvwFolder.SelectedNode.Tag.ToString();
                 var episodes = await SeasonHelper.GetEpisodes(_tvdb, folder);
                 var seriesFolder = new DirectoryInfo(folder).Parent.FullName;
-                var seriesName = Core.SeriesHelper.GetSeriesMetadata(seriesFolder).Series.Title;
+                var seriesName = Core.SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
                 renamer.ShowDialog(seriesName, folder, episodes);
                 LoadAllFiles(folder);
                 return renamer.GetSeasonData;

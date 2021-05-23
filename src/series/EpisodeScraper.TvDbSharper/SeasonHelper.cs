@@ -1,14 +1,13 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using MediaApps.Common.Helpers;
 using MediaApps.Series.Core;
 using MediaApps.Series.Core.Mede8er;
 using MediaApps.Series.Core.Models;
 using MediaApps.Series.Core.Rename;
-using MediaApps.Common.Helpers;
-using Core = MediaApps.Series.Core;
-using System.Diagnostics;
 
 namespace EpisodeScraper.TvDbSharper
 {
@@ -17,7 +16,7 @@ namespace EpisodeScraper.TvDbSharper
         public static async Task GetEpisodeMetadata(TvDbWrapper api, string seasonPath)
         {
             var parent = new DirectoryInfo(seasonPath).Parent;
-            var seriesId = Core.SeriesHelper.GetSeriesIdFromFile(parent.FullName);
+            var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
             await GetEpisodeMetadata(api, seriesId, seasonPath).ConfigureAwait(false);
         }
 
@@ -48,7 +47,7 @@ namespace EpisodeScraper.TvDbSharper
             foreach (var key in thumbs.Keys)
             {
                 //key sample : C:\BT\Series\Ray Donovan\Season 5\Ray Donovan.S05E06.Shelley Duvall.mkv
-                var episodeNo = Core.SeriesHelper.GetSeasonEpisodeFromName(key);
+                var episodeNo = SeriesIOHelper.GetSeasonEpisodeFromName(key);
                 //resolve episode from seasonEpisodes
                 var episode = seasonEpisodes.First(ep => ep.EpisodeNumber == episodeNo);
                 var episodeFileName = episode.FileName;
@@ -112,7 +111,7 @@ namespace EpisodeScraper.TvDbSharper
             var viewFile = Path.Combine(seasonPath, Constants.SEASON_VIEW);
             if (!File.Exists(viewFile))
             {
-                await api.WriteSeasonViewXml(viewFile);
+                await api.WriteSeasonViewXml(viewFile).ConfigureAwait(false);
             }
         }
 
@@ -120,7 +119,7 @@ namespace EpisodeScraper.TvDbSharper
         {
             var parent = new DirectoryInfo(seasonPath).Parent;
             var series = parent.Name;
-            var seriesId = Core.SeriesHelper.GetSeriesIdFromFile(parent.FullName);
+            var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
             var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
 
             var seasonName = new DirectoryInfo(seasonPath).Name;
@@ -191,14 +190,14 @@ namespace EpisodeScraper.TvDbSharper
                 EpisodePlot = episode.Overview,
                 MPAA = series.ContentRating,
                 Runtime = series.Runtime.Value,
-                genres = Core.SeriesHelper.ToArray(series.Genre),
+                genres = SeriesIOHelper.ToArray(series.Genre),
                 Director = episode.Director,
                 Credits = episode.Writer
             };
             var cast = series.Actors.Length > 0
                 ? series.Actors
                 : episode.GuestStars;
-            m.cast = Core.SeriesHelper.ToArray(cast);
+            m.cast = SeriesIOHelper.ToArray(cast);
             m.image = bannerImages.ToArray();
 
             metadata.Movie = m;

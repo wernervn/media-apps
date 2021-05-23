@@ -11,15 +11,11 @@ namespace EpisodeScraper.TvDbSharper
 {
     public static class SeriesHelper
     {
-        private static TvDbWrapper _api;
-
         public static async Task GetSeriesInfo(TvDbWrapper api, string seriesPath, string seriesId, bool includeSeasons = false)
         {
-            _api = api;
-
-            var fullRec = await api.GetSeriesFullRecord(seriesId);
-            var banners = await api.GetSeriesBanners(fullRec.Series.Id);
-            await SetSeriesData(api, seriesPath, fullRec, banners);
+            var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
+            var banners = await api.GetSeriesBanners(fullRec.Series.Id).ConfigureAwait(false);
+            await SetSeriesData(api, seriesPath, fullRec, banners).ConfigureAwait(false);
 
             //then season data
             if (includeSeasons)
@@ -28,7 +24,7 @@ namespace EpisodeScraper.TvDbSharper
                 {
                     var seasonName = new DirectoryInfo(seasonPath).Name;
                     var seasonNo = seasonName.Split(" ".ToCharArray())[1];
-                    await SeasonHelper.GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo);
+                    await SeasonHelper.GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo).ConfigureAwait(false);
                 }
             }
         }
@@ -36,8 +32,8 @@ namespace EpisodeScraper.TvDbSharper
         public static async Task GetSeriesInfo(TvDbWrapper api, string seriesPath, bool includeSeasons = false)
         {
             //first get series data
-            var seriesId = Core.SeriesHelper.GetSeriesIdFromFile(seriesPath);
-            await GetSeriesInfo(api, seriesPath, seriesId, includeSeasons);
+            var seriesId = Core.SeriesIOHelper.GetSeriesIdFromFile(seriesPath);
+            await GetSeriesInfo(api, seriesPath, seriesId, includeSeasons).ConfigureAwait(false);
         }
 
         private static async Task SetSeriesData(TvDbWrapper api, string seriesPath, SeriesFull fullRec, IEnumerable<Banner> banners)
@@ -46,15 +42,15 @@ namespace EpisodeScraper.TvDbSharper
             var viewFile = Path.Combine(seriesPath, Constants.SERIES_VIEW);
             if (!File.Exists(viewFile))
             {
-                await api.WriteSeriesViewXml(viewFile);
+                await api.WriteSeriesViewXml(viewFile).ConfigureAwait(false);
             }
 
             //fanart image
-            var fanartImages = await api.GetArtworkPaths(fullRec.Series.Id, BannerType.fanart);
+            var fanartImages = await api.GetArtworkPaths(fullRec.Series.Id, BannerType.fanart).ConfigureAwait(false);
             var fanart = Path.Combine(seriesPath, "fanart.jpg");
             if (!File.Exists(fanart) && fanartImages.Any())
             {
-                var image = await api.GetImageByUrl(fanartImages.First());
+                var image = await api.GetImageByUrl(fanartImages.First()).ConfigureAwait(false);
                 image = ImageHelper.ResizeImage(image, 1920, 1080);
                 File.WriteAllBytes(fanart, image);
             }
@@ -64,7 +60,7 @@ namespace EpisodeScraper.TvDbSharper
             var poster = Path.Combine(seriesPath, "folder.jpg");
             if (!File.Exists(poster) && folderImages.Length > 0)
             {
-                var image = await api.GetImageByUrl(folderImages[0]);
+                var image = await api.GetImageByUrl(folderImages[0]).ConfigureAwait(false);
                 image = ImageHelper.ResizeImage(image, 157, 237);
                 File.WriteAllBytes(poster, image);
             }

@@ -58,7 +58,7 @@ namespace SeriesNavigator
 
         #region Series info
         private SeriesMetadata GetSeriesMetadata(string path)
-            => MediaApps.Series.Core.SeriesHelper.GetSeriesMetadata(path);
+            => MediaApps.Series.Core.SeriesIOHelper.GetSeriesMetadata(path);
 
         private string GetSeriesDescription(string path)
         {
@@ -74,7 +74,7 @@ namespace SeriesNavigator
             var xmlPath = Path.ChangeExtension(path, "xml");
             if (File.Exists(xmlPath))
             {
-                var data = MediaApps.Series.Core.SeriesHelper.GetEpisodeMetadata(xmlPath);
+                var data = MediaApps.Series.Core.SeriesIOHelper.GetEpisodeMetadata(xmlPath);
                 return data;
             }
             return null;
@@ -104,7 +104,7 @@ namespace SeriesNavigator
         #endregion
 
         #region Shut-down
-        private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+        private void FrmMain_FormClosing(object sender, FormClosingEventArgs e)
             => SaveAppSettings();
 
         private void SaveAppSettings()

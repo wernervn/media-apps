@@ -9,7 +9,7 @@
   <ItemGroup>
     <PackageReference Include="WinCopies.WindowsAPICodePack.Shell" Version="2.2.0" />
     <PackageReference Include="WVN.Configuration" Version="2.1.1" />
-    <PackageReference Include="WVN.WinForms" Version="1.0.0" />
+    <PackageReference Include="WVN.WinForms" Version="1.0.1" />
   </ItemGroup>
 
   <ItemGroup>

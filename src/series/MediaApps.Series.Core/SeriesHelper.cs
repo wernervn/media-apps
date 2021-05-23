@@ -8,7 +8,7 @@ using MediaApps.Series.Core.Exceptions;
 
 namespace MediaApps.Series.Core
 {
-    public static class SeriesHelper
+    public static class SeriesIOHelper
     {
         public static bool IsDoubleEpisode(string episodeName)
         {

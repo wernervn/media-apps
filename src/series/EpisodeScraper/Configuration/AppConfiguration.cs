@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+﻿using WVN.WinForms;
 
 namespace EpisodeScraper.Configuration
 {
@@ -7,9 +7,6 @@ namespace EpisodeScraper.Configuration
         public string SeriesFolder { get; set; }
         public string ApiKey { get; set; }
 
-        public Size LastSize { get; set; }
-
-        public Point LastLocation { get; set; }
-
+        public WindowState WindowState { get; set; }
     }
 }

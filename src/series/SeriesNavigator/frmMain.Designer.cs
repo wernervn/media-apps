@@ -111,7 +111,7 @@ namespace SeriesNavigator
             this.Name = "frmMain";
             this.Text = "Form1";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMain_FormClosing);
             this.Resize += new System.EventHandler(this.frmMain_Resize);
             this.ResumeLayout(false);
 

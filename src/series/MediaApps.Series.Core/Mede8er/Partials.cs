@@ -19,7 +19,7 @@ namespace MediaApps.Series.Core.Mede8er
             var s = new Series
             {
                 Title = series.SeriesName,
-                genres = SeriesHelper.ToArray(series.Genre),
+                genres = SeriesIOHelper.ToArray(series.Genre),
                 Premiered = series.FirstAired?.ToString(Constants.DATE_FMT),
                 Year = series.FirstAired.HasValue ? series.FirstAired.Value.Year : DateTime.Today.Year,
                 Rating = double.Parse(series.RatingString ?? "0") * 10,
@@ -28,7 +28,7 @@ namespace MediaApps.Series.Core.Mede8er
                 TvdbId = series.Id.ToString(),
                 Runtime = series.Runtime.Value,
                 Plot = series.Overview,
-                cast = SeriesHelper.ToArray(series.Actors)
+                cast = SeriesIOHelper.ToArray(series.Actors)
             };
 
             Series = s;
