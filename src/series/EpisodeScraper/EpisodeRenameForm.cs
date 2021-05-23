@@ -39,7 +39,7 @@ namespace EpisodeScraper
 
         private void InitialiseData()
         {
-            _files = EpisodeScraper.TvDbSharper.SeasonHelper.GetEpisodes(_folderPath).Select(f => new FileInfo(f).Name).ToList();
+            _files = TvDbSharper.SeasonHelper.GetEpisodes(_folderPath).Select(f => new FileInfo(f).Name).ToList();
             LoadEpisodes();
         }
 
@@ -76,11 +76,11 @@ namespace EpisodeScraper
 
         private void RenameSelected()
         {
-            var files = EpisodeScraper.TvDbSharper.SeasonHelper.GetEpisodes(_folderPath).Select(f => new FileInfo(f).Name).ToList();
-            var subtitles = EpisodeScraper.TvDbSharper.SeasonHelper.GetSubtitles(_folderPath).ToList();
+            var files = TvDbSharper.SeasonHelper.GetEpisodes(_folderPath).Select(f => new FileInfo(f).Name).ToList();
+            var subtitles = TvDbSharper.SeasonHelper.GetSubtitles(_folderPath).ToList();
 
-            EpisodeScraper.TvDbSharper.SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, files);
-            EpisodeScraper.TvDbSharper.SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, subtitles);
+            TvDbSharper.SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, files);
+            TvDbSharper.SeasonHelper.RenameEpisodeFiles(_seriesName, _folderPath, _episodes, subtitles);
         }
 
         private void chkGetSeasonData_CheckedChanged(object sender, EventArgs e)

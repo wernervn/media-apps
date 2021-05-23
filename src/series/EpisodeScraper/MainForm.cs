@@ -185,7 +185,7 @@ namespace EpisodeScraper
                 if (search.ShowDialog() == DialogResult.OK)
                 {
                     //create files
-                    await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, search.TvdbId, false);
+                    await SeriesHelper.GetSeriesInfo(_tvdb, folder, search.TvdbId, false);
                     //override selected poster
                     var posterFile = Path.Combine(folder, "folder.jpg");
                     var image = ImageHelper.ReduceImageSize(search.Poster);
@@ -218,7 +218,7 @@ namespace EpisodeScraper
         private async Task GetSeriesData(bool includeSeasons)
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
-            await EpisodeScraper.TvDbSharper.SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons).ConfigureAwait(false);
+            await SeriesHelper.GetSeriesInfo(_tvdb, folder, includeSeasons).ConfigureAwait(false);
             this.InvokeUI(() => LoadAllFiles(folder));
             SetStatus($"Loaded series metadata for '{folder}'");
         }
@@ -250,7 +250,7 @@ namespace EpisodeScraper
             var tag = tvwFolder.SelectedNode.Tag;
             if (tag is not null && Directory.Exists(tag.ToString()))
             {
-                Core.SeriesIOHelper.Launch("explorer.exe", tag.ToString().DoubleQuote());
+                SeriesIOHelper.Launch("explorer.exe", tag.ToString().DoubleQuote());
             }
         }
 
@@ -382,7 +382,7 @@ namespace EpisodeScraper
         {
             var folder = tvwFolder.SelectedNode.Tag.ToString();
             var seriesFolder = new DirectoryInfo(folder).Parent.FullName;
-            var seriesName = Core.SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
+            var seriesName = SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
 
             await SeasonHelper.RenameFiles(api: _tvdb, seriesName: seriesName, seasonPath: folder);
             LoadAllFiles(folder);
@@ -395,7 +395,7 @@ namespace EpisodeScraper
                 var folder = tvwFolder.SelectedNode.Tag.ToString();
                 var episodes = await SeasonHelper.GetEpisodes(_tvdb, folder);
                 var seriesFolder = new DirectoryInfo(folder).Parent.FullName;
-                var seriesName = Core.SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
+                var seriesName = SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
                 renamer.ShowDialog(seriesName, folder, episodes);
                 LoadAllFiles(folder);
                 return renamer.GetSeasonData;

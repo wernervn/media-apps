@@ -197,9 +197,9 @@ namespace EpisodeScraper
 
         private void ShowImage(byte[] data)
         {
-            var tempFile = MediaApps.Series.Core.SeriesIOHelper.GetTempFileWithExtension(".jpg");
+            var tempFile = SeriesIOHelper.GetTempFileWithExtension(".jpg");
             File.WriteAllBytes(tempFile, data);
-            MediaApps.Series.Core.SeriesIOHelper.Launch(tempFile);
+            SeriesIOHelper.Launch(tempFile);
         }
 
         private void picPoster_DoubleClick(object sender, EventArgs e)
