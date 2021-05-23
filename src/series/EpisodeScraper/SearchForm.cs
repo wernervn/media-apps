@@ -124,7 +124,6 @@ namespace EpisodeScraper
         {
             if (_posterData[_posterIndex] == null)
             {
-                //_posterData[_posterIndex] = await ImageHelper.DownloadDataAsync(_posters[_posterIndex]);
                 _posterData[_posterIndex] = await _api.GetImageByUrl(_posters[_posterIndex]);
             }
             var poster = _posterData[_posterIndex];
@@ -149,7 +148,6 @@ namespace EpisodeScraper
         {
             if (_fanartData[_fanartIndex] == null)
             {
-                //_fanartData[_fanartIndex] = await ImageHelper.DownloadDataAsync(_posters[_fanartIndex]);
                 _fanartData[_fanartIndex] = await _api.GetImageByUrl(_posters[_fanartIndex]);
             }
             var fanart = _fanartData[_fanartIndex];
@@ -166,7 +164,7 @@ namespace EpisodeScraper
             lblFanArtIndex.CheckInvoke(new Action(() => lblFanArtIndex.Text = $"{_fanartIndex + 1} of {_fanart.Count}"));
         }
 
-        private async void btnPrev_Click(object sender, EventArgs e)
+        private async void BtnPrev_Click(object sender, EventArgs e)
         {
             if (_posterIndex > 0)
             {
@@ -175,7 +173,7 @@ namespace EpisodeScraper
             }
         }
 
-        private async void btnNext_Click(object sender, EventArgs e)
+        private async void BtnNext_Click(object sender, EventArgs e)
         {
             if (_posterIndex < _posters.Count - 1)
             {
@@ -184,7 +182,7 @@ namespace EpisodeScraper
             }
         }
 
-        private async void btnPrevArt_Click(object sender, EventArgs e)
+        private async void BtnPrevArt_Click(object sender, EventArgs e)
         {
             if (_fanartIndex > 0)
             {
@@ -193,7 +191,7 @@ namespace EpisodeScraper
             }
         }
 
-        private async void btnNextArt_Click(object sender, EventArgs e)
+        private async void BtnNextArt_Click(object sender, EventArgs e)
         {
             if (_fanartIndex < _fanart.Count - 1)
             {
@@ -209,7 +207,7 @@ namespace EpisodeScraper
             SeriesIOHelper.Launch(tempFile);
         }
 
-        private void picPoster_DoubleClick(object sender, EventArgs e)
+        private void PicPoster_DoubleClick(object sender, EventArgs e)
         {
             if (_posterData.Count > 0 && _posterData[_posterIndex] != null)
             {
@@ -217,7 +215,7 @@ namespace EpisodeScraper
             }
         }
 
-        private void picFanArt_DoubleClick(object sender, EventArgs e)
+        private void PicFanArt_DoubleClick(object sender, EventArgs e)
         {
             if (_fanartData.Count > 0 && _fanartData[_fanartIndex] != null)
             {

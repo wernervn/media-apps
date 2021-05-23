@@ -190,7 +190,7 @@
             this.btnNext.TabIndex = 13;
             this.btnNext.Text = ">";
             this.btnNext.UseVisualStyleBackColor = true;
-            this.btnNext.Click += new System.EventHandler(this.btnNext_Click);
+            this.btnNext.Click += new System.EventHandler(this.BtnNext_Click);
             // 
             // btnPrev
             // 
@@ -200,7 +200,7 @@
             this.btnPrev.TabIndex = 12;
             this.btnPrev.Text = "<";
             this.btnPrev.UseVisualStyleBackColor = true;
-            this.btnPrev.Click += new System.EventHandler(this.btnPrev_Click);
+            this.btnPrev.Click += new System.EventHandler(this.BtnPrev_Click);
             // 
             // picPoster
             // 
@@ -210,7 +210,7 @@
             this.picPoster.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picPoster.TabIndex = 11;
             this.picPoster.TabStop = false;
-            this.picPoster.DoubleClick += new System.EventHandler(this.picPoster_DoubleClick);
+            this.picPoster.DoubleClick += new System.EventHandler(this.PicPoster_DoubleClick);
             // 
             // tabPage2
             // 
@@ -242,7 +242,7 @@
             this.btnNextArt.TabIndex = 16;
             this.btnNextArt.Text = ">";
             this.btnNextArt.UseVisualStyleBackColor = true;
-            this.btnNextArt.Click += new System.EventHandler(this.btnNextArt_Click);
+            this.btnNextArt.Click += new System.EventHandler(this.BtnNextArt_Click);
             // 
             // btnPrevArt
             // 
@@ -252,7 +252,7 @@
             this.btnPrevArt.TabIndex = 15;
             this.btnPrevArt.Text = "<";
             this.btnPrevArt.UseVisualStyleBackColor = true;
-            this.btnPrevArt.Click += new System.EventHandler(this.btnPrevArt_Click);
+            this.btnPrevArt.Click += new System.EventHandler(this.BtnPrevArt_Click);
             // 
             // picFanArt
             // 
