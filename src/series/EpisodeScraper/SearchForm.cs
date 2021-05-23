@@ -69,8 +69,8 @@ namespace EpisodeScraper
                 SeriesId = lvwResult.SelectedItems[0].SubItems[1].Text;
                 var series = (await _api.GetSeriesFullRecord(SeriesId)).Series;
                 lblPlot.Text = $"{series.Overview} ({series.RatingString})";
-                await GetPostersAsync(SeriesId);
-                await GetSeasonArtAsync(SeriesId);
+                await GetPostersAsync(SeriesId).ConfigureAwait(true);
+                await GetSeasonArtAsync(SeriesId).ConfigureAwait(true);
             }
         }
 
@@ -91,7 +91,7 @@ namespace EpisodeScraper
             }
 
             _posterIndex = 0;
-            await LoadPostersAsync();
+            await LoadPostersAsync().ConfigureAwait(true);
         }
 
         private async Task GetSeasonArtAsync(string seriesId)
@@ -114,7 +114,7 @@ namespace EpisodeScraper
             }
             catch (Exception ex)
             {
-                _ = MessageBox.Show(ex.Message, "Error getting season art");
+                MessageBox.Show(ex.Message, "Error getting season art");
             }
         }
 
@@ -122,7 +122,7 @@ namespace EpisodeScraper
         {
             if (_posterData[_posterIndex] == null)
             {
-                _posterData[_posterIndex] = await _api.GetImageByUrl(_posters[_posterIndex]);
+                _posterData[_posterIndex] = await _api.GetImageByUrl(_posters[_posterIndex]).ConfigureAwait(true);
             }
             var poster = _posterData[_posterIndex];
 
@@ -139,14 +139,14 @@ namespace EpisodeScraper
                 picPoster.Image = originalImage;
             }
 
-            lblFanArtIndex.CheckInvoke(new Action(() => lblPosterIndex.Text = $"{_posterIndex + 1} of {_posters.Count}"));
+            lblFanArtIndex.InvokeUI(() => lblPosterIndex.Text = $"{_posterIndex + 1} of {_posters.Count}");
         }
 
         private async Task LoadFanArtAsync()
         {
             if (_fanartData[_fanartIndex] == null)
             {
-                _fanartData[_fanartIndex] = await _api.GetImageByUrl(_posters[_fanartIndex]);
+                _fanartData[_fanartIndex] = await _api.GetImageByUrl(_posters[_fanartIndex]).ConfigureAwait(true);
             }
             var fanart = _fanartData[_fanartIndex];
 
@@ -159,7 +159,7 @@ namespace EpisodeScraper
                 FanArt = resized;
             }
 
-            lblFanArtIndex.CheckInvoke(new Action(() => lblFanArtIndex.Text = $"{_fanartIndex + 1} of {_fanart.Count}"));
+            lblFanArtIndex.InvokeUI(() => lblFanArtIndex.Text = $"{_fanartIndex + 1} of {_fanart.Count}");
         }
 
         private async void BtnPrev_Click(object sender, EventArgs e)
@@ -167,7 +167,7 @@ namespace EpisodeScraper
             if (_posterIndex > 0)
             {
                 _posterIndex--;
-                await LoadPostersAsync();
+                await LoadPostersAsync().ConfigureAwait(false);
             }
         }
 
@@ -176,7 +176,7 @@ namespace EpisodeScraper
             if (_posterIndex < _posters.Count - 1)
             {
                 _posterIndex++;
-                await LoadPostersAsync();
+                await LoadPostersAsync().ConfigureAwait(false);
             }
         }
 
@@ -185,7 +185,7 @@ namespace EpisodeScraper
             if (_fanartIndex > 0)
             {
                 _fanartIndex--;
-                await LoadFanArtAsync();
+                await LoadFanArtAsync().ConfigureAwait(false);
             }
         }
 
@@ -194,34 +194,34 @@ namespace EpisodeScraper
             if (_fanartIndex < _fanart.Count - 1)
             {
                 _fanartIndex++;
-                await LoadFanArtAsync();
+                await LoadFanArtAsync().ConfigureAwait(false);
             }
         }
 
-        private void ShowImage(byte[] data)
+        private async Task ShowImage(byte[] data)
         {
             var tempFile = SeriesIOHelper.GetTempFileWithExtension(".jpg");
-            File.WriteAllBytes(tempFile, data);
+            await File.WriteAllBytesAsync(tempFile, data).ConfigureAwait(false);
             SeriesIOHelper.Launch(tempFile);
         }
 
-        private void PicPoster_DoubleClick(object sender, EventArgs e)
+        private async void PicPoster_DoubleClick(object sender, EventArgs e)
         {
             if (_posterData.Count > 0 && _posterData[_posterIndex] != null)
             {
-                ShowImage(_posterData[_posterIndex]);
+                await ShowImage(_posterData[_posterIndex]).ConfigureAwait(false);
             }
         }
 
-        private void PicFanArt_DoubleClick(object sender, EventArgs e)
+        private async void PicFanArt_DoubleClick(object sender, EventArgs e)
         {
             if (_fanartData.Count > 0 && _fanartData[_fanartIndex] != null)
             {
-                ShowImage(_fanartData[_fanartIndex]);
+                await ShowImage(_fanartData[_fanartIndex]).ConfigureAwait(false);
             }
         }
 
-        private async void SearchForm_Load(object sender, EventArgs e)
+        private void SearchForm_Load(object sender, EventArgs e)
         {
             Application.DoEvents();
             this.InvokeUI(async () => await DoSearch().ConfigureAwait(false));
