@@ -120,13 +120,13 @@ namespace EpisodeScraper
 
         private async Task LoadPostersAsync()
         {
-            if (_posterData[_posterIndex] == null)
+            if (_posterData[_posterIndex] is null)
             {
                 _posterData[_posterIndex] = await _api.GetImageByUrl(_posters[_posterIndex]).ConfigureAwait(true);
             }
             var poster = _posterData[_posterIndex];
 
-            var originalImage = poster == null ? null : Image.FromStream(new MemoryStream(poster));
+            var originalImage = poster is null ? null : Image.FromStream(new MemoryStream(poster));
             Poster = poster;
             var resized = ImageHelper.ResizeImage(poster, originalImage.Width, originalImage.Height);
             if (poster.LongLength > resized.LongLength)
@@ -144,13 +144,13 @@ namespace EpisodeScraper
 
         private async Task LoadFanArtAsync()
         {
-            if (_fanartData[_fanartIndex] == null)
+            if (_fanartData[_fanartIndex] is null)
             {
                 _fanartData[_fanartIndex] = await _api.GetImageByUrl(_posters[_fanartIndex]).ConfigureAwait(true);
             }
             var fanart = _fanartData[_fanartIndex];
 
-            picFanArt.Image = fanart == null ? null : Image.FromStream(new MemoryStream(fanart));
+            picFanArt.Image = fanart is null ? null : Image.FromStream(new MemoryStream(fanart));
             FanArt = fanart;
             var resized = ImageHelper.ResizeImage(fanart, picFanArt.Image.Width, picFanArt.Image.Height);
             if (fanart?.LongLength > resized.LongLength)
@@ -207,7 +207,7 @@ namespace EpisodeScraper
 
         private async void PicPoster_DoubleClick(object sender, EventArgs e)
         {
-            if (_posterData.Count > 0 && _posterData[_posterIndex] != null)
+            if (_posterData.Count > 0 && _posterData[_posterIndex] is not null)
             {
                 await ShowImage(_posterData[_posterIndex]).ConfigureAwait(false);
             }
@@ -215,7 +215,7 @@ namespace EpisodeScraper
 
         private async void PicFanArt_DoubleClick(object sender, EventArgs e)
         {
-            if (_fanartData.Count > 0 && _fanartData[_fanartIndex] != null)
+            if (_fanartData.Count > 0 && _fanartData[_fanartIndex] is not null)
             {
                 await ShowImage(_fanartData[_fanartIndex]).ConfigureAwait(false);
             }

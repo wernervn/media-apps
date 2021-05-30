@@ -66,10 +66,9 @@ namespace EpisodeScraper.TvDbSharper
                         {
                             bytesSaved += data.Length - reduced.Length;
                             //save image using episode name
-                            var extension = Path.GetExtension(key);
                             var newExtension = Path.GetExtension(episodeFileName);
                             var imgFile = Path.ChangeExtension(key, newExtension);
-                            File.WriteAllBytes(imgFile, reduced);
+                            await File.WriteAllBytesAsync(imgFile, reduced).ConfigureAwait(false);
                         }
                     }
                 }
@@ -79,14 +78,14 @@ namespace EpisodeScraper.TvDbSharper
                 if (!File.Exists(xmlPath))
                 {
                     var xml = GetEpisodeXml(fullRec.Series, episode, bannerImages);
-                    File.WriteAllText(xmlPath, xml);
+                    await File.WriteAllTextAsync(xmlPath, xml).ConfigureAwait(false);
                 }
             }
             Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
 
             //get season thumb
             var seasonThumb = Path.Combine(seasonPath, Constants.SERIES_SEASON_THUMB);
-            if (File.Exists(seasonThumb) && new FileInfo(seasonThumb).Length == 0)
+            if (File.Exists(seasonThumb) && new FileInfo(seasonThumb).Length == 0) //if the save operation failed previously, the file would have been created without content
             {
                 File.Delete(seasonThumb);
             }
@@ -95,14 +94,14 @@ namespace EpisodeScraper.TvDbSharper
             {
                 var epi = seasonEpisodes.First();
                 var seasonBanner = banners.ToList().Find(banner => banner.BannerType == "season" && banner.Season == epi.CombinedSeason);
-                if (seasonBanner != null)
+                if (seasonBanner is not null)
                 {
                     var img = await api.GetImage(seasonBanner.BannerPath).ConfigureAwait(false) ?? await api.GetImage(seasonBanner.ThumbnailPath).ConfigureAwait(false);
 
-                    if (img != null)
+                    if (img is not null)
                     {
                         var reduced = ImageHelper.ReduceImageSize(img);
-                        File.WriteAllBytes(seasonThumb, reduced);
+                        await File.WriteAllBytesAsync(seasonThumb, reduced).ConfigureAwait(false);
                     }
                 }
             }
@@ -118,7 +117,6 @@ namespace EpisodeScraper.TvDbSharper
         public static async Task<IEnumerable<Episode>> GetEpisodes(TvDbWrapper api, string seasonPath)
         {
             var parent = new DirectoryInfo(seasonPath).Parent;
-            var series = parent.Name;
             var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
             var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
 
@@ -126,7 +124,7 @@ namespace EpisodeScraper.TvDbSharper
             var seasonNo = seasonName.Split(" ".ToCharArray())[1];
 
             var seasonEpisodes = fullRec.Episodes.Where(ep => ep.CombinedSeason == seasonNo);
-            return seasonEpisodes.ToList();
+            return seasonEpisodes;
         }
 
         public static Dictionary<string, string> GetExistingEpisodeThumbs(string seasonPath)
@@ -203,9 +201,6 @@ namespace EpisodeScraper.TvDbSharper
             metadata.Movie = m;
             return metadata.AsXml();
         }
-
-        private static string CData(string text)
-            => $"<![CDATA[{text}]]>";
 
         public static IEnumerable<string> GetEpisodeFiles(string path)
             => IOHelper.GetFiles(path, Constants.VIDEO_EXTENSIONS, SearchOption.TopDirectoryOnly);

@@ -156,7 +156,7 @@ namespace MediaApps.Common.Helpers
                 throw new ArgumentException($"{nameof(parentType)} must be generic", nameof(parentType));
             }
 
-            if (type == null || type == typeof(object))
+            if (type is null || type == typeof(object))
             {
                 return false;
             }
@@ -211,7 +211,7 @@ namespace MediaApps.Common.Helpers
         }
 
         public static bool IsAtomic(this object source)
-            => source == null ||
+            => source is null ||
                    source is string ||
                    source is Enum ||
                    source is DateTime ||

@@ -108,7 +108,7 @@ namespace SeriesNavigator.Thumbs
         public void SetSelectedIndex(int index)
         {
             var selected = ThumbImageAtIndex(index);
-            if (selected != null)
+            if (selected is not null)
             {
                 SelectThumbImage(selected);
             }
@@ -141,7 +141,7 @@ namespace SeriesNavigator.Thumbs
         {
             AllThumbs().ForEach(thumb => thumb.IsSelected = false);
             var selected = ThumbViewAtIndex(index);
-            if (selected != null)
+            if (selected is not null)
             {
                 selected.IsSelected = true;
                 ActiveControl = selected;
@@ -202,7 +202,7 @@ namespace SeriesNavigator.Thumbs
         private void SelectThumbImage(Predicate<ThumbView> predicate)
         {
             var selected = AllThumbs().Find(predicate)?.ThumbImage;
-            if (selected != null)
+            if (selected is not null)
             {
                 SelectThumbImage(selected);
             }
@@ -226,7 +226,7 @@ namespace SeriesNavigator.Thumbs
 
         private void PageDown()
         {
-            if (_selectedItem == null)
+            if (_selectedItem is null)
             {
                 if (Controls.Count == 1)
                 {
@@ -241,7 +241,7 @@ namespace SeriesNavigator.Thumbs
 
         private void PageUp()
         {
-            if (_selectedItem == null)
+            if (_selectedItem is null)
             {
                 if (Controls.Count == 1)
                 {

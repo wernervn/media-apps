@@ -67,7 +67,7 @@ namespace MediaApps.Series.Core
         public static string[] ToArray(string field)
         {
             var DELIM = "|".ToCharArray();
-            return field != null ? field.Split(DELIM, StringSplitOptions.RemoveEmptyEntries) : new string[] { };
+            return field is not null ? field.Split(DELIM, StringSplitOptions.RemoveEmptyEntries) : new string[] { };
         }
 
         public static string GetTempFileWithExtension(string extension)
@@ -83,7 +83,7 @@ namespace MediaApps.Series.Core
         public static void Launch(string fileName, string args = null)
         {
             var psi = new ProcessStartInfo { FileName = fileName, UseShellExecute = true, CreateNoWindow = true };
-            if (args != null)
+            if (args is not null)
             {
                 psi.Arguments = args;
             }

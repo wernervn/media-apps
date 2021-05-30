@@ -115,7 +115,7 @@ namespace EpisodeScraper
         {
             //if the subfolder is a dummy folder, remove it and add any real folder
             var node = e.Node;
-            if (node.Nodes.Count == 1 && node.Nodes[0].Text == "dummy" && e.Node.Nodes[0].Tag == null)
+            if (node.Nodes.Count == 1 && node.Nodes[0].Text == "dummy" && e.Node.Nodes[0].Tag is null)
             {
                 e.Node.Nodes.Clear();
                 tvwFolder.LoadFolders(node, node.Tag.ToString(), Constants.FOLDER_KEY);
@@ -295,6 +295,7 @@ namespace EpisodeScraper
                 }
                 catch
                 {
+                    //Consume the exception
                 }
             }
         }

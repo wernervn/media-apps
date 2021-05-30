@@ -40,7 +40,7 @@ namespace MediaApps.Series.Core
         {
             var outputImage = Array.Empty<byte>();
 
-            if (Debugger.IsAttached && (inputImage == null || inputImage.Length == 0))
+            if (Debugger.IsAttached && (inputImage is null || inputImage.Length == 0))
             {
                 Debugger.Break();
             }
@@ -83,7 +83,7 @@ namespace MediaApps.Series.Core
         {
             var outputImage = Array.Empty<byte>();
 
-            if (Debugger.IsAttached && (inputImage == null || inputImage.Length == 0))
+            if (Debugger.IsAttached && (inputImage is null || inputImage.Length == 0))
             {
                 Debugger.Break();
             }

@@ -14,7 +14,7 @@ namespace MediaApps.Series.Core.Rename
         public string FoundFile { get; set; }
 
         public bool MustRename
-            => FoundFile != null && EpisodeName != Path.GetFileNameWithoutExtension(FoundFile);
+            => FoundFile is not null && EpisodeName != Path.GetFileNameWithoutExtension(FoundFile);
 
         public string NewName
             => MustRename ? string.Concat(EpisodeName, Path.GetExtension(FoundFile)) : string.Empty;

@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using MediaApps.Series.Core;
 using MediaApps.Series.Core.Models;
 using WVN.TvDb.API.Client;
-using Models = MediaApps.Series.Core.Models;
 using Dto = WVN.TvDb.API.Models;
+using Models = MediaApps.Series.Core.Models;
 
 namespace EpisodeScraper.TvDbSharper
 {
@@ -115,16 +115,12 @@ namespace EpisodeScraper.TvDbSharper
                 case BannerType.poster:
                     keyType = Dto.Series.KeyType.Poster;
                     break;
-                //case BannerType.actors:
-                //    break;
                 case BannerType.season:
                     keyType = Dto.Series.KeyType.Season;
                     break;
                 case BannerType.series:
                     keyType = Dto.Series.KeyType.Series;
                     break;
-                //case BannerType.all:
-                //    break;
                 default:
                     keyType = Dto.Series.KeyType.Season;
                     break;
@@ -140,7 +136,7 @@ namespace EpisodeScraper.TvDbSharper
 
         public async Task<IEnumerable<Models.Actor>> GetSeriesActors(int seriesId)
         {
-            //await Authenticate();
+            //await Authenticate()
             var actors = (await _client.GetActorsAsync(seriesId).ConfigureAwait(false)).Data;
             return actors.Select(Map).ToList();
         }

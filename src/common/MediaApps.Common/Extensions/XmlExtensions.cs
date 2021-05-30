@@ -90,7 +90,7 @@ namespace MediaApps.Common.Extensions
         /// <param name="document"></param>
         public static void StripNamespace(this XDocument document)
         {
-            if (document.Root == null)
+            if (document.Root is null)
             {
                 return;
             }

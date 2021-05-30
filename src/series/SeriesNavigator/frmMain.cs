@@ -83,7 +83,7 @@ namespace SeriesNavigator
         private string GetEpisodePlot(string path)
         {
             var data = GetEpisodeMetadata(path);
-            return data?.Movie == null ? string.Empty : $"{data.Movie.EpisodePlot} ({data.Movie.Rating})";
+            return data?.Movie is null ? string.Empty : $"{data.Movie.EpisodePlot} ({data.Movie.Rating})";
         }
 
         private string GetEpisodeThumb(string episode)
@@ -221,7 +221,7 @@ namespace SeriesNavigator
             var folders = Directory.GetDirectories(_seriesFolder).ToList();
 
             var index = 0; //start indexing from 0 (zero)
-            if (_thumbCache == null)
+            if (_thumbCache is null)
             {
                 _thumbCache = folders.ConvertAll(folder =>
                   {
@@ -348,7 +348,7 @@ namespace SeriesNavigator
         private string RatedDescription(string path)
         {
             var series = GetSeriesMetadata(path)?.Series;
-            return series != null ? $"{series.Plot} ({series.Rating})" : string.Empty;
+            return series is not null ? $"{series.Plot} ({series.Rating})" : string.Empty;
         }
 
         #endregion
