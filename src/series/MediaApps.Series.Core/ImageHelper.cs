@@ -9,33 +9,6 @@ namespace MediaApps.Series.Core
 {
     public static class ImageHelper
     {
-        public static byte[] ResizeImage(byte[] inputImage, int desiredWidth, int desiredHeight)
-        {
-            byte[] outputImage;
-            var image = Image.FromStream(new MemoryStream(inputImage));
-            var bmp = new Bitmap(desiredWidth, desiredHeight);
-            using (Graphics grfx = Graphics.FromImage(bmp))
-            {
-                grfx.CompositingQuality = CompositingQuality.HighQuality;
-                grfx.SmoothingMode = SmoothingMode.HighQuality;
-                grfx.InterpolationMode = InterpolationMode.High;
-
-                var rectangle = new Rectangle(0, 0, desiredWidth, desiredHeight);
-                grfx.DrawImage(image, rectangle);
-
-                // make a memory stream to work with the image bytes
-                using (var imageStream = new MemoryStream())
-                {
-                    bmp.Save(imageStream, ImageFormat.Jpeg);
-                    outputImage = imageStream.ToArray();
-                    bmp.Dispose();
-                    image.Dispose();
-                }
-            }
-
-            return outputImage;
-        }
-
         public static byte[] ReduceImageSize(byte[] inputImage, CompositingQuality compositingQuality = CompositingQuality.HighQuality, SmoothingMode smoothingMode = SmoothingMode.HighQuality, InterpolationMode interpolationMode = InterpolationMode.High)
         {
             var outputImage = Array.Empty<byte>();
@@ -53,26 +26,22 @@ namespace MediaApps.Series.Core
                 var desiredHeight = image.Height;
 
                 var bmp = new Bitmap(desiredWidth, desiredHeight);
-                using (Graphics grfx = Graphics.FromImage(bmp))
-                {
-                    grfx.CompositingQuality = compositingQuality;
-                    grfx.SmoothingMode = smoothingMode;
-                    grfx.InterpolationMode = interpolationMode;
+                using var grfx = Graphics.FromImage(bmp);
+                grfx.CompositingQuality = compositingQuality;
+                grfx.SmoothingMode = smoothingMode;
+                grfx.InterpolationMode = interpolationMode;
 
-                    var rectangle = new Rectangle(0, 0, desiredWidth, desiredHeight);
-                    grfx.DrawImage(image, rectangle);
+                var rectangle = new Rectangle(0, 0, desiredWidth, desiredHeight);
+                grfx.DrawImage(image, rectangle);
 
-                    // make a memory stream to work with the image bytes
-                    using (var imageStream = new MemoryStream())
-                    {
-                        bmp.Save(imageStream, ImageFormat.Jpeg);
-                        outputImage = imageStream.ToArray();
-                        bmp.Dispose();
-                        image.Dispose();
-                    }
-                }
+                // make a memory stream to work with the image bytes
+                using var imageStream = new MemoryStream();
+                bmp.Save(imageStream, ImageFormat.Jpeg);
+                outputImage = imageStream.ToArray();
+                bmp.Dispose();
+                image.Dispose();
             }
-            catch (System.Exception)
+            catch
             {
                 //return null when the input is an invalid image
             }
@@ -96,26 +65,22 @@ namespace MediaApps.Series.Core
                 var desiredHeight = Convert.ToInt32(Math.Floor(image.Height / reduceFactor));
 
                 var bmp = new Bitmap(desiredWidth, desiredHeight);
-                using (Graphics grfx = Graphics.FromImage(bmp))
-                {
-                    grfx.CompositingQuality = compositingQuality;
-                    grfx.SmoothingMode = smoothingMode;
-                    grfx.InterpolationMode = interpolationMode;
+                using var grfx = Graphics.FromImage(bmp);
+                grfx.CompositingQuality = compositingQuality;
+                grfx.SmoothingMode = smoothingMode;
+                grfx.InterpolationMode = interpolationMode;
 
-                    var rectangle = new Rectangle(0, 0, desiredWidth, desiredHeight);
-                    grfx.DrawImage(image, rectangle);
+                var rectangle = new Rectangle(0, 0, desiredWidth, desiredHeight);
+                grfx.DrawImage(image, rectangle);
 
-                    // make a memory stream to work with the image bytes
-                    using (var imageStream = new MemoryStream())
-                    {
-                        bmp.Save(imageStream, ImageFormat.Jpeg);
-                        outputImage = imageStream.ToArray();
-                        bmp.Dispose();
-                        image.Dispose();
-                    }
-                }
+                // make a memory stream to work with the image bytes
+                using var imageStream = new MemoryStream();
+                bmp.Save(imageStream, ImageFormat.Jpeg);
+                outputImage = imageStream.ToArray();
+                bmp.Dispose();
+                image.Dispose();
             }
-            catch (System.Exception)
+            catch
             {
                 //return null when the input is an invalid image
             }

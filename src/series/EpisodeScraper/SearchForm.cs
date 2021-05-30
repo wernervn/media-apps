@@ -128,7 +128,7 @@ namespace EpisodeScraper
 
             var originalImage = poster is null ? null : Image.FromStream(new MemoryStream(poster));
             Poster = poster;
-            var resized = ImageHelper.ResizeImage(poster, originalImage.Width, originalImage.Height);
+            var resized = ImageHelper.ReduceImageSize(poster);
             if (poster.LongLength > resized.LongLength)
             {
                 picPoster.Image = Image.FromStream(new MemoryStream(resized));
@@ -152,7 +152,7 @@ namespace EpisodeScraper
 
             picFanArt.Image = fanart is null ? null : Image.FromStream(new MemoryStream(fanart));
             FanArt = fanart;
-            var resized = ImageHelper.ResizeImage(fanart, picFanArt.Image.Width, picFanArt.Image.Height);
+            var resized = ImageHelper.ReduceImageSize(fanart);
             if (fanart?.LongLength > resized.LongLength)
             {
                 picFanArt.Image = Image.FromStream(new MemoryStream(resized));
