@@ -390,16 +390,14 @@ namespace EpisodeScraper
 
         private async Task<bool> RenameEpisodesUI()
         {
-            using (var renamer = new EpisodeRenameForm())
-            {
-                var folder = tvwFolder.SelectedNode.Tag.ToString();
-                var episodes = await SeasonHelper.GetEpisodes(_tvdb, folder);
-                var seriesFolder = new DirectoryInfo(folder).Parent.FullName;
-                var seriesName = SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
-                renamer.ShowDialog(seriesName, folder, episodes);
-                LoadAllFiles(folder);
-                return renamer.GetSeasonData;
-            }
+            using var renamer = new EpisodeRenameForm();
+            var folder = tvwFolder.SelectedNode.Tag.ToString();
+            var episodes = await SeasonHelper.GetEpisodes(_tvdb, folder);
+            var seriesFolder = new DirectoryInfo(folder).Parent.FullName;
+            var seriesName = SeriesIOHelper.GetSeriesMetadata(seriesFolder).Series.Title;
+            renamer.ShowDialog(seriesName, folder, episodes);
+            LoadAllFiles(folder);
+            return renamer.GetSeasonData;
         }
 
         #endregion
