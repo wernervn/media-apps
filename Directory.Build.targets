@@ -1,0 +1,14 @@
+<Project>
+
+  <!-- https://github.com/MicrosoftDocs/visualstudio-docs/issues/2774#issuecomment-489685855 -->
+  <!-- Publish Single File -->
+  <PropertyGroup Condition=" '$(UseWindowsForms)' == 'true' ">
+    <PublishSingleFile>true</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <!-- Enables use of assembly trimming, which is only supported for self-contained apps -->
+    <PublishTrimmed>false</PublishTrimmed>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
+  </PropertyGroup>
+  
+</Project>
