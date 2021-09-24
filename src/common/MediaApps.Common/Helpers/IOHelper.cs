@@ -44,7 +44,7 @@ namespace MediaApps.Common.Helpers
             => GetFiles(path, searchPatterns.ToList(), searchOption);
 
         // Takes some patterns, and executes in parallel
-        public static IEnumerable<string> GetFiles(string path, List<string> searchPatterns, SearchOption searchOption = SearchOption.TopDirectoryOnly)
+        public static IEnumerable<string> GetFiles(string path, IReadOnlyCollection<string> searchPatterns, SearchOption searchOption = SearchOption.TopDirectoryOnly)
             => searchPatterns.AsParallel()
                 .SelectMany(searchPattern => Directory.EnumerateFiles(path, searchPattern, searchOption))
                 .AsParallel();
