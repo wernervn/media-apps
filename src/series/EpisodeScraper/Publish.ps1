@@ -1,1 +1,2 @@
 ﻿dotnet publish -c Release -o:C:\Publish\EpisodeScraper
+#dotnet publish -r win-x64 -c Release -o C:\Publish\EpisodeScraper -p:PublishReadyToRun=true -p:PublishSingleFile=true -p:PublishTrimmed=false --self-contained false -p:IncludeNativeLibrariesForSelfExtract=true

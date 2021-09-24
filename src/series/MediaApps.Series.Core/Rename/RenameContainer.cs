@@ -71,12 +71,12 @@ namespace MediaApps.Series.Core.Rename
             var episodeNumber = episode.EpisodeNumber.Value;
             var key = string.Format(KEY, episode.SeasonNumber, episodeNumber);
             var episodeName = CleanFileName(string.Format(NAME, SeriesName, key, episode.EpisodeName));
-            var foundFile = FoundFiles.SingleOrDefault(f => f.Contains(key, StringComparison.OrdinalIgnoreCase));
+            var foundFiles = FoundFiles.Where(f => f.Contains(key, StringComparison.OrdinalIgnoreCase)).Select(foundFile => new RenameItem(episodeName, foundFile));
 
-            _renameItems.Add
-                (
-                    new(episodeName, foundFile)
-                );
+            if (foundFiles.Any())
+            {
+                _renameItems.AddRange(foundFiles);
+            }
         }
     }
 
