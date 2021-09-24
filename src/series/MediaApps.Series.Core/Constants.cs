@@ -12,9 +12,9 @@ namespace MediaApps.Series.Core
         public static readonly string SERIES_VIEW = "View.xml";
         public static readonly string SERIES_XML = "series.xml";
 
-        public static List<string> IMAGE_VALUES = new List<string> { "*.jpg", "*.jpeg" }; //{ ".jpg", ".jpeg", ".bmp", ".ico", ".png", ".gif" };
-        public static List<string> VIDEO_EXTENSIONS = new List<string> { "*.avi", "*.mkv", "*.mp4" };
-        public static List<string> SUBTITLES = new List<string> { "*.srt" };
+        public static readonly IReadOnlyCollection<string> IMAGE_VALUES = new List<string>() { "*.jpg", "*.jpeg" }; //{ ".jpg", ".jpeg", ".bmp", ".ico", ".png", ".gif" };
+        public static readonly IReadOnlyCollection<string> VIDEO_EXTENSIONS = new List<string>() { "*.avi", "*.mkv", "*.mp4" };
+        public static readonly IReadOnlyCollection<string> SUBTITLES = new List<string>() { "*.srt", "*.idx", "*.sub" };
 
         public static readonly string DATE_FMT = "yyyy-MM-dd";
     }

@@ -5,13 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\SeasonView.xml" />
-    <None Remove="Resources\SeriesView.xml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="Resources\SeasonView.xml" />
-    <EmbeddedResource Include="Resources\SeriesView.xml" />
+    <None Remove="Resources\*.*" />
+    <EmbeddedResource Include="Resources\*.*" />
   </ItemGroup>
 
   <ItemGroup>
