@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WVN.SimpleMapper" Version="1.0.1" />
-    <PackageReference Include="WVN.TvDb.API" Version="1.0.2" />
+    <PackageReference Include="WVN.SimpleMapper" Version="$(WVNSimpleMapper)" />
+    <PackageReference Include="WVN.TvDb.API" Version="$(WVNTvDbApi)" />
   </ItemGroup>
 
   <ItemGroup>

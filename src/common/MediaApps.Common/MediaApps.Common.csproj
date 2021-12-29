@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\.editorconfig" Link=".editorconfig" />
+    <PackageReference Include="WVN.IO" Version="$(WVNIO)" />
   </ItemGroup>
 
 </Project>

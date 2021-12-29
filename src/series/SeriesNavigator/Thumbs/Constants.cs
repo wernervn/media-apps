@@ -1,8 +1,7 @@
-﻿namespace SeriesNavigator.Thumbs
+﻿namespace SeriesNavigator.Thumbs;
+
+internal static class Constants
 {
-    internal static class Constants
-    {
-        internal const int THUMB_WIDTH = 210;
-        internal const int THUMB_HEIGHT = 315;
-    }
+    internal const int THUMB_WIDTH = 210;
+    internal const int THUMB_HEIGHT = 315;
 }

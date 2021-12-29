@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
+﻿namespace MediaApps.Series.Core.Rename;
 
-namespace MediaApps.Series.Core.Rename
+public class RenameItems : List<RenameItem>
 {
-    public class RenameItems : List<RenameItem>
-    {
-    }
 }

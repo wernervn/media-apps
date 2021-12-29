@@ -1,9 +1,8 @@
-﻿namespace SeriesNavigator.Thumbs
+﻿namespace SeriesNavigator.Thumbs;
+
+public enum SeriesView
 {
-    public enum SeriesView
-    {
-        Series,
-        Seasons,
-        Episodes
-    }
+    Series,
+    Seasons,
+    Episodes
 }

@@ -1,12 +1,11 @@
 ﻿using WVN.WinForms;
 
-namespace EpisodeScraper.Configuration
-{
-    public class AppConfiguration
-    {
-        public string SeriesFolder { get; set; }
-        public string ApiKey { get; set; }
+namespace EpisodeScraper.Configuration;
 
-        public WindowState WindowState { get; set; }
-    }
+public class AppConfiguration
+{
+    public string SeriesFolder { get; set; }
+    public string ApiKey { get; set; }
+
+    public WindowState WindowState { get; set; }
 }

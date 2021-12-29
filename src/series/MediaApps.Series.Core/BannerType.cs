@@ -1,7 +1,6 @@
-﻿namespace MediaApps.Series.Core
+﻿namespace MediaApps.Series.Core;
+
+public enum BannerType
 {
-    public enum BannerType
-    {
-        fanart, episode, poster, actors, season, series, all
-    }
+    fanart, episode, poster, actors, season, series, all
 }
