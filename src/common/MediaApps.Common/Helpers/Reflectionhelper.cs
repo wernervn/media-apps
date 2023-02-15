@@ -5,7 +5,7 @@ namespace MediaApps.Common.Helpers;
 /// <summary>
 /// Reflection helper classes
 /// </summary>
-public static class Reflectionhelper
+public static class ReflectionHelper
 {
     /// <summary>
     /// Get a list of types in an assembly
@@ -46,7 +46,7 @@ public static class Reflectionhelper
     /// <typeparam name="T">Type of object</typeparam>
     /// <param name="assembly">Assembly for inspection</param>
     /// <returns>Returns the first type in the sequence, else return null</returns>
-    public static Type? GetFirstOrDefaultTypeInAssembly<T>(Assembly assembly)
+    public static Type GetFirstOrDefaultTypeInAssembly<T>(Assembly assembly)
         => GetTypesInAssembly<T>(assembly).FirstOrDefault();
 
     /// <summary>
@@ -55,7 +55,7 @@ public static class Reflectionhelper
     /// <param name="assembly">Assembly for inspection</param>
     /// <param name="type">Type of object</param>
     /// <returns></returns>
-    public static Type? GetFirstOrDefaultTypeInAssembly(Assembly assembly, Type type)
+    public static Type GetFirstOrDefaultTypeInAssembly(Assembly assembly, Type type)
         => GetTypesInAssembly(assembly, type).FirstOrDefault();
 
     /// <summary>

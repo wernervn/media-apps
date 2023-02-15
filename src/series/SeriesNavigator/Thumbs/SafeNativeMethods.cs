@@ -8,7 +8,7 @@ internal static class SafeNativeMethods
 {
     //https://msdn.microsoft.com/en-us/library/windows/desktop/dd145062(v=vs.85).aspx
     [DllImport("User32.dll")]
-    internal static extern IntPtr MonitorFromPoint([In] System.Drawing.Point pt, [In] uint dwFlags);
+    internal static extern IntPtr MonitorFromPoint([In] Point pt, [In] uint dwFlags);
 
     //https://msdn.microsoft.com/en-us/library/windows/desktop/dn280510(v=vs.85).aspx
     [DllImport("Shcore.dll")]

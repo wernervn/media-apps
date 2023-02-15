@@ -3,18 +3,18 @@ using EpisodeScraper.TvDbSharper;
 using MediaApps.Common.Helpers;
 using MediaApps.Series.Core;
 using MediaApps.Series.Core.Mede8er;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using WVN.Configuration;
 using WVN.Extensions;
 using WVN.IO.Helpers;
 using WVN.WinForms.Extensions;
+using WVN.WinForms.Serialization;
 using Core = MediaApps.Series.Core;
 
 namespace EpisodeScraper;
 
 public partial class MainForm : Form
 {
-    private readonly AppSettings _settings = AppSettingsManager.GetSettings<AppSettings>();
+    private readonly AppSettings _settings = AppSettingsManager.GetSettings<AppSettings>(options: SerializerOptions.Default);
 
     private readonly TvDbWrapper _tvdb;
     private const string HAS_ID_KEY = "hasId";
@@ -47,7 +47,7 @@ public partial class MainForm : Form
     {
         _settings.AppConfiguration.SeriesFolder = _seriesFolder;
         _settings.AppConfiguration.WindowState = this.GetWindowState();
-        AppSettingsManager.SaveSettings(_settings);
+        AppSettingsManager.SaveSettings(_settings, options: SerializerOptions.Default);
     }
 
     #endregion Open/Close
@@ -352,18 +352,12 @@ public partial class MainForm : Form
 
     private void SelectFolderToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        using (var dialog = new CommonOpenFileDialog
+        using var folderBrowserDialog1 = new FolderBrowserDialog();
+        if (folderBrowserDialog1.ShowDialog() == DialogResult.OK)
         {
-            InitialDirectory = _seriesFolder,
-            IsFolderPicker = true
-        })
-        {
-            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
-            {
-                _seriesFolder = dialog.FileName;
-                UpdateSeriesFolder(_seriesFolder);
-                LoadFolders(_seriesFolder);
-            }
+            _seriesFolder = folderBrowserDialog1.SelectedPath;
+            UpdateSeriesFolder(_seriesFolder);
+            LoadFolders(_seriesFolder);
         }
     }
 

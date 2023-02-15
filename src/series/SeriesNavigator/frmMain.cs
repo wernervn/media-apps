@@ -6,12 +6,13 @@ using SeriesNavigator.Thumbs;
 using WVN.Configuration;
 using WVN.IO.Helpers;
 using WVN.WinForms.Extensions;
+using WVN.WinForms.Serialization;
 
 namespace SeriesNavigator;
 
 public partial class frmMain : Form
 {
-    private readonly AppSettings _settings = AppSettingsManager.GetSettings<AppSettings>();
+    private readonly AppSettings _settings = AppSettingsManager.GetSettings<AppSettings>(options: SerializerOptions.Default);
 
     private string _currentFolder;
     private string _seriesFolder;
@@ -106,7 +107,7 @@ public partial class frmMain : Form
         _settings.AppConfiguration.SeriesFolder = _seriesFolder;
         _settings.AppConfiguration.SelectedBackColour = Styles.SelectedBackColour;
         _settings.AppConfiguration.SelectedForeColour = Styles.SelectedForeColour;
-        AppSettingsManager.SaveSettings(_settings);
+        AppSettingsManager.SaveSettings(_settings, options: SerializerOptions.Default);
     }
 
     private void PromptClose()

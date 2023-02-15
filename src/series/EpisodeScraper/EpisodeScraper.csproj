@@ -2,12 +2,11 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>$(NetCoreWindows)</TargetFramework>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WinCopies.WindowsAPICodePack.Shell" Version="2.10.2" />
     <PackageReference Include="WVN.Configuration" Version="$(WVNConfiguration)" />
     <PackageReference Include="WVN.WinForms" Version="$(WVNWinForms)" />
   </ItemGroup>

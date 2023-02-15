@@ -47,11 +47,8 @@ public class RenameContainer
         {
             return;
         }
-        if (File.Exists(destination))
-        {
-            File.Delete(destination);
-        }
-        File.Move(source, destination);
+
+        File.Move(source, destination, overwrite: true);
     }
 
     private void LoadEpisodes()

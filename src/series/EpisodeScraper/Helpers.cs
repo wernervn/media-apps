@@ -1,6 +1,4 @@
-﻿using System.Net;
-
-namespace EpisodeScraper;
+﻿namespace EpisodeScraper;
 
 public static class Helpers
 {

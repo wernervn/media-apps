@@ -9,7 +9,7 @@ internal static class ArtworkClient
     internal static string BuildImageUrl(string imagePath)
         => Path.Combine(ImagePrefix, imagePath);
 
-    internal async static Task<byte[]?> DownloadDataAsync(string imageUrl)
+    internal async static Task<byte[]> DownloadDataAsync(string imageUrl)
     {
         var url = imageUrl ?? throw new ArgumentNullException(nameof(imageUrl));
         if (!url.StartsWith(ImagePrefix))

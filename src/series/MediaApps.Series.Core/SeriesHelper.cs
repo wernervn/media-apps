@@ -2,7 +2,7 @@
 using System.Text.RegularExpressions;
 using MediaApps.Series.Core.Exceptions;
 using MediaApps.Series.Core.Mede8er;
-using WVN.Extensions;
+using WVN.Extensions.Serialization;
 
 namespace MediaApps.Series.Core;
 
@@ -41,7 +41,7 @@ public static class SeriesIOHelper
         return metadata.Series.TvdbId;
     }
 
-    public static SeriesMetadata? GetSeriesMetadata(string path)
+    public static SeriesMetadata GetSeriesMetadata(string path)
     {
         var file = Path.Combine(path, Constants.SERIES_XML);
         if (File.Exists(file))
@@ -52,7 +52,7 @@ public static class SeriesIOHelper
         return null;
     }
 
-    public static EpisodeMetadata? GetEpisodeMetadata(string path)
+    public static EpisodeMetadata GetEpisodeMetadata(string path)
     {
         if (File.Exists(path))
         {

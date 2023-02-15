@@ -13,7 +13,7 @@ public partial class TvDbWrapper
 
     public TvDbWrapper(string apiKey)
     {
-        _client = new TvDbClient(apiKey);
+        _client = new TvDbClient();
         _client.AuthenticateAsync(apiKey);
         _apiKey = apiKey;
     }
@@ -148,10 +148,10 @@ public partial class TvDbWrapper
         return Map(episode);
     }
 
-    public async Task<Episode?> GetSeriesEpisode(string seriesId, string seasonNo, string episodeNo)
+    public async Task<Episode> GetSeriesEpisode(string seriesId, string seasonNo, string episodeNo)
         => await GetSeriesEpisode(int.Parse(seriesId), int.Parse(seasonNo), int.Parse(episodeNo)).ConfigureAwait(false);
 
-    public async Task<Episode?> GetSeriesEpisode(int seriesId, int seasonNo, int episodeNo)
+    public async Task<Episode> GetSeriesEpisode(int seriesId, int seasonNo, int episodeNo)
         => (await SearchEpisodes(seriesId, new Dto.Series.EpisodeQuery { AiredSeason = seasonNo, AiredEpisode = episodeNo }).ConfigureAwait(false)).SingleOrDefault();
 
     private async Task<IEnumerable<Episode>> SearchEpisodes(int seriesId, Dto.Series.EpisodeQuery query)
@@ -170,10 +170,10 @@ public partial class TvDbWrapper
     #endregion
 
     #region Image downloads
-    public async Task<byte[]?> GetImageByUrl(string url)
+    public async Task<byte[]> GetImageByUrl(string url)
         => await ArtworkClient.DownloadDataAsync(url).ConfigureAwait(false);
 
-    public async Task<byte[]?> GetImage(string filename)
+    public async Task<byte[]> GetImage(string filename)
         => await GetImageByUrl(filename).ConfigureAwait(false);
     #endregion
 }

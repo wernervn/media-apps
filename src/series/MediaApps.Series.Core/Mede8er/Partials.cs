@@ -1,5 +1,5 @@
 ﻿using MediaApps.Series.Core.Models;
-using WVN.Extensions;
+using WVN.Extensions.Serialization;
 
 namespace MediaApps.Series.Core.Mede8er;
 

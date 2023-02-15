@@ -1,19 +1,18 @@
 <Project>
 
   <PropertyGroup Label="SDK Versions">
-    <NetStandardTargetVersion>netstandard2.1</NetStandardTargetVersion>
-    <NetCoreTargetVersion>net6.0</NetCoreTargetVersion>
-    <NetCoreWindows>net6.0-windows</NetCoreWindows>
+    <DotnetVersion>net7.0</DotnetVersion>
+    <DotnetWindows>$(DotnetVersion)-windows</DotnetWindows>
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
-    <MSExtensionsConfiguration>6.0.0</MSExtensionsConfiguration>
-    <SystemDrawingCommon>6.0.0</SystemDrawingCommon>
-    <WVNConfiguration>3.0.0</WVNConfiguration>
-    <WVNWinForms>2.0.0</WVNWinForms>
-    <WVNTvDbApi>2.0.0</WVNTvDbApi>
+    <MSExtensionsConfiguration>7.0.0</MSExtensionsConfiguration>
+    <SystemDrawingCommon>7.0.0</SystemDrawingCommon>
+    <WVNConfiguration>5.0.1</WVNConfiguration>
+    <WVNWinForms>3.0.3</WVNWinForms>
+    <WVNTvDbApi>3.0.0</WVNTvDbApi>
     <WVNSimpleMapper>2.0.0</WVNSimpleMapper>
-    <WVNIO>1.0.0</WVNIO>
+    <WVNIO>2.0.1</WVNIO>
   </PropertyGroup>
 
 </Project>

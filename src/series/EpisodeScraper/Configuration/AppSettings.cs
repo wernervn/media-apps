@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
 namespace EpisodeScraper.Configuration;
 
 public class AppSettings
 {
-    [JsonProperty("App")]
+    [JsonPropertyName("App")]
     public AppConfiguration AppConfiguration { get; set; }
 }
