@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System.Text.Json.Serialization;
 
-namespace SeriesNavigator.Configuration
+namespace SeriesNavigator.Configuration;
+
+public class AppSettings
 {
-    public class AppSettings
-    {
-        [JsonProperty("App")]
-        public AppConfiguration AppConfiguration { get; set; }
-    }
+    [JsonPropertyName("App")]
+    public AppConfiguration AppConfiguration { get; set; } = new();
 }

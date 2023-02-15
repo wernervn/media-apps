@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>$(NetCoreTargetVersion)</TargetFramework>
+    <TargetFramework>$(DotnetVersion)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="..\..\..\.editorconfig" Link=".editorconfig" />
+    <PackageReference Include="WVN.IO" Version="$(WVNIO)" />
   </ItemGroup>
 
 </Project>

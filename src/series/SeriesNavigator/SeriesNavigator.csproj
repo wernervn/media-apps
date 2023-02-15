@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
-    <PackageReference Include="WVN.Configuration" Version="2.1.1" />
-    <PackageReference Include="WVN.WinForms" Version="1.0.0" />
+    <PackageReference Include="System.Drawing.Common" Version="$(SystemDrawingCommon)" />
+    <PackageReference Include="WVN.Configuration" Version="$(WVNConfiguration)" />
+    <PackageReference Include="WVN.WinForms" Version="$(WVNWinForms)" />
   </ItemGroup>
 
   <ItemGroup>

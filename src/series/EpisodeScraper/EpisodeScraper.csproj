@@ -2,14 +2,13 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net5.0-windows</TargetFramework>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WinCopies.WindowsAPICodePack.Shell" Version="2.2.0" />
-    <PackageReference Include="WVN.Configuration" Version="2.1.1" />
-    <PackageReference Include="WVN.WinForms" Version="1.0.1" />
+    <PackageReference Include="WVN.Configuration" Version="$(WVNConfiguration)" />
+    <PackageReference Include="WVN.WinForms" Version="$(WVNWinForms)" />
   </ItemGroup>
 
   <ItemGroup>

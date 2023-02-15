@@ -1,21 +1,18 @@
-﻿using System.IO;
-using System.Linq;
-using static MediaApps.Series.Core.Constants;
+﻿using static MediaApps.Series.Core.Constants;
 
-namespace MediaApps.Series.Core.Mede8er
+namespace MediaApps.Series.Core.Mede8er;
+
+public static class Mede8erHelper
 {
-    public static class Mede8erHelper
+    public static void SetItemWatched(string item)
     {
-        public static void SetItemWatched(string item)
-        {
-            var watchedFile = string.Concat(item, ".t");
-            using var fs = File.Create(watchedFile);
-        }
+        var watchedFile = string.Concat(item, ".t");
+        using var fs = File.Create(watchedFile);
+    }
 
-        public static void SetFolderWatched(string folder)
-        {
-            var videoFiles = VIDEO_EXTENSIONS.SelectMany(ext => Directory.EnumerateFiles(folder, ext)).ToList();
-            videoFiles.ForEach(SetItemWatched);
-        }
+    public static void SetFolderWatched(string folder)
+    {
+        var videoFiles = VIDEO_EXTENSIONS.SelectMany(ext => Directory.EnumerateFiles(folder, ext)).ToList();
+        videoFiles.ForEach(SetItemWatched);
     }
 }

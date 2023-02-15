@@ -1,7 +1,6 @@
-﻿namespace EpisodeScraper
+﻿namespace EpisodeScraper;
+
+public static class Constants
 {
-    public static class Constants
-    {
-        public const string FOLDER_KEY = "Folder2";
-    }
+    public const string FOLDER_KEY = "Folder2";
 }
