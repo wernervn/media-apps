@@ -1,0 +1,11 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\WVN.TmDb\src\WVN.TmDb.Api\WVN.TmDb.Api.csproj" />
+    <ProjectReference Include="..\MovieCollection.Common\MovieCollection.Common.csproj" />
+  </ItemGroup>
+</Project>

@@ -10,11 +10,14 @@ public class MovieDetails
     public string Genre { get; set; }
     public int Runtime { get; set; }
     public bool Adult { get; set; }
-    public int Id { get; set; }
+    public long Id { get; set; }
     public string ImdbId { get; set; }
     public string Url { get; set; }
     public string Overview { get; set; }
     public string Popularity { get; set; }
+
+    public string PosterPath { get; set; }
+    public string BackdropPath { get; set; }
 
     private byte[] _poster;
     public byte[] Poster
