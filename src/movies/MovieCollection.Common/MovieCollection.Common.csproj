@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="$(Dapper)" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="$(MSDataSqlite)" />
+    <PackageReference Include="WVN.Extensions" Version="$(WVNExtensions)" />
+    <PackageReference Include="WVN.IO" Version="$(WVNIO)" />
+    <!--<PackageReference Include="WVN.TmDb.Api" Version="$(WVNTmDbApi)" />-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\WVN.TmDb\src\WVN.TmDb.Api\WVN.TmDb.Api.csproj" />
+  </ItemGroup>
+
+</Project>
