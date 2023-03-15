@@ -8,25 +8,28 @@ internal static class SqliteData
 
     public static async Task ExecuteCommandAsync(string dbPath, string sql)
     {
-        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
-
-        await cn.ExecuteAsync(sql).ConfigureAwait(false);
+        using (var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false))
+        {
+            await cn.ExecuteAsync(sql).ConfigureAwait(false);
+        }
     }
 
     public static async Task ExecuteCommandAsync(string dbPath, string sql, Dictionary<string, object> parameters)
     {
-        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
-
-        await cn.ExecuteAsync(sql, new DynamicParameters(parameters)).ConfigureAwait(false);
+        using (var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false))
+        {
+            await cn.ExecuteAsync(sql, new DynamicParameters(parameters)).ConfigureAwait(false);
+        }
     }
 
     public static async Task ExecuteCommandsAsync(string dbPath, IEnumerable<string> sqlStatements)
     {
-        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
-
-        foreach (var sql in sqlStatements)
+        using (var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false))
         {
-            await cn.ExecuteAsync(sql).ConfigureAwait(false);
+            foreach (var sql in sqlStatements)
+            {
+                await cn.ExecuteAsync(sql).ConfigureAwait(false);
+            }
         }
     }
 

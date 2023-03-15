@@ -382,7 +382,7 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(7, 258);
+            label3.Location = new Point(7, 267);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
             label3.Size = new Size(56, 16);
@@ -392,7 +392,7 @@
             // txtTagLine
             // 
             txtTagLine.BackColor = SystemColors.Window;
-            txtTagLine.Location = new Point(117, 258);
+            txtTagLine.Location = new Point(116, 267);
             txtTagLine.Margin = new Padding(4);
             txtTagLine.Name = "txtTagLine";
             txtTagLine.ReadOnly = true;

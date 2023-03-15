@@ -43,12 +43,13 @@ public static class MovieFile
     {
         var isAdult = movie.Adult ? 1 : 0;
         var rating = string.IsNullOrEmpty(movie.Popularity) ? 0 : double.Parse(movie.Popularity, NumberStyles.Float, CultureInfo.CurrentCulture);
-        var sql = $@"""
+        var sql = $"""
     INSERT INTO MovieInfo
     (
         MovieId, Name, Released, Language, Genre, Runtime, Adult, IMDBId, Url, Overview, Rating, TagLine
     )
-    VALUES (
+    VALUES
+    (
         {movie.Id}, '{SqliteData.CleanSQL(movie.Title)}', '{movie.Released:yyyy-MM-yy}', '{movie.Language}', '{movie.Genre}', '{movie.Runtime}', {isAdult}, '{movie.ImdbId}', '{movie.Url}', '{SqliteData.CleanSQL(movie.Overview)}', '{rating}', '{SqliteData.CleanSQL(movie.TagLine)}'
     )
 """;

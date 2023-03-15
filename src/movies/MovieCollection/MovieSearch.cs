@@ -20,7 +20,6 @@ public partial class MovieSearch : Form
     public void Show(AppConfiguration settings, IMovieData wrapper, string movieFolder, IWin32Window owner = null)
     {
         _settings = settings;
-        //_wrapper = new TmDbData(settings.ApiKey);
         _wrapper = wrapper;
 
         txtMovie.Text = Helpers.ScrubMovieName(movieFolder, _settings.SpaceCharacters, _settings.RemovalValues);
@@ -118,16 +117,18 @@ public partial class MovieSearch : Form
 
     private void btnAccept_Click(object sender, EventArgs e)
     {
-        var details = lvwMovies.SelectedItems[0].Tag as MovieDetails;
-        //details.MovieImages = this.MovieImages;
-        SelectedMovie = details;
-        DialogResult = DialogResult.OK;
+        if (lvwMovies.SelectedItems[0].Tag is MovieDetails movie)
+        {
+            SelectedMovie = movie;
+            DialogResult = DialogResult.OK;
+        }
     }
 
     private void info_ImageResized(object sender, ImageResizedEventArgs e)
     {
-        const string msg = "Image has been resized from {0} to {1}";
-        SetStatus(msg, Helpers.GetSize(e.OriginalSize), Helpers.GetSize(e.NewSize));
+        string msg = $"{e.ImageName} has been resized from {Helpers.GetSize(e.OriginalSize)} to {Helpers.GetSize(e.NewSize)}";
+        System.Diagnostics.Debug.WriteLine(msg);
+        SetStatus(msg);
     }
 
     private void SetStatus(string text, params object[] parameters)

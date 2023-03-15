@@ -13,4 +13,9 @@
     <!--<PackageReference Include="WVN.TmDb.Api" Version="$(WVNTmDbApi)" />-->
   </ItemGroup>
 
+  <ItemGroup>
+    <None Remove="DB\**\*.sql" />
+    <EmbeddedResource Include="DB\**\*.sql" />
+  </ItemGroup>
+
 </Project>
