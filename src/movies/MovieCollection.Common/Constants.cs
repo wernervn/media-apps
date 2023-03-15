@@ -11,4 +11,6 @@ public static class Constants
 
     public const string Poster = nameof(Poster);
     public const string Backdrop = nameof(Backdrop);
+
+    public const string DateFormat = "yyyy-MM-dd";
 }

@@ -46,4 +46,20 @@ public class AppConfiguration
     /// Window state of the Details window
     /// </summary>
     public WindowState DetailsState { get; set; } = new WindowState { Size = new Size(804, 804), FormWindowState = FormWindowState.Normal };
+
+    /// <summary>
+    /// Characters that will be replaced with spaces when scrubbing movie names
+    /// </summary>
+    public List<string> SpaceCharacters { get; set; } = DefaultSpaceCharacters;
+
+    /// <summary>
+    /// Strings that will be removed when scrubbing movie names
+    /// </summary>
+    public List<string> RemovalValues { get; set; } = DefaultRemovalValues;
+
+    private static List<string> DefaultSpaceCharacters
+        => new() { ".", "_", "(", ")", "[", "]" };
+
+    private static List<string> DefaultRemovalValues
+        => new() { "Extended", "DVDRip", "BDRip", "BRRip", "HDTV", "Xvid", @"\d{4}p", @"\d{4}", @"\d{3}p", "dvdscr", "limited", "hdrip", "x264", "r5", "bluray", "unrated", "directors cut", "AC3", "webrip", "webdl", "remastered", "YTS AG", "-EVO", "-ETRG", "AAC", "READNFO", "YTS PE", "-RARBG", "H264", "YTS.ME", "YTS.AM", "5.1", "YTS.MX" };
 }

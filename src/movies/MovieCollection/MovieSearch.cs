@@ -2,6 +2,7 @@
 using MovieCollection.Common.Interfaces;
 using MovieCollection.Common.Models;
 using MovieCollection.Configuration;
+using Movies.TmDb;
 using WVN.WinForms;
 using WVN.WinForms.Extensions;
 
@@ -19,11 +20,13 @@ public partial class MovieSearch : Form
     public void Show(AppConfiguration settings, IMovieData wrapper, string movieFolder, IWin32Window owner = null)
     {
         _settings = settings;
+        //_wrapper = new TmDbData(settings.ApiKey);
         _wrapper = wrapper;
 
-        txtMovie.Text = Helpers.ScrubMovieName(movieFolder);
+        txtMovie.Text = Helpers.ScrubMovieName(movieFolder, _settings.SpaceCharacters, _settings.RemovalValues);
         lvwMovies.Columns[0].Width = lvwMovies.ClientSize.Width;
         //DoSearch().GetAwaiter().GetResult();
+        btnSearch.Focus();
         ShowDialog(owner);
     }
 
@@ -66,44 +69,31 @@ public partial class MovieSearch : Form
     {
         ClearStatus();
         btnAccept.Enabled = false;
-        MovieDetails movie = null;
         if (lvwMovies.SelectedItems.Count > 0)
         {
-            var result = lvwMovies.SelectedItems[0].Tag as MovieSearchResult;
-            if (result != null)
+            // Initially a MovieSearchResult is stored.
+            // The first time the item is selected, the stored MovieSearchResult is replaced with a MovieDetails item.
+            if (lvwMovies.SelectedItems[0].Tag is MovieSearchResult result)
             {
-                movie = await _wrapper.GetDetails(result.Id);
-                lvwMovies.SelectedItems[0].Tag = movie;
-            }
-            movie = lvwMovies.SelectedItems[0].Tag as MovieDetails;
+                var movieDetails = await _wrapper.GetDetails(result.Id);
+                var images = await _wrapper.GetImageUrls(movieDetails);
+                movieDetails.Poster = images.Poster;
+                movieDetails.Backdrop = images.Backdrop;
 
-            if (movie is null)
+                lvwMovies.SelectedItems[0].Tag = movieDetails;
+            }
+
+            if (lvwMovies.SelectedItems[0].Tag is MovieDetails movie)
             {
-                return;
+                info.MovieDetails = movie;
+                btnAccept.Enabled = true;
             }
-
-            var images = await _wrapper.GetImageUrls(movie);
-            movie.Poster = images.Poster;
-            movie.Backdrop = images.Backdrop;
-
-            info.MovieDetails = movie;
-            btnAccept.Enabled = true;
         }
     }
 
     private void MovieData_Load(object sender, EventArgs e)
     {
-        //Size size = _settings.SearchState.Size;
-        //Point loc = _settings.SearchState.Location;
         int width = _settings.SearchResultWidth;
-        //if (size != new Size(0, 0))
-        //{
-        //    Size = size;
-        //}
-        //if (loc != new Point(0, 0))
-        //{
-        //    Location = loc;
-        //}
         this.SetWindowState(_settings.SearchState);
 
         if (width != 0)

@@ -61,7 +61,7 @@ partial class MovieSearch
         MNU.Location = new Point(0, 0);
         MNU.Name = "MNU";
         MNU.Padding = new Padding(7, 2, 0, 2);
-        MNU.Size = new Size(1149, 36);
+        MNU.Size = new Size(1149, 25);
         MNU.TabIndex = 1;
         MNU.Text = "menuStrip1";
         // 
@@ -69,34 +69,34 @@ partial class MovieSearch
         // 
         mnuFile.DropDownItems.AddRange(new ToolStripItem[] { mniFileExit });
         mnuFile.Name = "mnuFile";
-        mnuFile.Size = new Size(58, 32);
+        mnuFile.Size = new Size(39, 21);
         mnuFile.Text = "&File";
         // 
         // mniFileExit
         // 
         mniFileExit.Name = "mniFileExit";
-        mniFileExit.Size = new Size(145, 36);
+        mniFileExit.Size = new Size(96, 22);
         mniFileExit.Text = "E&xit";
         // 
         // mnuNavigate
         // 
         mnuNavigate.DropDownItems.AddRange(new ToolStripItem[] { mniNavigatePrevious, mniNavigateNext });
         mnuNavigate.Name = "mnuNavigate";
-        mnuNavigate.Size = new Size(107, 32);
+        mnuNavigate.Size = new Size(72, 21);
         mnuNavigate.Text = "&Navigate";
         // 
         // mniNavigatePrevious
         // 
         mniNavigatePrevious.Name = "mniNavigatePrevious";
         mniNavigatePrevious.ShortcutKeys = Keys.Control | Keys.P;
-        mniNavigatePrevious.Size = new Size(256, 36);
+        mniNavigatePrevious.Size = new Size(169, 22);
         mniNavigatePrevious.Text = "&Previous";
         // 
         // mniNavigateNext
         // 
         mniNavigateNext.Name = "mniNavigateNext";
         mniNavigateNext.ShortcutKeys = Keys.Control | Keys.N;
-        mniNavigateNext.Size = new Size(256, 36);
+        mniNavigateNext.Size = new Size(169, 22);
         mniNavigateNext.Text = "&Next";
         // 
         // STB
@@ -113,7 +113,7 @@ partial class MovieSearch
         // lblStatus
         // 
         lblStatus.Name = "lblStatus";
-        lblStatus.Size = new Size(1132, 15);
+        lblStatus.Size = new Size(1132, 17);
         lblStatus.Spring = true;
         lblStatus.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -122,7 +122,7 @@ partial class MovieSearch
         btnSearch.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         btnSearch.Location = new Point(1065, 34);
         btnSearch.Name = "btnSearch";
-        btnSearch.Size = new Size(83, 20);
+        btnSearch.Size = new Size(83, 25);
         btnSearch.TabIndex = 7;
         btnSearch.Text = "&Search";
         btnSearch.UseVisualStyleBackColor = true;
@@ -131,9 +131,9 @@ partial class MovieSearch
         // txtMovie
         // 
         txtMovie.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        txtMovie.Location = new Point(74, 34);
+        txtMovie.Location = new Point(95, 34);
         txtMovie.Name = "txtMovie";
-        txtMovie.Size = new Size(983, 27);
+        txtMovie.Size = new Size(962, 20);
         txtMovie.TabIndex = 6;
         // 
         // label1
@@ -141,7 +141,7 @@ partial class MovieSearch
         label1.AutoSize = true;
         label1.Location = new Point(0, 34);
         label1.Name = "label1";
-        label1.Size = new Size(101, 18);
+        label1.Size = new Size(73, 13);
         label1.TabIndex = 5;
         label1.Text = "Search text";
         // 
@@ -149,7 +149,7 @@ partial class MovieSearch
         // 
         SPLIT.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         SPLIT.FixedPanel = FixedPanel.Panel1;
-        SPLIT.Location = new Point(3, 57);
+        SPLIT.Location = new Point(3, 60);
         SPLIT.Name = "SPLIT";
         // 
         // SPLIT.Panel1
@@ -159,19 +159,19 @@ partial class MovieSearch
         // SPLIT.Panel2
         // 
         SPLIT.Panel2.Controls.Add(info);
-        SPLIT.Size = new Size(1145, 817);
+        SPLIT.Size = new Size(1145, 814);
         SPLIT.SplitterDistance = 219;
         SPLIT.TabIndex = 8;
         // 
         // lvwMovies
         // 
+        lvwMovies.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         lvwMovies.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2 });
-        lvwMovies.Dock = DockStyle.Fill;
         lvwMovies.FullRowSelect = true;
         lvwMovies.Location = new Point(0, 0);
         lvwMovies.MultiSelect = false;
         lvwMovies.Name = "lvwMovies";
-        lvwMovies.Size = new Size(219, 817);
+        lvwMovies.Size = new Size(219, 814);
         lvwMovies.TabIndex = 0;
         lvwMovies.UseCompatibleStateImageBehavior = false;
         lvwMovies.View = View.Details;
@@ -183,18 +183,19 @@ partial class MovieSearch
         // 
         // columnHeader2
         // 
-        columnHeader2.Text = "Year";
+        columnHeader2.Text = "Release date";
+        columnHeader2.Width = 100;
         // 
         // info
         // 
+        info.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         info.AutoScroll = true;
-        info.Dock = DockStyle.Fill;
         info.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
-        info.Location = new Point(0, 0);
+        info.Location = new Point(0, 18);
         info.Margin = new Padding(4);
         info.MovieDetails = null;
         info.Name = "info";
-        info.Size = new Size(922, 817);
+        info.Size = new Size(922, 796);
         info.TabIndex = 0;
         info.ImageResized += info_ImageResized;
         // 
@@ -212,7 +213,7 @@ partial class MovieSearch
         // 
         // MovieSearch
         // 
-        AutoScaleDimensions = new SizeF(10F, 18F);
+        AutoScaleDimensions = new SizeF(7F, 13F);
         AutoScaleMode = AutoScaleMode.Font;
         AutoScroll = true;
         ClientSize = new Size(1149, 923);

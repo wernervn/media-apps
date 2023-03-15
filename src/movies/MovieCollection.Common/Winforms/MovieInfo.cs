@@ -151,7 +151,7 @@ public partial class MovieInfo : UserControl
         }
     }
 
-    private void ClearImage()
+    private void ClearImages()
     {
         picPoster.Image = null;
         picBackdrop.Image = null;
@@ -173,6 +173,7 @@ public partial class MovieInfo : UserControl
 
     public void ClearAll()
     {
+        ClearImages();
         foreach (Control ctrl in Controls)
         {
             switch (ctrl)
@@ -201,7 +202,7 @@ public partial class MovieInfo : UserControl
             {
                 lblWidth.Text = string.Format("Width: {0}", img.Width);
                 lblHeight.Text = string.Format("Height: {0}", img.Height);
-                lblSize.Text = string.Format("Size: {0}", Helpers.GetSize(MovieDetails.Poster.LongLength));
+                lblSize.Text = string.Format("Size: {0}", Helpers.GetSize(MovieDetails.Poster?.LongLength ?? 0));
             }
         }
         else
@@ -211,13 +212,17 @@ public partial class MovieInfo : UserControl
             {
                 lblWidth.Text = string.Format("Width: {0}", img.Width);
                 lblHeight.Text = string.Format("Height: {0}", img.Height);
-                lblSize.Text = string.Format("Size: {0}", Helpers.GetSize(MovieDetails.Backdrop.LongLength));
+                lblSize.Text = string.Format("Size: {0}", Helpers.GetSize(MovieDetails.Backdrop?.LongLength ?? 0));
             }
         }
     }
 
     private void tabImages_TabIndexChanged(object sender, EventArgs e)
     {
+        lblWidth.Text = string.Empty;
+        lblHeight.Text = string.Empty;
+        lblSize.Text = string.Empty;
+
         ShowImageSize();
     }
 

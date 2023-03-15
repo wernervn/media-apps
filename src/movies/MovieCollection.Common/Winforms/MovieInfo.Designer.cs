@@ -74,7 +74,7 @@
             txtReleased.Margin = new Padding(4);
             txtReleased.Name = "txtReleased";
             txtReleased.ReadOnly = true;
-            txtReleased.Size = new Size(108, 30);
+            txtReleased.Size = new Size(108, 22);
             txtReleased.TabIndex = 157;
             // 
             // label17
@@ -83,7 +83,7 @@
             label17.Location = new Point(384, 4);
             label17.Margin = new Padding(4, 0, 4, 0);
             label17.Name = "label17";
-            label17.Size = new Size(94, 25);
+            label17.Size = new Size(67, 16);
             label17.TabIndex = 156;
             label17.Text = "Released";
             // 
@@ -93,7 +93,7 @@
             lblSize.Location = new Point(441, 720);
             lblSize.Margin = new Padding(4, 0, 4, 0);
             lblSize.Name = "lblSize";
-            lblSize.Size = new Size(0, 25);
+            lblSize.Size = new Size(0, 16);
             lblSize.TabIndex = 155;
             // 
             // lblHeight
@@ -102,7 +102,7 @@
             lblHeight.Location = new Point(441, 686);
             lblHeight.Margin = new Padding(4, 0, 4, 0);
             lblHeight.Name = "lblHeight";
-            lblHeight.Size = new Size(0, 25);
+            lblHeight.Size = new Size(0, 16);
             lblHeight.TabIndex = 154;
             // 
             // lblWidth
@@ -111,16 +111,16 @@
             lblWidth.Location = new Point(441, 651);
             lblWidth.Margin = new Padding(4, 0, 4, 0);
             lblWidth.Name = "lblWidth";
-            lblWidth.Size = new Size(0, 25);
+            lblWidth.Size = new Size(0, 16);
             lblWidth.TabIndex = 153;
             // 
             // lblImages
             // 
             lblImages.AutoSize = true;
-            lblImages.Location = new Point(7, 289);
+            lblImages.Location = new Point(7, 323);
             lblImages.Margin = new Padding(4, 0, 4, 0);
             lblImages.Name = "lblImages";
-            lblImages.Size = new Size(76, 25);
+            lblImages.Size = new Size(52, 16);
             lblImages.TabIndex = 151;
             lblImages.Text = "Images";
             // 
@@ -142,7 +142,7 @@
             label15.Location = new Point(3, 133);
             label15.Margin = new Padding(4, 0, 4, 0);
             label15.Name = "label15";
-            label15.Size = new Size(94, 25);
+            label15.Size = new Size(63, 16);
             label15.TabIndex = 149;
             label15.Text = "Overview";
             // 
@@ -153,7 +153,7 @@
             txtRuntime.Margin = new Padding(4);
             txtRuntime.Name = "txtRuntime";
             txtRuntime.ReadOnly = true;
-            txtRuntime.Size = new Size(108, 30);
+            txtRuntime.Size = new Size(108, 22);
             txtRuntime.TabIndex = 148;
             // 
             // label12
@@ -162,7 +162,7 @@
             label12.Location = new Point(384, 37);
             label12.Margin = new Padding(4, 0, 4, 0);
             label12.Name = "label12";
-            label12.Size = new Size(83, 25);
+            label12.Size = new Size(56, 16);
             label12.TabIndex = 147;
             label12.Text = "Runtime";
             // 
@@ -173,7 +173,7 @@
             txtURL.Margin = new Padding(4);
             txtURL.Name = "txtURL";
             txtURL.ReadOnly = true;
-            txtURL.Size = new Size(657, 30);
+            txtURL.Size = new Size(657, 22);
             txtURL.TabIndex = 146;
             // 
             // label10
@@ -182,7 +182,7 @@
             label10.Location = new Point(3, 101);
             label10.Margin = new Padding(4, 0, 4, 0);
             label10.Name = "label10";
-            label10.Size = new Size(50, 25);
+            label10.Size = new Size(34, 16);
             label10.TabIndex = 145;
             label10.Text = "URL";
             // 
@@ -193,7 +193,7 @@
             txtIMDBID.Margin = new Padding(4);
             txtIMDBID.Name = "txtIMDBID";
             txtIMDBID.ReadOnly = true;
-            txtIMDBID.Size = new Size(108, 30);
+            txtIMDBID.Size = new Size(108, 22);
             txtIMDBID.TabIndex = 144;
             // 
             // label8
@@ -202,7 +202,7 @@
             label8.Location = new Point(384, 65);
             label8.Margin = new Padding(4, 0, 4, 0);
             label8.Name = "label8";
-            label8.Size = new Size(85, 25);
+            label8.Size = new Size(56, 16);
             label8.TabIndex = 143;
             label8.Text = "IMDB ID";
             // 
@@ -213,7 +213,7 @@
             txtID.Margin = new Padding(4);
             txtID.Name = "txtID";
             txtID.ReadOnly = true;
-            txtID.Size = new Size(92, 30);
+            txtID.Size = new Size(92, 22);
             txtID.TabIndex = 142;
             // 
             // label7
@@ -222,7 +222,7 @@
             label7.Location = new Point(7, 65);
             label7.Margin = new Padding(4, 0, 4, 0);
             label7.Name = "label7";
-            label7.Size = new Size(31, 25);
+            label7.Size = new Size(20, 16);
             label7.TabIndex = 141;
             label7.Text = "ID";
             // 
@@ -233,7 +233,7 @@
             txtGenre.Margin = new Padding(4);
             txtGenre.Name = "txtGenre";
             txtGenre.ReadOnly = true;
-            txtGenre.Size = new Size(253, 30);
+            txtGenre.Size = new Size(253, 22);
             txtGenre.TabIndex = 140;
             // 
             // label6
@@ -242,7 +242,7 @@
             label6.Location = new Point(3, 37);
             label6.Margin = new Padding(4, 0, 4, 0);
             label6.Name = "label6";
-            label6.Size = new Size(66, 25);
+            label6.Size = new Size(44, 16);
             label6.TabIndex = 139;
             label6.Text = "Genre";
             // 
@@ -253,7 +253,7 @@
             txtName.Margin = new Padding(4);
             txtName.Name = "txtName";
             txtName.ReadOnly = true;
-            txtName.Size = new Size(253, 30);
+            txtName.Size = new Size(253, 22);
             txtName.TabIndex = 138;
             // 
             // label4
@@ -262,7 +262,7 @@
             label4.Location = new Point(3, 4);
             label4.Margin = new Padding(4, 0, 4, 0);
             label4.Name = "label4";
-            label4.Size = new Size(64, 25);
+            label4.Size = new Size(44, 16);
             label4.TabIndex = 137;
             label4.Text = "Name";
             // 
@@ -273,16 +273,16 @@
             txtLanguage.Margin = new Padding(4);
             txtLanguage.Name = "txtLanguage";
             txtLanguage.ReadOnly = true;
-            txtLanguage.Size = new Size(99, 30);
+            txtLanguage.Size = new Size(99, 22);
             txtLanguage.TabIndex = 136;
             // 
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new Point(593, 4);
+            label2.Location = new Point(573, 4);
             label2.Margin = new Padding(4, 0, 4, 0);
             label2.Name = "label2";
-            label2.Size = new Size(100, 25);
+            label2.Size = new Size(68, 16);
             label2.TabIndex = 135;
             label2.Text = "Language";
             // 
@@ -290,10 +290,10 @@
             // 
             chkAdult.AutoSize = true;
             chkAdult.CheckAlign = ContentAlignment.MiddleRight;
-            chkAdult.Location = new Point(597, 32);
+            chkAdult.Location = new Point(573, 33);
             chkAdult.Margin = new Padding(4);
             chkAdult.Name = "chkAdult";
-            chkAdult.Size = new Size(83, 29);
+            chkAdult.Size = new Size(56, 20);
             chkAdult.TabIndex = 134;
             chkAdult.Text = "Adult";
             chkAdult.UseVisualStyleBackColor = true;
@@ -305,7 +305,7 @@
             txtPopularity.Margin = new Padding(4);
             txtPopularity.Name = "txtPopularity";
             txtPopularity.ReadOnly = true;
-            txtPopularity.Size = new Size(99, 30);
+            txtPopularity.Size = new Size(99, 22);
             txtPopularity.TabIndex = 133;
             // 
             // label18
@@ -314,7 +314,7 @@
             label18.Location = new Point(573, 65);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
-            label18.Size = new Size(98, 25);
+            label18.Size = new Size(67, 16);
             label18.TabIndex = 132;
             label18.Text = "Popularity";
             // 
@@ -322,11 +322,11 @@
             // 
             tabImages.Controls.Add(tabPoster);
             tabImages.Controls.Add(tabBackdrop);
-            tabImages.Location = new Point(71, 293);
+            tabImages.Location = new Point(71, 323);
             tabImages.Margin = new Padding(4);
             tabImages.Name = "tabImages";
             tabImages.SelectedIndex = 0;
-            tabImages.Size = new Size(356, 452);
+            tabImages.Size = new Size(356, 422);
             tabImages.TabIndex = 158;
             tabImages.SelectedIndexChanged += tabImages_TabIndexChanged;
             tabImages.TabIndexChanged += tabImages_TabIndexChanged;
@@ -334,11 +334,11 @@
             // tabPoster
             // 
             tabPoster.Controls.Add(picPoster);
-            tabPoster.Location = new Point(4, 34);
+            tabPoster.Location = new Point(4, 25);
             tabPoster.Margin = new Padding(4);
             tabPoster.Name = "tabPoster";
             tabPoster.Padding = new Padding(4);
-            tabPoster.Size = new Size(348, 414);
+            tabPoster.Size = new Size(348, 393);
             tabPoster.TabIndex = 0;
             tabPoster.Text = "Poster";
             tabPoster.UseVisualStyleBackColor = true;
@@ -349,7 +349,7 @@
             picPoster.Location = new Point(4, 4);
             picPoster.Margin = new Padding(4);
             picPoster.Name = "picPoster";
-            picPoster.Size = new Size(340, 406);
+            picPoster.Size = new Size(340, 385);
             picPoster.SizeMode = PictureBoxSizeMode.Zoom;
             picPoster.TabIndex = 153;
             picPoster.TabStop = false;
@@ -358,11 +358,11 @@
             // tabBackdrop
             // 
             tabBackdrop.Controls.Add(picBackdrop);
-            tabBackdrop.Location = new Point(4, 34);
+            tabBackdrop.Location = new Point(4, 25);
             tabBackdrop.Margin = new Padding(4);
             tabBackdrop.Name = "tabBackdrop";
             tabBackdrop.Padding = new Padding(4);
-            tabBackdrop.Size = new Size(348, 414);
+            tabBackdrop.Size = new Size(348, 393);
             tabBackdrop.TabIndex = 1;
             tabBackdrop.Text = "Backdrop";
             tabBackdrop.UseVisualStyleBackColor = true;
@@ -373,7 +373,7 @@
             picBackdrop.Location = new Point(4, 4);
             picBackdrop.Margin = new Padding(4);
             picBackdrop.Name = "picBackdrop";
-            picBackdrop.Size = new Size(340, 406);
+            picBackdrop.Size = new Size(340, 385);
             picBackdrop.SizeMode = PictureBoxSizeMode.Zoom;
             picBackdrop.TabIndex = 154;
             picBackdrop.TabStop = false;
@@ -385,23 +385,23 @@
             label3.Location = new Point(7, 258);
             label3.Margin = new Padding(4, 0, 4, 0);
             label3.Name = "label3";
-            label3.Size = new Size(82, 25);
+            label3.Size = new Size(56, 16);
             label3.TabIndex = 160;
             label3.Text = "Tag line";
             // 
             // txtTagLine
             // 
             txtTagLine.BackColor = SystemColors.Window;
-            txtTagLine.Location = new Point(116, 258);
+            txtTagLine.Location = new Point(117, 258);
             txtTagLine.Margin = new Padding(4);
             txtTagLine.Name = "txtTagLine";
             txtTagLine.ReadOnly = true;
-            txtTagLine.Size = new Size(657, 30);
+            txtTagLine.Size = new Size(657, 22);
             txtTagLine.TabIndex = 161;
             // 
             // MovieInfo
             // 
-            AutoScaleDimensions = new SizeF(12F, 25F);
+            AutoScaleDimensions = new SizeF(8F, 16F);
             AutoScaleMode = AutoScaleMode.Font;
             AutoScroll = true;
             Controls.Add(txtTagLine);

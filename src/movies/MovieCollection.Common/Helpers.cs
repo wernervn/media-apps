@@ -43,10 +43,8 @@ public static class Helpers
         }
     }
 
-    public static string ScrubMovieName(string name)
+    public static string ScrubMovieName(string name, List<string> spaceChars, List<string> removals)
     {
-        var spaceChars = new List<string> { ".", "_", "(", ")", "[", "]" };
-        var removals = new List<string> { "Extended", "DVDRip", "BDRip", "BRRip", "HDTV", "Xvid", @"\d{4}p", @"\d{4}", @"\d{3}p", "dvdscr", "limited", "hdrip", "x264", "r5", "bluray", "unrated", "directors cut", "AC3", "webrip", "webdl", "remastered", "YTS AG", "-EVO", "-ETRG", "AAC", "READNFO", "YTS PE", "-RARBG", "H264", "YTS.ME", "YTS.AM" };
         name = name.ReplaceAllChars(spaceChars, " ");
         name = name.RegExReplaceAllChars(removals, string.Empty, true);
         return name.Trim();

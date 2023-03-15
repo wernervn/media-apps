@@ -1,4 +1,5 @@
-﻿using MovieCollection.Common.Models;
+﻿using MovieCollection.Common;
+using MovieCollection.Common.Models;
 using WVN.TmDb.Api.Models;
 using WVN.TmDb.Api.Wrapper;
 using Models = MovieCollection.Common.Models;
@@ -23,7 +24,7 @@ internal class TmDbWrapperHelper
                                 {
                                     Id = movie.Id,
                                     Title = movie.Title,
-                                    ReleaseDate = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString() : string.Empty }
+                                    ReleaseDate = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString(Constants.DateFormat) : string.Empty }
                                 );
     }
 
@@ -37,12 +38,12 @@ internal class TmDbWrapperHelper
             Genre = movie.Genres.Count > 0 ? movie.Genres[0].Name : string.Empty,
             Id = movie.Id,
             ImdbId = movie.ImdbId,
-            Language = SpokenLanguageName(movie),// = movie.OriginalLanguage,
+            Language = SpokenLanguageName(movie),
             Title = movie.Title,
             TagLine = movie.Tagline,
             Overview = movie.Overview,
             Popularity = movie.VoteAverage.ToString(),
-            Released = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString() : string.Empty,
+            Released = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString(Constants.DateFormat) : string.Empty,
             Runtime = movie.Runtime,
             PosterPath = movie.PosterPath,
             BackdropPath = movie.BackdropPath,
