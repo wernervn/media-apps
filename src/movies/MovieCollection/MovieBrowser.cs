@@ -1,4 +1,5 @@
-﻿using MovieCollection.Common;
+﻿using System.Reflection;
+using MovieCollection.Common;
 using MovieCollection.Common.Interfaces;
 using MovieCollection.Common.Models;
 using MovieCollection.Configuration;
@@ -13,7 +14,7 @@ namespace MovieCollection;
 
 public partial class MovieBrowser : Form
 {
-    private static readonly AppSettings _settings = AppSettingsManager.GetSettings<AppSettings>(options: SerializerOptions.Default);
+    private readonly AppSettings _settings;
 
     private enum FileFilter
     {
@@ -29,12 +30,16 @@ public partial class MovieBrowser : Form
     private const string POSTER_KEY = "poster";
     private const string MOVIE_TEXT = "movie.txt";
     private const string XML_KEY = "Xml";
-    private readonly IMovieData _wrapper = new TmDbData(_settings.AppConfiguration.ApiKey);
+    private readonly IMovieData _wrapper;
     private FileFilter _fileFilter;
+    private Assembly _executingAssembly = Assembly.GetExecutingAssembly();
 
     public MovieBrowser()
     {
         InitializeComponent();
+
+        _settings = AppSettingsManager.GetSettings<AppSettings>(options: SerializerOptions.Default);
+        _wrapper = new TmDbData(_settings.AppConfiguration.ApiKey);
     }
 
     #region MNU clicks
@@ -84,17 +89,14 @@ public partial class MovieBrowser : Form
 
     private async void mniMovieDataSearch_Click(object sender, EventArgs e)
     {
-        using (var frm = new MovieData())
+        using var frm = new MovieSearch();
+        var movieFolder = tvwFolder.SelectedNode.Tag.ToString();
+        var movieName = new DirectoryInfo(tvwFolder.SelectedNode.Tag.ToString()).Name;
+        frm.Show(_settings.AppConfiguration, _wrapper, movieName, this);
+        if (frm.DialogResult == DialogResult.OK)
         {
-            var movieFolder = tvwFolder.SelectedNode.Tag.ToString();
-            var movieName = new DirectoryInfo(tvwFolder.SelectedNode.Tag.ToString()).Name;
-            frm.Show(_settings.AppConfiguration, _wrapper, movieName, this);
-            if (frm.DialogResult == DialogResult.OK)
-            {
-                //TODO: update settings from Search for for WindowState and Splitter width
-                await PersistMovieInfoAsync(movieFolder, frm.SelectedMovie);
-                await FixFolderNameAsync();
-            }
+            await PersistMovieInfoAsync(movieFolder, frm.SelectedMovie);
+            await FixFolderNameAsync();
         }
     }
 
@@ -183,25 +185,13 @@ public partial class MovieBrowser : Form
         await SetFilterAsync(FileFilter.AllFiles);
         if (_filterActive)
         {
-            //btnSplitSearch.Image = Properties.Resources.Filter;
+            btnSplitSearch.Image = GetImageResource(Images.Filter);
             btnSplitSearch.ToolTipText = "Filter movies";
         }
 
         lvwFiles.SmallImageList = IMG;
 
-        if (_settings.AppConfiguration.WindowState.Size != new Size(0, 0))
-        {
-            Size = _settings.AppConfiguration.WindowState.Size;
-        }
-
-        if (_settings.AppConfiguration.WindowState.Location != new Point(0, 0))
-        {
-            var loc = _settings.AppConfiguration.WindowState.Location;
-            if (loc.X >= 0 && loc.Y >= 0)
-            {
-                Location = _settings.AppConfiguration.WindowState.Location;
-            }
-        }
+        this.SetWindowState(_settings.AppConfiguration.WindowState);
 
         if (_settings.AppConfiguration.SplitterDistance > 0)
         {
@@ -217,8 +207,6 @@ public partial class MovieBrowser : Form
 
     private void MovieBrowser_FormClosing(object sender, FormClosingEventArgs e)
     {
-        _settings.AppConfiguration.WindowState.Size = Size;
-        _settings.AppConfiguration.WindowState.Location = Location;
         _settings.AppConfiguration.SplitterDistance = SPLIT.SplitterDistance;
         _settings.AppConfiguration.WindowState = this.GetWindowState();
         AppSettingsManager.SaveSettings(_settings, options: SerializerOptions.Default);
@@ -263,7 +251,7 @@ public partial class MovieBrowser : Form
         if (node.Nodes.Count == 1 && node.Nodes[0].Text == "dummy" && e.Node.Nodes[0].Tag == null)
         {
             e.Node.Nodes.Clear();
-            tvwFolder.LoadFolders(node, node.Tag.ToString(), MovieCollection.Common.Constants.FOLDER_KEY);
+            tvwFolder.LoadFolders(node, node.Tag.ToString(), Constants.FOLDER_KEY);
         }
     }
 
@@ -323,7 +311,7 @@ public partial class MovieBrowser : Form
     private void LoadFolders(string path)
     {
         lvwFiles.Items.Clear();
-        var count = tvwFolder.LoadFolders(path, MovieCollection.Common.Constants.FOLDER_KEY);
+        var count = tvwFolder.LoadFolders(path, Constants.FOLDER_KEY);
         _settings.AppConfiguration.LastPath = path;
         lblStatus.Text = string.Format("Root folder contains {0} movie folder(s)", count);
         if (tvwFolder.Nodes[0].Nodes.Count > 0)
@@ -335,7 +323,7 @@ public partial class MovieBrowser : Form
     private void LoadFolders(string path, string filter)
     {
         lvwFiles.Items.Clear();
-        var count = tvwFolder.LoadFolders(path, MovieCollection.Common.Constants.FOLDER_KEY, filter);
+        var count = tvwFolder.LoadFolders(path, Constants.FOLDER_KEY, filter);
         _settings.AppConfiguration.LastPath = path;
         lblStatus.Text = string.Format("Root folder contains {0} movie folder(s)", count);
     }
@@ -447,7 +435,7 @@ public partial class MovieBrowser : Form
 
     private async Task PersistMovieInfoAsync(string path, MovieDetails movie)
     {
-        await MovieCollection.Common.DB.MovieFile.WriteFile(path, movie);
+        await Common.DB.MovieFile.WriteFile(path, movie);
         await LoadFilesByFilterAsync(path);
     }
 
@@ -631,7 +619,7 @@ public partial class MovieBrowser : Form
     }
 
     private async Task<MovieDetails> GetMovieDetailsAsync(string path)
-        => await MovieCollection.Common.DB.MovieFile.GetMovieDetailsAsync(path);
+        => await Common.DB.MovieFile.GetMovieDetailsAsync(path);
 
     private async Task ShowMovieInfoAsync()
     {
@@ -662,7 +650,7 @@ public partial class MovieBrowser : Form
             var movie = await GetMovieDetailsAsync(archivePath);
             using (var frm = new MovieDetailsView())
             {
-                frm.Show(movie, this);
+                frm.Show(_settings.AppConfiguration, movie, this);
             }
         }
         else
@@ -875,18 +863,12 @@ public partial class MovieBrowser : Form
 
     private Image GetFilterImage(FileFilter filter)
     {
-        //switch (filter)
-        //{
-        //    case FileFilter.AllFiles:
-        //        return Properties.Resources.AllFiles;
-        //    case FileFilter.MoviesOnly:
-        //        return Properties.Resources.Video;
-        //    default:
-        //        return Properties.Resources.AllFiles;
-        //}
-
-        //TEMP CODE:
-        return null;
+        return filter switch
+        {
+            FileFilter.AllFiles => GetImageResource(Images.AllFiles),
+            FileFilter.MoviesOnly => GetImageResource(Images.Video),
+            _ => GetImageResource(Images.AllFiles),
+        };
     }
 
     #endregion View filters
@@ -956,7 +938,7 @@ public partial class MovieBrowser : Form
         _filterActive = true;
         if (!string.IsNullOrWhiteSpace(txtSearch.Text))
         {
-            //btnSplitSearch.Image = Properties.Resources.Filter;
+            btnSplitSearch.Image = GetImageResource(Images.Filter);
             lvwFiles.Items.Clear();
             PIC.Image = null;
             picBackdrop.Image = null;
@@ -964,14 +946,14 @@ public partial class MovieBrowser : Form
             txtMovieScore.Text = string.Empty;
             LoadFolders(_settings.AppConfiguration.LastPath, txtSearch.Text);
         }
-        //btnSplitSearch.Image = Properties.Resources.Filter;
+        btnSplitSearch.Image = GetImageResource(Images.Filter);
         btnSplitSearch.ToolTipText = "Filter movies";
     }
 
     private void ClearMovieFilter()
     {
         _filterActive = false;
-        //btnSplitSearch.Image = Properties.Resources.Clear;
+        btnSplitSearch.Image = GetImageResource(Images.Clear);
         btnSplitSearch.ToolTipText = "Remove filter";
         txtSearch.Text = string.Empty;
         LoadFolders(_settings.AppConfiguration.LastPath);
@@ -1019,4 +1001,7 @@ public partial class MovieBrowser : Form
             }
         }
     }
+
+    private Image GetImageResource(Images image)
+        => _executingAssembly.GetResourceImage($"MovieCollection.Resources.{image}.png");
 }

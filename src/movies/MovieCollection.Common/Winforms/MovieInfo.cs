@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.Drawing;
-using System.IO;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Diagnostics;
 using MovieCollection.Common.Models;
 
 namespace MovieCollection.Common.Winforms;
@@ -11,9 +6,9 @@ namespace MovieCollection.Common.Winforms;
 public partial class MovieInfo : UserControl
 {
     public event EventHandler<ImageResizedEventArgs> ImageResized;
-    protected void OnImageResized(long originalSize, long newSize)
+    protected void OnImageResized(string imageName, long originalSize, long newSize)
     {
-        ImageResized?.Invoke(this, new ImageResizedEventArgs(originalSize, newSize));
+        ImageResized?.Invoke(this, new ImageResizedEventArgs(imageName, originalSize, newSize));
     }
 
     public MovieInfo()
@@ -21,36 +16,102 @@ public partial class MovieInfo : UserControl
         InitializeComponent();
     }
 
-    private MovieImageInfo _imageInfo;
+    #region Unused for now
 
-    public MovieImageInfo ImageInfo
-    {
-        get { return _imageInfo; }
-        set
-        {
-            _imageInfo = value;
-            ShowImageInfo();
-        }
-    }
+    //private MovieImageInfo _imageInfo;
 
-    private void ShowImageInfo()
-    {
-        if (_imageInfo != null)
-        {
-            cboBackdrops.DataSource = _imageInfo.BackDropUrls;
-            cboPosters.DataSource = _imageInfo.PosterUrls;
+    //public MovieImageInfo ImageInfo
+    //{
+    //    get { return _imageInfo; }
+    //    set
+    //    {
+    //        _imageInfo = value;
+    //        ShowImageInfo();
+    //    }
+    //}
 
-            if (cboPosters.Items.Count > 0)
-            {
-                cboPosters.SelectedIndex = cboPosters.Items.Count - 1;
-            }
+    //private void ShowImageInfo()
+    //{
+    //    if (_imageInfo != null)
+    //    {
+    //        cboBackdrops.DataSource = _imageInfo.BackDropUrls;
+    //        cboPosters.DataSource = _imageInfo.PosterUrls;
 
-            if (cboBackdrops.Items.Count > 0)
-            {
-                cboBackdrops.SelectedIndex = cboBackdrops.Items.Count - 1;
-            }
-        }
-    }
+    //        if (cboPosters.Items.Count > 0)
+    //        {
+    //            cboPosters.SelectedIndex = cboPosters.Items.Count - 1;
+    //        }
+
+    //        if (cboBackdrops.Items.Count > 0)
+    //        {
+    //            cboBackdrops.SelectedIndex = cboBackdrops.Items.Count - 1;
+    //        }
+    //    }
+    //}
+
+    //private async void btnGetPoster_Click(object sender, EventArgs e)
+    //{
+    //    await GetPoster();
+    //}
+
+    //private async Task GetPoster()
+    //{
+    //    byte[] poster = await Helpers.DownloadImage(cboPosters.Text);
+    //    if (poster != null)
+    //    {
+    //        MovieDetails.Poster = poster;
+    //        Image checkImage = MovieDetails.PosterImage;
+    //        //desire max 1000 x 1500
+    //        var w = Math.Min(checkImage.Width, 1000);
+    //        var h = Math.Min(checkImage.Height, 1500);
+    //        byte[] resized = ResizedImage(poster, w, h);
+    //        if (poster.LongLength > resized.LongLength)
+    //        {
+    //            OnImageResized(poster.Length, resized.Length);
+    //            MovieDetails.Poster = resized;
+    //        }
+    //        picPoster.Image = MovieDetails.PosterImage;
+    //        ShowImageSize();
+    //    }
+    //}
+
+    //private async void btnGetBackdrop_Click(object sender, EventArgs e)
+    //{
+    //    await GetBackdrop();
+    //}
+
+    //private async Task GetBackdrop()
+    //{
+    //    byte[] backdrop = await Helpers.DownloadImage(cboBackdrops.Text);
+    //    if (backdrop != null)
+    //    {
+    //        MovieDetails.Backdrop = backdrop;
+    //        Image checkImage = MovieDetails.BackdropImage;
+    //        //desire max 1500 x 1000
+    //        var w = Math.Min(checkImage.Width, 1500);
+    //        var h = Math.Min(checkImage.Height, 1000);
+    //        byte[] resized = ResizedImage(backdrop, w, h);
+    //        if (backdrop.LongLength > resized.LongLength)
+    //        {
+    //            OnImageResized(backdrop.Length, resized.Length);
+    //            MovieDetails.Backdrop = resized;
+    //        }
+    //        picBackdrop.Image = MovieDetails.BackdropImage;
+    //        ShowImageSize();
+    //    }
+    //}
+
+    //private async void cboPosters_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    await GetPoster();
+    //}
+
+    //private async void cboBackdrops_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    await GetBackdrop();
+    //}
+
+    #endregion Unused for now
 
     private MovieDetails _movieDetails;
     public MovieDetails MovieDetails
@@ -85,16 +146,8 @@ public partial class MovieInfo : UserControl
             txtReleased.Text = MovieDetails.Released;
             txtTagLine.Text = MovieDetails.TagLine;
 
-            Image img = MovieDetails.PosterImage;
-            picPoster.Image = img;
-            picBackdrop.Image = MovieDetails.BackdropImage;
-
-            if (img != null)
-            {
-                lblWidth.Text = img.Width.ToString();
-                lblHeight.Text = img.Height.ToString();
-                lblSize.Text = MovieDetails.Poster != null ? string.Format("Size: {0}", Helpers.GetSize(MovieDetails.Poster.LongLength)) : "0 bytes";
-            }
+            SetResizedPoster(MovieDetails.Poster);
+            SetResizedBackdrop(MovieDetails.Backdrop);
         }
     }
 
@@ -122,68 +175,20 @@ public partial class MovieInfo : UserControl
     {
         foreach (Control ctrl in Controls)
         {
-            if (ctrl is TextBox)
-                ctrl.Text = string.Empty;
-            else if (ctrl is CheckBox)
-                ((CheckBox)ctrl).Checked = false;
-            else if (ctrl is PictureBox)
-                ((PictureBox)ctrl).Image = null;
-            else
+            switch (ctrl)
             {
-                //pass
+                case TextBox txt:
+                    txt.Text = string.Empty;
+                    break;
+                case CheckBox chk:
+                    chk.Checked = false;
+                    break;
+                case PictureBox pic:
+                    pic.Image = null;
+                    break;
+                default:
+                    break;
             }
-        }
-    }
-
-    private async void btnGetPoster_Click(object sender, EventArgs e)
-    {
-        await GetPoster();
-    }
-
-    private async Task GetPoster()
-    {
-        byte[] poster = await Helpers.DownloadImage(cboPosters.Text);
-        if (poster != null)
-        {
-            MovieDetails.Poster = poster;
-            Image checkImage = MovieDetails.PosterImage;
-            //desire max 1000 x 1500
-            var w = Math.Min(checkImage.Width, 1000);
-            var h = Math.Min(checkImage.Height, 1500);
-            byte[] resized = ResizedImage(poster, w, h);
-            if (poster.LongLength > resized.LongLength)
-            {
-                OnImageResized(poster.Length, resized.Length);
-                MovieDetails.Poster = resized;
-            }
-            picPoster.Image = MovieDetails.PosterImage;
-            ShowImageSize();
-        }
-    }
-
-    private async void btnGetBackdrop_Click(object sender, EventArgs e)
-    {
-        await GetBackdrop();
-    }
-
-    private async Task GetBackdrop()
-    {
-        byte[] backdrop = await Helpers.DownloadImage(cboBackdrops.Text);
-        if (backdrop != null)
-        {
-            MovieDetails.Backdrop = backdrop;
-            Image checkImage = MovieDetails.BackdropImage;
-            //desire max 1500 x 1000
-            var w = Math.Min(checkImage.Width, 1500);
-            var h = Math.Min(checkImage.Height, 1000);
-            byte[] resized = ResizedImage(backdrop, w, h);
-            if (backdrop.LongLength > resized.LongLength)
-            {
-                OnImageResized(backdrop.Length, resized.Length);
-                MovieDetails.Backdrop = resized;
-            }
-            picBackdrop.Image = MovieDetails.BackdropImage;
-            ShowImageSize();
         }
     }
 
@@ -239,34 +244,60 @@ public partial class MovieInfo : UserControl
         Helpers.Launch(tempFile);
     }
 
-    public void ShowImageInfo(bool show)
-    {
-        grpImageData.Visible = show;
-    }
-
-    private byte[] ResizedImage(byte[] data, int width, int height)
-    {
-        byte[] resized = Helpers.ResizeImage(data, width, height);
-        return resized;
-    }
-
     public void HideAllImageControls()
     {
         lblImages.Visible = false;
         tabImages.Visible = false;
-        grpImageData.Visible = false;
-        lblWidth.Visible=false;
+        lblWidth.Visible = false;
         lblHeight.Visible = false;
         lblSize.Visible = false;
     }
 
-    private async void cboPosters_SelectedIndexChanged(object sender, EventArgs e)
+    private void SetResizedPoster(byte[] poster)
     {
-        await GetPoster();
+        if (poster != null)
+        {
+            MovieDetails.Poster = poster;
+            Image checkImage = MovieDetails.PosterImage;
+            //desire max 1000 x 1500 Ratio = 2:3
+            var w = Math.Min(checkImage.Width, 1000);
+            var h = Math.Min(checkImage.Height, 1500);
+            byte[] resized = ResizedImage(poster, w, h);
+            if (poster.LongLength > resized.LongLength)
+            {
+                OnImageResized(Constants.Poster, poster.Length, resized.Length);
+                MovieDetails.Poster = resized;
+            }
+            picPoster.Image = MovieDetails.PosterImage;
+            ShowImageSize();
+        }
     }
 
-    private async void cboBackdrops_SelectedIndexChanged(object sender, EventArgs e)
+    private void SetResizedBackdrop(byte[] backdrop)
     {
-        await GetBackdrop();
+        if (backdrop != null)
+        {
+            MovieDetails.Backdrop = backdrop;
+            Image checkImage = MovieDetails.BackdropImage;
+            //calculate ratio
+            var w = Math.Min(checkImage.Width, 1000);
+            var r = w / (decimal)checkImage.Width;
+            var h = decimal.ToInt32(checkImage.Height * r);
+
+            byte[] resized = ResizedImage(backdrop, w, h);
+            if (backdrop.LongLength > resized.LongLength)
+            {
+                OnImageResized(Constants.Backdrop, backdrop.Length, resized.Length);
+                MovieDetails.Backdrop = resized;
+            }
+            picBackdrop.Image = MovieDetails.BackdropImage;
+            ShowImageSize();
+        }
+    }
+
+    private static byte[] ResizedImage(byte[] data, int width, int height)
+    {
+        byte[] resized = Helpers.ResizeImage(data, width, height);
+        return resized;
     }
 }

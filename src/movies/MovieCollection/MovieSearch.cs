@@ -2,15 +2,16 @@
 using MovieCollection.Common.Interfaces;
 using MovieCollection.Common.Models;
 using MovieCollection.Configuration;
+using WVN.WinForms;
 using WVN.WinForms.Extensions;
 
 namespace MovieCollection;
-public partial class MovieData : Form
+public partial class MovieSearch : Form
 {
     private IMovieData _wrapper;
-    internal AppConfiguration _settings;
+    private AppConfiguration _settings;
 
-    public MovieData()
+    public MovieSearch()
     {
         InitializeComponent();
     }
@@ -19,9 +20,10 @@ public partial class MovieData : Form
     {
         _settings = settings;
         _wrapper = wrapper;
+
         txtMovie.Text = Helpers.ScrubMovieName(movieFolder);
         lvwMovies.Columns[0].Width = lvwMovies.ClientSize.Width;
-        DoSearch().GetAwaiter().GetResult();
+        //DoSearch().GetAwaiter().GetResult();
         ShowDialog(owner);
     }
 
@@ -50,13 +52,9 @@ public partial class MovieData : Form
             item.SubItems.Add(movie.ReleaseDate);
             item.Tag = movie;
         });
+
         lvwMovies.ResizeColumnsAll();
         lvwMovies.EndUpdate();
-
-        //if (_settings.AutoSelectSearchResult && result.Count == 1)
-        //{
-        //    lvwMovies.Items[0].Selected = true;
-        //}
 
         if (result.Count > 0)
         {
@@ -78,29 +76,36 @@ public partial class MovieData : Form
                 lvwMovies.SelectedItems[0].Tag = movie;
             }
             movie = lvwMovies.SelectedItems[0].Tag as MovieDetails;
-            var images = await _wrapper.GetImageUrls(movie);
-            if (movie != null)
+
+            if (movie is null)
             {
-                info.MovieDetails = movie;
-                info.ImageInfo = new(); //TODO:
-                btnAccept.Enabled = true;
+                return;
             }
+
+            var images = await _wrapper.GetImageUrls(movie);
+            movie.Poster = images.Poster;
+            movie.Backdrop = images.Backdrop;
+
+            info.MovieDetails = movie;
+            btnAccept.Enabled = true;
         }
     }
 
     private void MovieData_Load(object sender, EventArgs e)
     {
-        Size size = _settings.SearchState.Size;
-        Point loc = _settings.SearchState.Location;
+        //Size size = _settings.SearchState.Size;
+        //Point loc = _settings.SearchState.Location;
         int width = _settings.SearchResultWidth;
-        if (size != new Size(0, 0))
-        {
-            Size = size;
-        }
-        if (loc != new Point(0, 0))
-        {
-            Location = loc;
-        }
+        //if (size != new Size(0, 0))
+        //{
+        //    Size = size;
+        //}
+        //if (loc != new Point(0, 0))
+        //{
+        //    Location = loc;
+        //}
+        this.SetWindowState(_settings.SearchState);
+
         if (width != 0)
         {
             SPLIT.SplitterDistance = width;

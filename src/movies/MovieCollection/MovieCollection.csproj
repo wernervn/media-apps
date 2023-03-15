@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\common\MediaApps.Common\MediaApps.Common.csproj" />
     <ProjectReference Include="..\Movies.TmDb\Movies.TmDb.csproj" />
   </ItemGroup>
 

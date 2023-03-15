@@ -37,11 +37,11 @@ internal class TmDbWrapperHelper
             Genre = movie.Genres.Count > 0 ? movie.Genres[0].Name : string.Empty,
             Id = movie.Id,
             ImdbId = movie.ImdbId,
-            Language = movie.SpokenLanguages.Count > 0 ? movie.SpokenLanguages[0].Name : string.Empty,
+            Language = SpokenLanguageName(movie),// = movie.OriginalLanguage,
             Title = movie.Title,
             TagLine = movie.Tagline,
             Overview = movie.Overview,
-            Popularity = movie.VoteAverage.ToString(),// Math.Round(info.popularity, 1).ToString(),
+            Popularity = movie.VoteAverage.ToString(),
             Released = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString() : string.Empty,
             Runtime = movie.Runtime,
             PosterPath = movie.PosterPath,
@@ -55,6 +55,12 @@ internal class TmDbWrapperHelper
         var movie = new Movie { PosterPath = movieDetails.PosterPath, BackdropPath = movieDetails.BackdropPath };
         var images =  await _wrapper.DownloadImages(movie);
         return new Models.MovieImages() { Backdrop = images.BackdropData, Poster = images.PosterData };
+    }
+
+    private static string SpokenLanguageName(Movie movie)
+    {
+        var found = movie.SpokenLanguages.Find(lang => lang.Iso639_1 == movie.OriginalLanguage);
+        return found?.EnglishName ?? movie.OriginalLanguage;
     }
 
     private static string HomePage(long tmdbId, string url)

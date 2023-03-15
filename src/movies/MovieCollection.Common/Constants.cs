@@ -8,4 +8,7 @@ public static class Constants
 
     public static List<string> IMAGE_VALUES { get; } = new() { ".jpg", ".jpeg", ".bmp", ".ico", ".png", ".gif" };
     public static List<string> MOVIE_VALUES { get; } = new() { "*.avi", "*.wmv", "*.mkv", "*.ifo", "*.vob", "*.mp4" };
+
+    public const string Poster = nameof(Poster);
+    public const string Backdrop = nameof(Backdrop);
 }

@@ -1,10 +1,12 @@
 ﻿using MovieCollection.Common.Models;
+using MovieCollection.Configuration;
+using WVN.WinForms.Extensions;
 
 namespace MovieCollection;
 
 public partial class MovieDetailsView : Form
 {
-    //private Properties.Settings _settings = Properties.Settings.Default;
+    private AppConfiguration _settings;
 
     public MovieDetailsView()
     {
@@ -12,26 +14,22 @@ public partial class MovieDetailsView : Form
     }
 
     private MovieDetails _movie;
-    public void Show(MovieDetails movie, IWin32Window owner = null)
+
+    public void Show(AppConfiguration settings, MovieDetails movie, IWin32Window owner = null)
     {
+        _settings = settings;
         _movie = movie;
         movieInfo.MovieDetails = _movie;
-        movieInfo.ShowImageInfo(false);
         ShowDialog(owner);
     }
 
     private void MovieDetailsView_Load(object sender, EventArgs e)
     {
-        //Size size = _settings.DetailsSize;
-        //if (size.Width > 0 && size.Height > 0)
-        //{
-        //    Size = size;
-        //}
+        this.SetWindowState(_settings.DetailsState);
     }
 
     private void MovieDetailsView_FormClosing(object sender, FormClosingEventArgs e)
     {
-        //_settings.DetailsSize = Size;
-        //_settings.Save();
+        _settings.DetailsState = this.GetWindowState();
     }
 }
