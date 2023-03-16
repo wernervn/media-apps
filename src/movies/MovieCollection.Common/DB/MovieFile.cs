@@ -12,6 +12,7 @@ public static class MovieFile
         string dbPath = Path.Combine(folderPath, Constants.MOVIE_DATA);
         await CreateDatabase(dbPath);
         await PopulateDatabase(dbPath, movieInfo);
+        await SqliteData.VacuumDB(dbPath);
     }
 
     private static async Task CreateDatabase(string path)

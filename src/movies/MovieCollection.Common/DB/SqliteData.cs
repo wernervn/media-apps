@@ -8,28 +8,22 @@ internal static class SqliteData
 
     public static async Task ExecuteCommandAsync(string dbPath, string sql)
     {
-        using (var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false))
-        {
-            await cn.ExecuteAsync(sql).ConfigureAwait(false);
-        }
+        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
+        await cn.ExecuteAsync(sql).ConfigureAwait(false);
     }
 
     public static async Task ExecuteCommandAsync(string dbPath, string sql, Dictionary<string, object> parameters)
     {
-        using (var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false))
-        {
-            await cn.ExecuteAsync(sql, new DynamicParameters(parameters)).ConfigureAwait(false);
-        }
+        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
+        await cn.ExecuteAsync(sql, new DynamicParameters(parameters)).ConfigureAwait(false);
     }
 
     public static async Task ExecuteCommandsAsync(string dbPath, IEnumerable<string> sqlStatements)
     {
-        using (var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false))
+        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
+        foreach (var sql in sqlStatements)
         {
-            foreach (var sql in sqlStatements)
-            {
-                await cn.ExecuteAsync(sql).ConfigureAwait(false);
-            }
+            await cn.ExecuteAsync(sql).ConfigureAwait(false);
         }
     }
 
@@ -40,7 +34,6 @@ internal static class SqliteData
         where TEntity : class, new()
     {
         using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
-
         return await cn.QuerySingleOrDefaultAsync<TEntity>(sql).ConfigureAwait(false);
     }
 
@@ -52,11 +45,21 @@ internal static class SqliteData
     }
     #endregion Query
 
+    #region Vacuum DB
+    public static async Task VacuumDB(string dbPath)
+    {
+        using var cn = await GetConnectionAsync(dbPath).ConfigureAwait(false);
+        cn.Execute("VACUUM");
+    }
+    #endregion
+
     #region Helpers
 
     private static async Task<SqliteConnection> GetConnectionAsync(string path)
     {
-        var cn = new SqliteConnection(string.Format("Data Source={0}", path));
+        //Pooling=false prevents file from being locked. Can also use SqliteConnection.ClearPool(connection)
+        // See: https://learn.microsoft.com/en-us/ef/core/what-is-new/ef-core-6.0/breaking-changes#connection-pool
+        var cn = new SqliteConnection($"Data Source={path};Pooling=false");
         await cn.OpenAsync().ConfigureAwait(false);
         return cn;
     }

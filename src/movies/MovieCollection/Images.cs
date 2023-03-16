@@ -6,7 +6,7 @@ public partial class MovieBrowser
     {
         AllFiles,
         Clear,
-        eyes,
+        Eyes,
         Filter,
         Poster,
         SplitMovie,

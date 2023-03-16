@@ -40,7 +40,28 @@ public partial class MovieBrowser : Form
 
         _settings = AppSettingsManager.GetSettings<AppSettings>(options: SerializerOptions.Default);
         _wrapper = new TmDbData(_settings.AppConfiguration.ApiKey);
+
+        SetResourceImages();
     }
+
+    #region Set images from resources
+    private void SetResourceImages()
+    {
+        mniViewWithMovies.Image = GetImageResource(Images.Video);
+        mniViewWatched.Image = GetImageResource(Images.Eyes);
+        mniViewPosters.Image = GetImageResource(Images.Poster);
+        foldersWithXMLToolStripMenuItem.Image = GetImageResource(Images.Xml);
+        foldersWithSplitMoviesToolStripMenuItem.Image = GetImageResource(Images.SplitMovie);
+        mniMede8erWatched.Image = GetImageResource(Images.Eyes);
+        mniMede8erCreatePoster.Image = GetImageResource(Images.Poster);
+        splitAllFiles.Image = GetImageResource(Images.AllFiles);
+        splitMoviesOnly.Image = GetImageResource(Images.Video);
+        btnMakePoster.Image = GetImageResource(Images.Poster);
+        searchDoSearch.Image = GetImageResource(Images.Filter);
+        searchClearSearch.Image = GetImageResource(Images.Clear);
+    }
+    #endregion Set images from resources
+
 
     #region MNU clicks
     private void mniFileExit_Click(object sender, EventArgs e)
@@ -96,7 +117,7 @@ public partial class MovieBrowser : Form
         if (frm.DialogResult == DialogResult.OK)
         {
             await PersistMovieInfoAsync(movieFolder, frm.SelectedMovie);
-            await FixFolderNameAsync();
+            FixFolderNameAsync(frm.SelectedMovie);
         }
     }
 
@@ -139,6 +160,7 @@ public partial class MovieBrowser : Form
         Helpers.Launch(exe, path);
     }
 
+    [Obsolete]
     private void mniMede8erWatched_Click(object sender, EventArgs e)
     {
         if (tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode())
@@ -147,19 +169,12 @@ public partial class MovieBrowser : Form
         }
     }
 
+    [Obsolete]
     private async void mniMede8erCreatePoster_Click(object sender, EventArgs e)
     {
         if (tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode())
         {
             await CreatePosterAsync();
-        }
-    }
-
-    private async void mniMede8erFixFolder_Click(object sender, EventArgs e)
-    {
-        if (tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode())
-        {
-            await FixFolderNameAsync();
         }
     }
 
@@ -764,7 +779,7 @@ public partial class MovieBrowser : Form
     /// <summary>
     /// renames the current folder name to MOVIE_NAME (YEAR)
     /// </summary>
-    private async Task FixFolderNameAsync()
+    private void FixFolderNameAsync(MovieDetails movie)
     {
         if (!Directory.Exists(tvwFolder.SelectedNode.Tag.ToString()))
         {
@@ -773,39 +788,35 @@ public partial class MovieBrowser : Form
         }
 
         var movieFile = CurrentMovieInfoFile();
-        if (File.Exists(movieFile))
+        if (movie.Poster != null)
         {
-            var movie = await GetMovieDetailsAsync(movieFile);
-            if (movie.Poster != null)
+            var folder = Path.GetDirectoryName(movieFile);
+            var dirInfo = new DirectoryInfo(folder);
+
+            var title = movie.Title;
+            var year = DateTime.Parse(movie.Released).Year.ToString();
+            var newName = IOHelper.CleanFileName(string.Format("{0} ({1})", title, year));
+            var fixedName = Path.Combine(dirInfo.Parent.FullName, newName);
+
+            try
             {
-                var folder = Path.GetDirectoryName(movieFile);
-                var dirInfo = new DirectoryInfo(folder);
-
-                var title = movie.Title;
-                var year = DateTime.Parse(movie.Released).Year.ToString();
-                var newName = IOHelper.CleanFileName(string.Format("{0} ({1})", title, year));
-                var fixedName = Path.Combine(dirInfo.Parent.FullName, newName);
-
-                try
+                //fix the name
+                if (!string.Equals(folder, fixedName, StringComparison.OrdinalIgnoreCase))
                 {
-                    //fix the name
-                    if (string.Compare(folder, fixedName, StringComparison.OrdinalIgnoreCase) != 0)
-                    {
-                        Directory.Move(folder, fixedName);
+                    Directory.Move(folder, fixedName);
 
-                        //fix the treeview
-                        var node = tvwFolder.SelectedNode;
-                        node.Tag = fixedName;
-                        node.Text = newName;
-                    }
-                    //advance to the next folder
-                    NextMovie();
+                    //fix the treeview
+                    var node = tvwFolder.SelectedNode;
+                    node.Tag = fixedName;
+                    node.Text = newName;
                 }
-                catch (Exception ex)
-                {
-                    var msg = string.Format("Error renaming folder from:\r\n{0}\r\n{1}\r\n{2}", folder, fixedName, ex.Message);
-                    MessageBox.Show(msg, "Error renaming folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                //advance to the next folder
+                NextMovie();
+            }
+            catch (Exception ex)
+            {
+                var msg = string.Format("Error renaming folder from:\r\n{0}\r\n{1}\r\n{2}", folder, fixedName, ex.Message);
+                MessageBox.Show(msg, "Error renaming folder", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
