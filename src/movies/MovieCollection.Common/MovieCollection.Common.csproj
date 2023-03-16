@@ -10,7 +10,6 @@
     <PackageReference Include="Microsoft.Data.Sqlite" Version="$(MSDataSqlite)" />
     <PackageReference Include="WVN.Extensions" Version="$(WVNExtensions)" />
     <PackageReference Include="WVN.IO" Version="$(WVNIO)" />
-    <!--<PackageReference Include="WVN.TmDb.Api" Version="$(WVNTmDbApi)" />-->
   </ItemGroup>
 
   <ItemGroup>

@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\WVN.TmDb\src\WVN.TmDb.Api\WVN.TmDb.Api.csproj" />
+    <PackageReference Include="WVN.TmDb.Api" Version="$(WVNTmDbApi)" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MovieCollection.Common\MovieCollection.Common.csproj" />
   </ItemGroup>
 </Project>

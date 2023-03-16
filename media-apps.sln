@@ -25,13 +25,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Series", "Series", "{266D83
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Movies", "Movies", "{D9352CE3-ECCA-4680-8B8A-2F16265D45AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieCollection", "src\movies\MovieCollection\MovieCollection.csproj", "{829B6C9D-2136-4BD3-825F-399549508B8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieCollection", "src\movies\MovieCollection\MovieCollection.csproj", "{829B6C9D-2136-4BD3-825F-399549508B8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieCollection.Common", "src\movies\MovieCollection.Common\MovieCollection.Common.csproj", "{79EB823C-CE77-48FB-B3CB-FC71503ED454}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MovieCollection.Common", "src\movies\MovieCollection.Common\MovieCollection.Common.csproj", "{79EB823C-CE77-48FB-B3CB-FC71503ED454}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WVN.TmDb.Api", "..\WVN.TmDb\src\WVN.TmDb.Api\WVN.TmDb.Api.csproj", "{71B65125-0F32-4DC6-ABCA-4ACBDB33190B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Movies.TmDb", "src\movies\Movies.TmDb\Movies.TmDb.csproj", "{558C6D9A-3283-4760-B023-0EFC94FC7AD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Movies.TmDb", "src\movies\Movies.TmDb\Movies.TmDb.csproj", "{558C6D9A-3283-4760-B023-0EFC94FC7AD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -67,10 +65,6 @@ Global
 		{79EB823C-CE77-48FB-B3CB-FC71503ED454}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{79EB823C-CE77-48FB-B3CB-FC71503ED454}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{79EB823C-CE77-48FB-B3CB-FC71503ED454}.Release|Any CPU.Build.0 = Release|Any CPU
-		{71B65125-0F32-4DC6-ABCA-4ACBDB33190B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{71B65125-0F32-4DC6-ABCA-4ACBDB33190B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{71B65125-0F32-4DC6-ABCA-4ACBDB33190B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{71B65125-0F32-4DC6-ABCA-4ACBDB33190B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{558C6D9A-3283-4760-B023-0EFC94FC7AD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{558C6D9A-3283-4760-B023-0EFC94FC7AD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{558C6D9A-3283-4760-B023-0EFC94FC7AD1}.Release|Any CPU.ActiveCfg = Release|Any CPU

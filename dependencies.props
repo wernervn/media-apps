@@ -16,7 +16,7 @@
     <WVNSimpleMapper>2.0.0</WVNSimpleMapper>
     <WVNIO>2.0.1</WVNIO>
     <WVNExtensions>2.0.1</WVNExtensions>
-    <WVNTmDbApi>1.0.0</WVNTmDbApi>
+    <WVNTmDbApi>1.0.1</WVNTmDbApi>
   </PropertyGroup>
 
 </Project>
