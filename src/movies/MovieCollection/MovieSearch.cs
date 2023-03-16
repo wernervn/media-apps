@@ -2,8 +2,6 @@
 using MovieCollection.Common.Interfaces;
 using MovieCollection.Common.Models;
 using MovieCollection.Configuration;
-using Movies.TmDb;
-using WVN.WinForms;
 using WVN.WinForms.Extensions;
 
 namespace MovieCollection;

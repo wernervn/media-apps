@@ -24,7 +24,8 @@ internal class TmDbWrapperHelper
                                 {
                                     Id = movie.Id,
                                     Title = movie.Title,
-                                    ReleaseDate = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString(Constants.DateFormat) : string.Empty }
+                                    ReleaseDate = movie.ReleaseDate.HasValue ? movie.ReleaseDate.Value.ToString(Constants.DateFormat) : string.Empty
+                                }
                                 );
     }
 
@@ -54,7 +55,7 @@ internal class TmDbWrapperHelper
     internal async Task<Models.MovieImages> GetImageInfo(MovieDetails movieDetails)
     {
         var movie = new Movie { PosterPath = movieDetails.PosterPath, BackdropPath = movieDetails.BackdropPath };
-        var images =  await _wrapper.DownloadImages(movie);
+        var images = await _wrapper.DownloadImages(movie);
         return new Models.MovieImages() { Backdrop = images.BackdropData, Poster = images.PosterData };
     }
 

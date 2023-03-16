@@ -3,7 +3,7 @@ using MovieCollection.Common.Models;
 
 namespace Movies.TmDb;
 
-public class TmDbData: IMovieData
+public class TmDbData : IMovieData
 {
     private readonly TmDbWrapperHelper _wrapper;
 

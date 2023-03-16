@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace MovieCollection.Common.Models;
+﻿namespace MovieCollection.Common.Models;
 
 [Serializable]
 public class MovieImageInfo

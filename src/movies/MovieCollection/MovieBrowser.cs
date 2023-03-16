@@ -45,6 +45,7 @@ public partial class MovieBrowser : Form
     }
 
     #region Set images from resources
+
     private void SetResourceImages()
     {
         mniViewWithMovies.Image = GetImageResource(Images.Video);
@@ -60,8 +61,8 @@ public partial class MovieBrowser : Form
         searchDoSearch.Image = GetImageResource(Images.Filter);
         searchClearSearch.Image = GetImageResource(Images.Clear);
     }
-    #endregion Set images from resources
 
+    #endregion Set images from resources
 
     #region MNU clicks
     private void mniFileExit_Click(object sender, EventArgs e)
@@ -309,17 +310,15 @@ public partial class MovieBrowser : Form
     #region Private methods
     private void SelectFolder()
     {
-        using (var dlg = new FolderBrowserDialog())
+        using var dlg = new FolderBrowserDialog();
+        if (Directory.Exists(_settings.AppConfiguration.LastPath))
         {
-            if (Directory.Exists(_settings.AppConfiguration.LastPath))
-            {
-                dlg.SelectedPath = _settings.AppConfiguration.LastPath;
-            }
+            dlg.SelectedPath = _settings.AppConfiguration.LastPath;
+        }
 
-            if (dlg.ShowDialog() == DialogResult.OK)
-            {
-                LoadFolders(dlg.SelectedPath);
-            }
+        if (dlg.ShowDialog() == DialogResult.OK)
+        {
+            LoadFolders(dlg.SelectedPath);
         }
     }
 
@@ -480,10 +479,7 @@ public partial class MovieBrowser : Form
             mniMovieDataDisplay.Enabled = false;
             mniMovieDataCreateNFO.Enabled = false;
 
-            var searchFiles = new List<string>(Constants.MOVIE_VALUES.ToArray())
-            {
-                "*.tmdb"
-            };
+            var searchFiles = new List<string>(Constants.MOVIE_VALUES.ToArray()) { "*.tmdb" };
             var files = FileUtil.GetFiles(path, searchFiles, SearchOption.AllDirectories).ToList();
 
             lvwFiles.BeginUpdate();
@@ -625,12 +621,10 @@ public partial class MovieBrowser : Form
                 IMG.Images.Add(extension, icon);
             }
         }
-#pragma warning disable RECS0022 // A catch clause that catches System.Exception and has an empty body
         catch
         {
             //Consume exception
         }
-#pragma warning restore RECS0022 // A catch clause that catches System.Exception and has an empty body
     }
 
     private async Task<MovieDetails> GetMovieDetailsAsync(string path)
@@ -663,10 +657,8 @@ public partial class MovieBrowser : Form
         if (File.Exists(archivePath))
         {
             var movie = await GetMovieDetailsAsync(archivePath);
-            using (var frm = new MovieDetailsView())
-            {
-                frm.Show(_settings.AppConfiguration, movie, this);
-            }
+            using var frm = new MovieDetailsView();
+            frm.Show(_settings.AppConfiguration, movie, this);
         }
         else
         {
@@ -674,6 +666,7 @@ public partial class MovieBrowser : Form
         }
     }
 
+    [Obsolete]
     private void Mede8erSetWatched(TreeNode node)
     {
         //get all the movie file in the current folder
@@ -803,6 +796,7 @@ public partial class MovieBrowser : Form
                 //fix the name
                 if (!string.Equals(folder, fixedName, StringComparison.OrdinalIgnoreCase))
                 {
+                    // the rename will fail if any files are locked
                     Directory.Move(folder, fixedName);
 
                     //fix the treeview
@@ -810,6 +804,7 @@ public partial class MovieBrowser : Form
                     node.Tag = fixedName;
                     node.Text = newName;
                 }
+
                 //advance to the next folder
                 NextMovie();
             }
@@ -824,12 +819,11 @@ public partial class MovieBrowser : Form
     private void NextMovie()
     {
         //move to next movie
-        if (tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode())
+        if (tvwFolder.SelectedNode != null
+            && tvwFolder.SelectedNode != RootNode()
+            && tvwFolder.SelectedNode.NextNode != null)
         {
-            if (tvwFolder.SelectedNode.NextNode != null)
-            {
-                tvwFolder.SelectedNode = tvwFolder.SelectedNode.NextNode;
-            }
+            tvwFolder.SelectedNode = tvwFolder.SelectedNode.NextNode;
         }
     }
 
@@ -859,9 +853,11 @@ public partial class MovieBrowser : Form
     #region Toolbar
 
     #region View filters
-    private async void splitAllFiles_Click(object sender, EventArgs e) => await SetFilterAsync(FileFilter.AllFiles);
+    private async void splitAllFiles_Click(object sender, EventArgs e)
+        => await SetFilterAsync(FileFilter.AllFiles);
 
-    private async void splitMoviesOnly_Click(object sender, EventArgs e) => await SetFilterAsync(FileFilter.MoviesOnly);
+    private async void splitMoviesOnly_Click(object sender, EventArgs e)
+        => await SetFilterAsync(FileFilter.MoviesOnly);
 
     private async Task SetFilterAsync(FileFilter filter)
     {
@@ -869,7 +865,9 @@ public partial class MovieBrowser : Form
         btnSplit.Image = GetFilterImage(_fileFilter);
         btnSplit.ToolTipText = _fileFilter.ToString();
         if (tvwFolder.SelectedNode != null)
+        {
             await LoadFilesByFilterAsync(tvwFolder.SelectedNode.Tag.ToString());
+        }
     }
 
     private Image GetFilterImage(FileFilter filter)
@@ -884,7 +882,8 @@ public partial class MovieBrowser : Form
 
     #endregion View filters
 
-    private async void btnMakePoster_Click(object sender, EventArgs e) => await CreatePosterAsync();
+    private async void btnMakePoster_Click(object sender, EventArgs e)
+        => await CreatePosterAsync();
 
     #region Search
     #endregion Search
@@ -892,9 +891,11 @@ public partial class MovieBrowser : Form
     #endregion Toolbar
 
     #region Resize
-    private void PIC_Resize(object sender, EventArgs e) => ResizeAll();
+    private void PIC_Resize(object sender, EventArgs e)
+        => ResizeAll();
 
-    private void SPLIT_Panel2_Resize(object sender, EventArgs e) => ResizeRest();
+    private void SPLIT_Panel2_Resize(object sender, EventArgs e)
+        => ResizeRest();
 
     private void ResizeAll()
     {
@@ -940,9 +941,11 @@ public partial class MovieBrowser : Form
     #endregion Resize
 
     #region Filter movies by title
-    private void searchDoSearch_Click(object sender, EventArgs e) => FilterMovies();
+    private void searchDoSearch_Click(object sender, EventArgs e)
+        => FilterMovies();
 
-    private void searchClearSearch_Click(object sender, EventArgs e) => ClearMovieFilter();
+    private void searchClearSearch_Click(object sender, EventArgs e)
+        => ClearMovieFilter();
 
     private void FilterMovies()
     {
@@ -992,16 +995,13 @@ public partial class MovieBrowser : Form
         if (IsMovieFolder())
         {
             var folder = GetCurrentFolder();
-            if (MessageBox.Show("Do you really want to delete folder '{folder}'?", "OK to delete folder?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (MessageBox.Show($"Do you really want to delete folder '{folder}'?", "OK to delete folder?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 Directory.Delete(folder, true);
 
                 var oldNode = tvwFolder.SelectedNode;
                 var newNode = tvwFolder.SelectedNode.NextNode;
-                if (newNode == null)
-                {
-                    newNode = tvwFolder.SelectedNode.PrevNode;
-                }
+                newNode ??= tvwFolder.SelectedNode.PrevNode;
 
                 tvwFolder.Nodes.Remove(oldNode);
                 if (newNode != null)
