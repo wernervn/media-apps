@@ -30,12 +30,12 @@ public class AppConfiguration
     /// <summary>
     /// Window state of the main window
     /// </summary>
-    public WindowState WindowState { get; set; }
+    public WindowState WindowState { get; set; } = new WindowState { Location = new(0, 0), Size = new(0, 0) };
 
     /// <summary>
     /// Window state of the Search window
     /// </summary>
-    public WindowState SearchState { get; set; } = new WindowState { Size = new Size(1051, 950), FormWindowState = FormWindowState.Normal };
+    public WindowState SearchState { get; set; } = new WindowState { Location = new(0, 0), Size = new(0, 0) };
 
     /// <summary>
     /// Width of the search results list
@@ -45,7 +45,7 @@ public class AppConfiguration
     /// <summary>
     /// Window state of the Details window
     /// </summary>
-    public WindowState DetailsState { get; set; } = new WindowState { Size = new Size(804, 804), FormWindowState = FormWindowState.Normal };
+    public WindowState DetailsState { get; set; } = new WindowState { Location = new(0, 0), Size = new(0, 0) };
 
     /// <summary>
     /// Characters that will be replaced with spaces when scrubbing movie names
