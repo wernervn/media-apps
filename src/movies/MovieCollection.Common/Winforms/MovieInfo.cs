@@ -143,7 +143,7 @@ public partial class MovieInfo : UserControl
             txtURL.Text = MovieDetails.Url;
             txtRuntime.Text = MovieDetails.Runtime.ToString();
             txtOverview.Text = MovieDetails.Overview;
-            txtReleased.Text = MovieDetails.Released;
+            txtReleased.Text = MovieDetails.Released ?? string.Empty;
             txtTagLine.Text = MovieDetails.TagLine;
 
             SetResizedPoster(MovieDetails.Poster);

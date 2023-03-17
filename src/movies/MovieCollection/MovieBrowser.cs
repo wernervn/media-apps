@@ -787,7 +787,7 @@ public partial class MovieBrowser : Form
             var dirInfo = new DirectoryInfo(folder);
 
             var title = movie.Title;
-            var year = DateTime.Parse(movie.Released).Year.ToString();
+            var year = !string.IsNullOrWhiteSpace(movie.Released) ?  DateTime.Parse(movie.Released).Year.ToString() : "(0000)";
             var newName = IOHelper.CleanFileName(string.Format("{0} ({1})", title, year));
             var fixedName = Path.Combine(dirInfo.Parent.FullName, newName);
 

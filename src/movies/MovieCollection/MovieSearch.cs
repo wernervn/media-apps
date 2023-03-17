@@ -49,7 +49,7 @@ public partial class MovieSearch : Form
         result.ForEach(movie =>
         {
             ListViewItem item = lvwMovies.Items.Add(movie.Title);
-            item.SubItems.Add(movie.ReleaseDate);
+            item.SubItems.Add(movie.ReleaseDate ?? string.Empty);
             item.Tag = movie;
         });
 
