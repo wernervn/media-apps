@@ -13,8 +13,7 @@ namespace FolderCleaner;
 public partial class Cleaner : Form
 {
     private readonly AppSettings _settings;
-
-    StringComparer COMPARER = StringComparer.CurrentCultureIgnoreCase;
+    private StringComparer COMPARER = StringComparer.CurrentCultureIgnoreCase;
     private List<string> _ignoreFiles = new();
     private readonly Assembly _executingAssembly;
 
@@ -66,41 +65,36 @@ public partial class Cleaner : Form
 
     #endregion
 
-    #region Menu strips stuff
-
-    #endregion
-
     #region Private methods
 
     private void LoadFolders()
     {
-        if (string.IsNullOrWhiteSpace(_settings.AppConfiguration.LastPath) || !Directory.Exists(_settings.AppConfiguration.LastPath))
+        if (!string.IsNullOrWhiteSpace(_settings.AppConfiguration.LastPath) && Directory.Exists(_settings.AppConfiguration.LastPath))
         {
-            return;
+            tvwFolder.LoadFolders(_settings.AppConfiguration.LastPath, MovieCollection.Common.Constants.FOLDER_KEY);
         }
-        int count = tvwFolder.LoadFolders(_settings.AppConfiguration.LastPath, MovieCollection.Common.Constants.FOLDER_KEY);
     }
 
-    void SetMovieFolder()
+    private void SetMovieFolder()
     {
-        bool isMovieFolder = IsMovieFolder();
+        var isMovieFolder = IsMovieFolder();
+        //TODO: ???
     }
 
-    bool IsMovieFolder() => tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode();
+    private bool IsMovieFolder()
+        => tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode();
 
-    TreeNode RootNode()
+    private TreeNode RootNode()
     {
         if (tvwFolder.Nodes.Count > 0)
         {
             return tvwFolder.Nodes[0];
         }
-        else
-        {
-            return null;
-        }
+
+        return null;
     }
 
-    void CleanFolder()
+    private void CleanFolder()
     {
         if (MessageBox.Show("Are you sure you want to perform the outlined actions", "OK to clean folder?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
         {
@@ -150,7 +144,9 @@ public partial class Cleaner : Form
     {
         _ignoreFiles.Clear();
         if (_settings.AppConfiguration.IgnoreList.Count > 0)
+        {
             _ignoreFiles.AddRange(_settings.AppConfiguration.IgnoreList);
+        }
     }
 
     #endregion
@@ -164,7 +160,7 @@ public partial class Cleaner : Form
             return;
         }
 
-        string folder = e.Node.Tag.ToString();
+        var folder = e.Node.Tag.ToString();
         if (Directory.Exists(folder))
         {
             LoadAllFiles(folder);
@@ -180,10 +176,10 @@ public partial class Cleaner : Form
         }
     }
 
-    void tvwFolder_BeforeExpand(object sender, TreeViewCancelEventArgs e)
+    private void tvwFolder_BeforeExpand(object sender, TreeViewCancelEventArgs e)
     {
         //if the sub-folder is a dummy folder, remove it and add any real folder
-        TreeNode node = e.Node;
+        var node = e.Node;
         if (node.Nodes.Count == 1 && node.Nodes[0].Text == "dummy" && e.Node.Nodes[0].Tag == null)
         {
             e.Node.Nodes.Clear();
@@ -191,9 +187,9 @@ public partial class Cleaner : Form
         }
     }
 
-    void ctxExplore_Click(object sender, EventArgs e)
+    private void ctxExplore_Click(object sender, EventArgs e)
     {
-        object tag = tvwFolder.SelectedNode.Tag;
+        var tag = tvwFolder.SelectedNode.Tag;
         if (tag != null && Directory.Exists(tag.ToString()))
         {
             Helpers.Launch(@"C:\Windows\explorer.exe", tag.ToString().DoubleQuote());
@@ -204,13 +200,13 @@ public partial class Cleaner : Form
 
     #region load files
 
-    List<string> GetExtensions()
+    private static List<string> GetExtensions()
     {
         return (from x in Constants.RENAME_FILES.Concat(Constants.ONLY_MOVE_FILES).Distinct()
-                select string.Concat("*" + x)).ToList();
+                select $"*{x}").ToList();
     }
 
-    void LoadAllFiles(string path)
+    private void LoadAllFiles(string path)
     {
         var extensions = GetExtensions();
         var files = FileUtil.GetFiles(path, extensions, SearchOption.AllDirectories).ToList();
@@ -225,18 +221,14 @@ public partial class Cleaner : Form
         lvwFilesRename.BeginUpdate();
         lvwFilesRename.Items.Clear();
 
-        string movieText = string.Empty;
-
-        string movieInfo = string.Empty;
-
         foreach (var file in files)
         {
-            string nameOnly = Path.GetFileName(file);
-            string imgKey = Path.GetExtension(file);
+            var nameOnly = Path.GetFileName(file);
+            var imgKey = Path.GetExtension(file);
             AddIcon(file);
-            ListViewItem item = lvwFilesRename.Items.Add(nameOnly, imgKey);
+            var item = lvwFilesRename.Items.Add(nameOnly, imgKey);
             item.SubItems.Add(file);
-            string newName = NewPath(path, nameOnly);
+            var newName = NewPath(path, nameOnly);
             if (newNames.Contains(newName, COMPARER))
             {
                 item.ForeColor = Color.Red;
@@ -251,7 +243,7 @@ public partial class Cleaner : Form
             }
 
             item.SubItems.Add(newName);
-            if (string.Compare(item.SubItems[1].Text, item.SubItems[2].Text, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Equals(item.SubItems[1].Text, item.SubItems[2].Text, StringComparison.OrdinalIgnoreCase))
             {
                 item.Checked = false;
                 item.ForeColor = Color.Green;
@@ -269,7 +261,7 @@ public partial class Cleaner : Form
         tvwFolder.Focus();
     }
 
-    void LoadDeleteItems(string path)
+    private void LoadDeleteItems(string path)
     {
         lvwDeleteFolders.Items.Clear();
         var removeDirs = Directory.EnumerateDirectories(path, "*", SearchOption.TopDirectoryOnly).AsParallel();
@@ -278,7 +270,7 @@ public partial class Cleaner : Form
 
         var toDelete = (removeDirs.SelectMany(dir => Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).AsParallel()
                             .Where(file => !Constants.RENAME_FILES.Contains(Path.GetExtension(file), COMPARER))
-                            .Where(file => !Constants.RENAME_FILES.Contains(Path.GetExtension(file), COMPARER))
+                            .Where(file => !Constants.RENAME_FILES.Contains(Path.GetExtension(file), COMPARER)) //?? why duplicate?
                             .Where(file => !Constants.ONLY_MOVE_FILES.Contains(Path.GetExtension(file), COMPARER))
                             )).ToList();
         //add icons
@@ -293,35 +285,35 @@ public partial class Cleaner : Form
     }
 
     //TODO: wrap this in a class that gets and stores icons
-    void AddIcon(string fileName)
+    private void AddIcon(string fileName)
     {
-        string extension = Path.GetExtension(fileName);
+        var extension = Path.GetExtension(fileName);
         if (!IMG.Images.ContainsKey(extension) && extension.Length > 0)
         {
-            Icon icon = Icon.ExtractAssociatedIcon(fileName);
+            var icon = Icon.ExtractAssociatedIcon(fileName);
             IMG.Images.Add(extension, icon);
         }
     }
 
-    string NewPath(string path, string fileName)
+    private string NewPath(string path, string fileName)
     {
-        string folderFileName = new DirectoryInfo(path).Name;
-        string extension = Path.GetExtension(fileName);
+        var folderFileName = new DirectoryInfo(path).Name;
+        var extension = Path.GetExtension(fileName);
 
         if (Constants.RENAME_FILES.Contains(extension, COMPARER))
         {
             if (!Constants.WATCHED_FILES.Contains(extension, COMPARER))
             {
-                string noExtension = Regex.Escape(Path.GetFileNameWithoutExtension(fileName));
-                string newName = Regex.Replace(fileName, noExtension, folderFileName, RegexOptions.IgnoreCase);
+                var noExtension = Regex.Escape(Path.GetFileNameWithoutExtension(fileName));
+                var newName = Regex.Replace(fileName, noExtension, folderFileName, RegexOptions.IgnoreCase);
                 return Path.Combine(path, newName);
             }
             else
             {
                 //handle .t files different
-                string matchFile = Path.GetFileNameWithoutExtension(fileName);
-                string noExtension = Regex.Escape(Path.GetFileNameWithoutExtension(matchFile));
-                string newName = Regex.Replace(matchFile, noExtension, folderFileName, RegexOptions.IgnoreCase);
+                var matchFile = Path.GetFileNameWithoutExtension(fileName);
+                var noExtension = Regex.Escape(Path.GetFileNameWithoutExtension(matchFile));
+                var newName = Regex.Replace(matchFile, noExtension, folderFileName, RegexOptions.IgnoreCase);
                 return Path.Combine(path, string.Concat(newName, extension));
             }
         }
@@ -353,17 +345,16 @@ public partial class Cleaner : Form
     #region Settings menu
     private void mniSettingsFolder_Click(object sender, EventArgs e)
     {
-        using (FolderBrowserDialog dlg = new FolderBrowserDialog())
+        using var dlg = new FolderBrowserDialog();
+        if (!string.IsNullOrWhiteSpace(_settings.AppConfiguration.LastPath))
         {
-            if (!string.IsNullOrWhiteSpace(_settings.AppConfiguration.LastPath))
-            {
-                dlg.SelectedPath = _settings.AppConfiguration.LastPath;
-            }
-            if (dlg.ShowDialog() == DialogResult.OK)
-            {
-                _settings.AppConfiguration.LastPath = dlg.SelectedPath;
-                LoadFolders();
-            }
+            dlg.SelectedPath = _settings.AppConfiguration.LastPath;
+        }
+
+        if (dlg.ShowDialog() == DialogResult.OK)
+        {
+            _settings.AppConfiguration.LastPath = dlg.SelectedPath;
+            LoadFolders();
         }
     }
 
