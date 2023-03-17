@@ -2,6 +2,6 @@
   "solution": "media-apps.sln",
   "solutionFolder": "TmDbApi",
   "mappings": {
-    "WVN.RestClient": "../WVN.TmDb/src/WVN.TmDb.Api/WVN.TmDb.Api.csproj"
+    "WVN.TmDb.Api": "../WVN.TmDb/src/WVN.TmDb.Api/WVN.TmDb.Api.csproj"
   }
 }
