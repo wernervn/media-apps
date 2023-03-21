@@ -6,13 +6,17 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Package Versions">
+    <Dapper>2.0.123</Dapper>
     <MSExtensionsConfiguration>7.0.0</MSExtensionsConfiguration>
+    <MSDataSqlite>7.0.3</MSDataSqlite>
     <SystemDrawingCommon>7.0.0</SystemDrawingCommon>
     <WVNConfiguration>5.0.1</WVNConfiguration>
     <WVNWinForms>3.0.3</WVNWinForms>
     <WVNTvDbApi>3.0.0</WVNTvDbApi>
     <WVNSimpleMapper>2.0.0</WVNSimpleMapper>
     <WVNIO>2.0.1</WVNIO>
+    <WVNExtensions>2.0.1</WVNExtensions>
+    <WVNTmDbApi>1.0.2</WVNTmDbApi>
   </PropertyGroup>
 
 </Project>

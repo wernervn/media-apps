@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="WVN.Configuration" Version="$(WVNConfiguration)" />
+    <PackageReference Include="WVN.WinForms" Version="$(WVNWinForms)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\**\*.*" />
+    <EmbeddedResource Include="Resources\**\*.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\common\MediaApps.Common\MediaApps.Common.csproj" />
+    <ProjectReference Include="..\Movies.TmDb\Movies.TmDb.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

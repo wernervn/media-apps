@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>$(DotnetWindows)</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="$(Dapper)" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="$(MSDataSqlite)" />
+    <PackageReference Include="WVN.Extensions" Version="$(WVNExtensions)" />
+    <PackageReference Include="WVN.IO" Version="$(WVNIO)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DB\**\*.sql" />
+    <EmbeddedResource Include="DB\**\*.sql" />
+  </ItemGroup>
+
+</Project>
