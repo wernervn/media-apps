@@ -72,7 +72,7 @@ public static class SeriesIOHelper
     {
         if (!extension.StartsWith(".", StringComparison.CurrentCulture))
         {
-            extension = string.Concat(".", extension);
+            extension = $".{extension}";
         }
 
         return string.Concat(Path.GetTempPath(), Guid.NewGuid().ToString(), extension);

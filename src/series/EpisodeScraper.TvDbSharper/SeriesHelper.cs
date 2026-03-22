@@ -44,7 +44,7 @@ public static class SeriesHelper
         {
             var image = await api.GetImageByUrl(fanartImages.First()).ConfigureAwait(false);
             image = ImageHelper.ReduceImageSize(image);
-            File.WriteAllBytes(fanart, image);
+            await File.WriteAllBytesAsync(fanart, image);
         }
 
         //folder image
@@ -54,13 +54,13 @@ public static class SeriesHelper
         {
             var image = await api.GetImageByUrl(folderImages[0]).ConfigureAwait(false);
             image = ImageHelper.ReduceImageSize(image);
-            File.WriteAllBytes(poster, image);
+            await File.WriteAllBytesAsync(poster, image);
         }
 
         //series xml
         var xmlPath = Path.Combine(seriesPath, Constants.SERIES_XML);
         var xml = GetSeriesXml(fullRec.Series);
-        File.WriteAllText(xmlPath, xml);
+        await File.WriteAllTextAsync(xmlPath, xml);
     }
 
     private static string GetSeriesXml(SeriesBase series)

@@ -7,7 +7,7 @@ using WVN.IO.Helpers;
 
 namespace EpisodeScraper.TvDbSharper;
 
-public static partial class SeasonHelper
+public static class SeasonHelper
 {
     public static async Task GetEpisodeMetadata(TvDbWrapper api, string seasonPath)
     {
@@ -192,7 +192,7 @@ public static partial class SeasonHelper
             ? series.Actors
             : episode.GuestStars;
         m.cast = SeriesIOHelper.ToArray(cast);
-        m.image = bannerImages.ToArray();
+        m.image = [.. bannerImages];
 
         metadata.Movie = m;
         return metadata.AsXml();

@@ -5,7 +5,7 @@ namespace MediaApps.Common.Helpers;
 
 public static class HttpHelper
 {
-    public async static Task<byte[]> DownloadBytes(string imageUrl)
+    public static async Task<byte[]> DownloadBytes(string imageUrl)
     {
         byte[] data = null;
 
@@ -28,6 +28,6 @@ public static class HttpHelper
     private static void DebugOutput(string text)
     {
         Debug.WriteLine(text);
-        Trace.WriteLine(text);
+        Trace.TraceInformation(text);
     }
 }

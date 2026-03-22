@@ -1,12 +1,14 @@
-﻿using static MediaApps.Series.Core.Constants;
+﻿using System.Diagnostics.CodeAnalysis;
+using static MediaApps.Series.Core.Constants;
 
 namespace MediaApps.Series.Core.Mede8er;
 
+[SuppressMessage("csharpsquid", "S101")]
 public static class Mede8erHelper
 {
     public static void SetItemWatched(string item)
     {
-        var watchedFile = string.Concat(item, ".t");
+        var watchedFile = $"{item}.t";
         using var fs = File.Create(watchedFile);
     }
 
