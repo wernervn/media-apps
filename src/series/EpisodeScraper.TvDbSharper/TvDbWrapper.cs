@@ -9,13 +9,11 @@ namespace EpisodeScraper.TvDbSharper;
 public partial class TvDbWrapper
 {
     private readonly TvDbClient _client;
-    private readonly string _apiKey;
 
     public TvDbWrapper(string apiKey)
     {
         _client = new TvDbClient();
         _client.AuthenticateAsync(apiKey);
-        _apiKey = apiKey;
     }
 
     #region Get series

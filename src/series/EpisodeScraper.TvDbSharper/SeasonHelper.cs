@@ -13,18 +13,18 @@ public static class SeasonHelper
     {
         var parent = new DirectoryInfo(seasonPath).Parent;
         var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
-        await GetEpisodeMetadata(api, seriesId, seasonPath).ConfigureAwait(false);
+        await GetEpisodeMetadata(api, seriesId, seasonPath);
     }
 
     public static async Task GetEpisodeMetadata(TvDbWrapper api, string seriesId, string seasonPath)
     {
-        var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
+        var fullRec = await api.GetSeriesFullRecord(seriesId);
 
         var seasonName = new DirectoryInfo(seasonPath).Name;
         var seasonNo = seasonName.Split(" ".ToCharArray())[1];
-        var banners = await api.GetArtwork(fullRec.Series.Id, BannerType.season).ConfigureAwait(false);
+        var banners = await api.GetArtwork(fullRec.Series.Id, BannerType.season);
 
-        await GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo).ConfigureAwait(false);
+        await GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo);
     }
 
     public static async Task GetEpisodeMetadata(TvDbWrapper api, SeriesFull fullRec, string seasonPath, IEnumerable<Banner> banners, string seasonNo)
@@ -53,7 +53,7 @@ public static class SeasonHelper
             {
                 //get banner TVDB filename
                 //get image using filename
-                var data = await api.GetImage(episodeFileName).ConfigureAwait(false);
+                var data = await api.GetImage(episodeFileName);
                 if (data?.Length > 0)
                 {
                     var reduced = ImageHelper.ReduceImageSize(data);
@@ -64,7 +64,7 @@ public static class SeasonHelper
                         //save image using episode name
                         var newExtension = Path.GetExtension(episodeFileName);
                         var imgFile = Path.ChangeExtension(key, newExtension);
-                        await File.WriteAllBytesAsync(imgFile, reduced).ConfigureAwait(false);
+                        await File.WriteAllBytesAsync(imgFile, reduced);
                     }
                 }
             }
@@ -74,7 +74,7 @@ public static class SeasonHelper
             if (!File.Exists(xmlPath))
             {
                 var xml = GetEpisodeXml(fullRec.Series, episode, bannerImages);
-                await File.WriteAllTextAsync(xmlPath, xml).ConfigureAwait(false);
+                await File.WriteAllTextAsync(xmlPath, xml);
             }
         }
         Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
@@ -92,12 +92,12 @@ public static class SeasonHelper
             var seasonBanner = banners.ToList().Find(banner => banner.BannerType == "season" && banner.Season == epi.CombinedSeason);
             if (seasonBanner is not null)
             {
-                var img = await api.GetImage(seasonBanner.BannerPath).ConfigureAwait(false) ?? await api.GetImage(seasonBanner.ThumbnailPath).ConfigureAwait(false);
+                var img = await api.GetImage(seasonBanner.BannerPath) ?? await api.GetImage(seasonBanner.ThumbnailPath);
 
                 if (img is not null)
                 {
                     var reduced = ImageHelper.ReduceImageSize(img);
-                    await File.WriteAllBytesAsync(seasonThumb, reduced).ConfigureAwait(false);
+                    await File.WriteAllBytesAsync(seasonThumb, reduced);
                 }
             }
         }
@@ -106,7 +106,7 @@ public static class SeasonHelper
         var viewFile = Path.Combine(seasonPath, Constants.SEASON_VIEW);
         if (!File.Exists(viewFile))
         {
-            await api.WriteSeasonViewXml(viewFile).ConfigureAwait(false);
+            await api.WriteSeasonViewXml(viewFile);
         }
     }
 
@@ -114,7 +114,7 @@ public static class SeasonHelper
     {
         var parent = new DirectoryInfo(seasonPath).Parent;
         var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
-        var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
+        var fullRec = await api.GetSeriesFullRecord(seriesId);
 
         var seasonName = new DirectoryInfo(seasonPath).Name;
         var seasonNo = seasonName.Split(" ".ToCharArray())[1];
@@ -206,7 +206,7 @@ public static class SeasonHelper
 
     public static async Task RenameFiles(TvDbWrapper api, string seriesName, string seasonPath)
     {
-        var episodes = await GetEpisodes(api, seasonPath).ConfigureAwait(false);
+        var episodes = await GetEpisodes(api, seasonPath);
         var files = GetEpisodeFiles(seasonPath).Select(f => new FileInfo(f).Name);
         var subtitles = GetSubtitleFiles(seasonPath);
 

@@ -8,9 +8,9 @@ public static class SeriesHelper
 {
     public static async Task GetSeriesInfo(TvDbWrapper api, string seriesPath, string seriesId, bool includeSeasons = false)
     {
-        var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
-        var banners = await api.GetSeriesBanners(fullRec.Series.Id).ConfigureAwait(false);
-        await SetSeriesData(api, seriesPath, fullRec, banners).ConfigureAwait(false);
+        var fullRec = await api.GetSeriesFullRecord(seriesId);
+        var banners = await api.GetSeriesBanners(fullRec.Series.Id);
+        await SetSeriesData(api, seriesPath, fullRec, banners);
 
         //then season data
         if (includeSeasons)
@@ -19,7 +19,7 @@ public static class SeriesHelper
             {
                 var seasonName = new DirectoryInfo(seasonPath).Name;
                 var seasonNo = seasonName.Split(" ".ToCharArray())[1];
-                await SeasonHelper.GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo).ConfigureAwait(false);
+                await SeasonHelper.GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo);
             }
         }
     }
@@ -28,21 +28,21 @@ public static class SeriesHelper
     {
         //first get series data
         var seriesId = SeriesIOHelper.GetSeriesIdFromFile(seriesPath);
-        await GetSeriesInfo(api, seriesPath, seriesId, includeSeasons).ConfigureAwait(false);
+        await GetSeriesInfo(api, seriesPath, seriesId, includeSeasons);
     }
 
     private static async Task SetSeriesData(TvDbWrapper api, string seriesPath, SeriesFull fullRec, IEnumerable<Banner> banners)
     {
         //get View.xml
         var viewFile = Path.Combine(seriesPath, Constants.SERIES_VIEW);
-        await api.WriteSeriesViewXml(viewFile).ConfigureAwait(false);
+        await api.WriteSeriesViewXml(viewFile);
 
         //fanart image
-        var fanartImages = await api.GetArtworkPaths(fullRec.Series.Id, BannerType.fanart).ConfigureAwait(false);
+        var fanartImages = await api.GetArtworkPaths(fullRec.Series.Id, BannerType.fanart);
         var fanart = Path.Combine(seriesPath, "fanart.jpg");
         if (fanartImages.Any())
         {
-            var image = await api.GetImageByUrl(fanartImages.First()).ConfigureAwait(false);
+            var image = await api.GetImageByUrl(fanartImages.First());
             image = ImageHelper.ReduceImageSize(image);
             await File.WriteAllBytesAsync(fanart, image);
         }
@@ -52,7 +52,7 @@ public static class SeriesHelper
         var poster = Path.Combine(seriesPath, "folder.jpg");
         if (folderImages.Length > 0)
         {
-            var image = await api.GetImageByUrl(folderImages[0]).ConfigureAwait(false);
+            var image = await api.GetImageByUrl(folderImages[0]);
             image = ImageHelper.ReduceImageSize(image);
             await File.WriteAllBytesAsync(poster, image);
         }
