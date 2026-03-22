@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using MovieCollection.Common.Models;
 
 namespace MovieCollection.Common.Winforms;
@@ -114,6 +115,8 @@ public partial class MovieInfo : UserControl
     #endregion Unused for now
 
     private MovieDetails _movieDetails;
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public MovieDetails MovieDetails
     {
         get

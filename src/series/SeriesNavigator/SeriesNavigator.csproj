@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -12,9 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" Version="$(SystemDrawingCommon)" />
-    <PackageReference Include="WVN.Configuration" Version="$(WVNConfiguration)" />
-    <PackageReference Include="WVN.WinForms" Version="$(WVNWinForms)" />
+    <PackageReference Include="System.Drawing.Common" />
+    <PackageReference Include="WVN.Configuration" />
+    <PackageReference Include="WVN.WinForms" />
   </ItemGroup>
 
   <ItemGroup>

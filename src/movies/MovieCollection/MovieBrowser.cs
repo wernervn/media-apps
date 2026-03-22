@@ -763,7 +763,7 @@ public partial class MovieBrowser : Form
             {
                 var folder = Path.GetDirectoryName(movieFile);
                 var poster = Path.Combine(folder, "poster.jpg");
-                File.WriteAllBytes(poster, movie.Poster);
+                await File.WriteAllBytesAsync(poster, movie.Poster);
                 await LoadFilesByFilterAsync(GetCurrentFolder());
             }
         }
@@ -787,7 +787,7 @@ public partial class MovieBrowser : Form
             var dirInfo = new DirectoryInfo(folder);
 
             var title = movie.Title;
-            var year = !string.IsNullOrWhiteSpace(movie.Released) ?  DateTime.Parse(movie.Released).Year.ToString() : "(0000)";
+            var year = !string.IsNullOrWhiteSpace(movie.Released) ? DateTime.Parse(movie.Released).Year.ToString() : "(0000)";
             var newName = IOHelper.CleanFileName(string.Format("{0} ({1})", title, year));
             var fixedName = Path.Combine(dirInfo.Parent.FullName, newName);
 

@@ -18,7 +18,7 @@ public static class ResourceHelper
     {
         using var stream = assembly.GetManifestResourceStream(resourceName);
         var data = new byte[stream.Length];
-        stream.Read(data, 0, (int)stream.Length);
+        stream.ReadExactly(data, 0, (int)stream.Length);
         return Encoding.UTF8.GetString(data);
     }
 

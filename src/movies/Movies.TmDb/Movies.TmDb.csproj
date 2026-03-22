@@ -1,11 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>$(DotnetWindows)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WVN.TmDb.Api" Version="$(WVNTmDbApi)" />
+    <PackageReference Include="WVN.TmDb.Api" />
   </ItemGroup>
 
   <ItemGroup>
