@@ -3,7 +3,7 @@
   <PropertyGroup>
     <DotnetVersion>net10.0</DotnetVersion>
     <DotnetWindows>$(DotnetVersion)-windows</DotnetWindows>
-  
+
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <LangVersion>latest</LangVersion>
     <Nullable>disable</Nullable>

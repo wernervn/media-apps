@@ -12,7 +12,7 @@ public static class HttpHelper
         try
         {
             using var client = new HttpClient();
-            data = await client.GetByteArrayAsync(imageUrl).ConfigureAwait(false);
+            data = await client.GetByteArrayAsync(imageUrl);
         }
         catch (HttpListenerException ex)
         {

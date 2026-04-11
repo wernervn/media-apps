@@ -19,18 +19,18 @@ public partial class TvDbWrapper
     #region Get series
     public async Task<IEnumerable<SearchResultItem>> SearchSeries(string criteria)
     {
-        var found = (await _client.SearchSeriesByNameAsync(criteria).ConfigureAwait(false)/*.ConfigureAwait(false)*/).Data;
+        var found = (await _client.SearchSeriesByNameAsync(criteria)/**/).Data;
         return found.Select(Map).ToList();
     }
 
     public async Task<SeriesBase> GetSeriesBaseRecord(int seriesId)
     {
-        var baseRec = (await _client.GetSeriesAsync(seriesId).ConfigureAwait(false)).Data;
+        var baseRec = (await _client.GetSeriesAsync(seriesId)).Data;
         var series = Map(baseRec);
 
         try
         {
-            var actorResponse = await _client.GetActorsAsync(seriesId).ConfigureAwait(false);
+            var actorResponse = await _client.GetActorsAsync(seriesId);
             var actors = actorResponse.Data;
             var actorNames = actors.Select(actor => actor.Name);
             var actorList = string.Join("|", actorNames);
@@ -44,12 +44,12 @@ public partial class TvDbWrapper
     }
 
     public async Task<SeriesFull> GetSeriesFullRecord(string seriesId)
-        => await GetSeriesFullRecord(int.Parse(seriesId)).ConfigureAwait(false);
+        => await GetSeriesFullRecord(int.Parse(seriesId));
 
     public async Task<SeriesFull> GetSeriesFullRecord(int seriesId)
     {
-        var baseRec = await GetSeriesBaseRecord(seriesId).ConfigureAwait(false);
-        var allEpisodes = await _client.GetAllEpisodesAsync(seriesId).ConfigureAwait(false);
+        var baseRec = await GetSeriesBaseRecord(seriesId);
+        var allEpisodes = await _client.GetAllEpisodesAsync(seriesId);
         var episodeList = allEpisodes.Select(Map).ToList();
         return new SeriesFull { Series = baseRec, Episodes = episodeList };
     }
@@ -58,67 +58,54 @@ public partial class TvDbWrapper
 
     #region Get banners
     public async Task<IEnumerable<Banner>> GetSeriesBanners(string seriesId)
-        => await GetSeriesBanners(int.Parse(seriesId)).ConfigureAwait(false);
+        => await GetSeriesBanners(int.Parse(seriesId));
 
     public async Task<IEnumerable<Banner>> GetSeriesBanners(int seriesId)
     {
         try
         {
-            var banners = (await _client.GetImagesAsync(seriesId, GetImageQuery(BannerType.season)).ConfigureAwait(false)).Data;
+            var banners = (await _client.GetImagesAsync(seriesId, GetImageQuery(BannerType.season))).Data;
             return banners.Select(Map);
         }
         catch (Exception)
         {
-            return Enumerable.Empty<Banner>();
+            return [];
         }
     }
 
     public async Task<IEnumerable<Banner>> GetArtwork(string seriesId, BannerType bannerType)
-        => await GetArtwork(int.Parse(seriesId), bannerType).ConfigureAwait(false);
+        => await GetArtwork(int.Parse(seriesId), bannerType);
 
     public async Task<IEnumerable<Banner>> GetArtwork(int seriesId, BannerType bannerType)
     {
         try
         {
-            var images = (await _client.GetImagesAsync(seriesId, GetImageQuery(bannerType)).ConfigureAwait(false)).Data;
+            var images = (await _client.GetImagesAsync(seriesId, GetImageQuery(bannerType))).Data;
             return images.Select(Map);
         }
         catch (Exception)
         {
-            return Enumerable.Empty<Banner>();
+            return [];
         }
     }
 
     public async Task<IEnumerable<string>> GetArtworkPaths(int seriesId, BannerType bannerType)
     {
-        var artwork = await GetArtwork(seriesId, bannerType).ConfigureAwait(false);
+        var artwork = await GetArtwork(seriesId, bannerType);
         return artwork.Select(b => ArtworkClient.BuildImageUrl(b.BannerPath));
     }
 
     private Dto.Series.ImagesQuery GetImageQuery(BannerType bannerType)
     {
-        Dto.Series.KeyType keyType;
-        switch (bannerType)
+        var keyType = bannerType switch
         {
-            case BannerType.fanart:
-                keyType = Dto.Series.KeyType.Fanart;
-                break;
-            case BannerType.episode:
-                keyType = Dto.Series.KeyType.Season;
-                break;
-            case BannerType.poster:
-                keyType = Dto.Series.KeyType.Poster;
-                break;
-            case BannerType.season:
-                keyType = Dto.Series.KeyType.Season;
-                break;
-            case BannerType.series:
-                keyType = Dto.Series.KeyType.Series;
-                break;
-            default:
-                keyType = Dto.Series.KeyType.Season;
-                break;
-        }
+            BannerType.fanart => Dto.Series.KeyType.Fanart,
+            BannerType.episode => Dto.Series.KeyType.Season,
+            BannerType.poster => Dto.Series.KeyType.Poster,
+            BannerType.season => Dto.Series.KeyType.Season,
+            BannerType.series => Dto.Series.KeyType.Series,
+            _ => Dto.Series.KeyType.Season,
+        };
         return new() { KeyType = keyType };
     }
 
@@ -126,35 +113,35 @@ public partial class TvDbWrapper
 
     #region Get Actors
     public async Task<IEnumerable<Models.Actor>> GetSeriesActors(string seriesId)
-=> await GetSeriesActors(int.Parse(seriesId)).ConfigureAwait(false);
+=> await GetSeriesActors(int.Parse(seriesId));
 
     public async Task<IEnumerable<Models.Actor>> GetSeriesActors(int seriesId)
     {
         //await Authenticate()
-        var actors = (await _client.GetActorsAsync(seriesId).ConfigureAwait(false)).Data;
+        var actors = (await _client.GetActorsAsync(seriesId)).Data;
         return actors.Select(Map).ToList();
     }
 
     #endregion
 
     public async Task<Episode> GetEpisode(string episodeId)
-        => await GetEpisode(int.Parse(episodeId)).ConfigureAwait(false);
+        => await GetEpisode(int.Parse(episodeId));
 
     public async Task<Episode> GetEpisode(int episodeId)
     {
-        var episode = (await _client.GetEpisodeAsync(episodeId).ConfigureAwait(false)).Data;
+        var episode = (await _client.GetEpisodeAsync(episodeId)).Data;
         return Map(episode);
     }
 
     public async Task<Episode> GetSeriesEpisode(string seriesId, string seasonNo, string episodeNo)
-        => await GetSeriesEpisode(int.Parse(seriesId), int.Parse(seasonNo), int.Parse(episodeNo)).ConfigureAwait(false);
+        => await GetSeriesEpisode(int.Parse(seriesId), int.Parse(seasonNo), int.Parse(episodeNo));
 
     public async Task<Episode> GetSeriesEpisode(int seriesId, int seasonNo, int episodeNo)
-        => (await SearchEpisodes(seriesId, new Dto.Series.EpisodeQuery { AiredSeason = seasonNo, AiredEpisode = episodeNo }).ConfigureAwait(false)).SingleOrDefault();
+        => (await SearchEpisodes(seriesId, new Dto.Series.EpisodeQuery { AiredSeason = seasonNo, AiredEpisode = episodeNo })).SingleOrDefault();
 
     private async Task<IEnumerable<Episode>> SearchEpisodes(int seriesId, Dto.Series.EpisodeQuery query)
     {
-        var records = (await _client.GetEpisodesAsync(seriesId, page: 1, query).ConfigureAwait(false)).Data;
+        var records = (await _client.GetEpisodesAsync(seriesId, page: 1, query)).Data;
         return records.Select(Map);
     }
 
@@ -169,9 +156,9 @@ public partial class TvDbWrapper
 
     #region Image downloads
     public async Task<byte[]> GetImageByUrl(string url)
-        => await ArtworkClient.DownloadDataAsync(url).ConfigureAwait(false);
+        => await ArtworkClient.DownloadDataAsync(url);
 
     public async Task<byte[]> GetImage(string filename)
-        => await GetImageByUrl(filename).ConfigureAwait(false);
+        => await GetImageByUrl(filename);
     #endregion
 }

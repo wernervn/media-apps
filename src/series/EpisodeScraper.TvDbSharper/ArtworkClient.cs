@@ -18,6 +18,6 @@ internal static class ArtworkClient
             imageUrl = BuildImageUrl(imageUrl);
         }
 
-        return await DownloadBytes(imageUrl).ConfigureAwait(false);
+        return await DownloadBytes(imageUrl);
     }
 }

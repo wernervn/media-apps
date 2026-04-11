@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Drawing.Common" />
     <PackageReference Include="WVN.Configuration" />
     <PackageReference Include="WVN.WinForms" />
   </ItemGroup>
