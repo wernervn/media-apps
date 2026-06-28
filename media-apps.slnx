@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/Movies/">
+    <Project Path="src/movies/FolderCleaner/FolderCleaner.csproj" />
+    <Project Path="src/movies/MovieCollection.Common/MovieCollection.Common.csproj" />
+    <Project Path="src/movies/MovieCollection/MovieCollection.csproj" />
+    <Project Path="src/movies/Movies.TmDb/Movies.TmDb.csproj" />
+  </Folder>
+  <Folder Name="/Series/">
+    <Project Path="src/series/EpisodeScraper.TvDbSharper/EpisodeScraper.TvDbSharper.csproj" />
+    <Project Path="src/series/EpisodeScraper/EpisodeScraper.csproj" />
+    <Project Path="src/series/MediaApps.Series.Core/MediaApps.Series.Core.csproj" />
+    <Project Path="src/series/SeriesNavigator/SeriesNavigator.csproj" />
+  </Folder>
+  <Project Path="src/common/MediaApps.Common/MediaApps.Common.csproj" />
+</Solution>

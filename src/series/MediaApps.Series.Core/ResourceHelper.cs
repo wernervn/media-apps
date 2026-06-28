@@ -7,8 +7,8 @@ public class ResourceHelper
 {
     public async Task WriteResourceToFile(string resourceName, string fileName)
     {
-        using var resource = GetType().Assembly.GetManifestResourceStream(resourceName);
-        using var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
+        await using var resource = GetType().Assembly.GetManifestResourceStream(resourceName);
+        await using var file = new FileStream(fileName, FileMode.Create, FileAccess.Write);
         await resource.CopyToAsync(file).ConfigureAwait(false);
     }
 

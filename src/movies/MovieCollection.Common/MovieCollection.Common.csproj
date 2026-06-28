@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>$(DotnetWindows)</TargetFramework>
@@ -6,10 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="$(Dapper)" />
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="$(MSDataSqlite)" />
-    <PackageReference Include="WVN.Extensions" Version="$(WVNExtensions)" />
-    <PackageReference Include="WVN.IO" Version="$(WVNIO)" />
+    <PackageReference Include="Dapper" />
+    <PackageReference Include="Microsoft.Data.Sqlite" />
+    <PackageReference Include="WVN.Extensions" />
+    <PackageReference Include="WVN.IO" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,4 +1,5 @@
-﻿using MediaApps.Series.Core.Models;
+﻿using System.Globalization;
+using MediaApps.Series.Core.Models;
 using WVN.SimpleMapper;
 using WVN.TvDb.API.Models.Episode;
 using WVN.TvDb.API.Models.Search;
@@ -9,14 +10,16 @@ namespace EpisodeScraper.TvDbSharper;
 
 public partial class TvDbWrapper
 {
-    private SearchResultItem Map(SeriesSearchResult item)
+    private static readonly CultureInfo InvariantCulture = CultureInfo.InvariantCulture;
+
+    private static SearchResultItem Map(SeriesSearchResult item)
     {
         var mapper = new Mapper<SeriesSearchResult, SearchResultItem>(StringComparison.OrdinalIgnoreCase);
         mapper.AddMapping((s, d) => d.SeriesId = s.Id);
         return mapper.CreateMappedObject(item);
     }
 
-    private SeriesBase Map(Dto.Series.Series series)
+    private static SeriesBase Map(Dto.Series.Series series)
     {
         var mapper = new Mapper<Dto.Series.Series, SeriesBase>(StringComparison.OrdinalIgnoreCase);
         mapper.AddMapping((s, d) =>
@@ -25,7 +28,7 @@ public partial class TvDbWrapper
             d.Genre = s.Genre.Length > 0 ? s.Genre[0] : null;
             d.IMDB_ID = s.ImdbId;
             d.MPAA = s.Rating;
-            if (DateTime.TryParse(s.FirstAired, out var firstAired))
+            if (DateTime.TryParse(s.FirstAired, InvariantCulture, out var firstAired))
             {
                 d.FirstAired = firstAired;
             }
@@ -41,7 +44,7 @@ public partial class TvDbWrapper
         return mapper.CreateMappedObject(series);
     }
 
-    private Episode Map(EpisodeRecord episode)
+    private static Episode Map(EpisodeRecord episode)
     {
         var episodeMapper = new Mapper<EpisodeRecord, Episode>(StringComparison.OrdinalIgnoreCase);
         episodeMapper.AddMapping((s, d) =>
@@ -51,7 +54,7 @@ public partial class TvDbWrapper
             d.CombinedSeason = (s.AiredSeason?.ToString());
             d.Director = s.Directors.Length > 0 ? s.Directors[0] : null;
             d.EpisodeNumber = s.AiredEpisodeNumber;
-            if (DateTime.TryParse(s.FirstAired, out var firstAired))
+            if (DateTime.TryParse(s.FirstAired, InvariantCulture, out var firstAired))
             {
                 d.FirstAired = firstAired;
             }
@@ -63,7 +66,7 @@ public partial class TvDbWrapper
         return episodeMapper.CreateMappedObject(episode);
     }
 
-    private Banner Map(Dto.Series.Image banner)
+    private static Banner Map(Dto.Series.Image banner)
     {
         var mapper = new Mapper<Dto.Series.Image, Banner>();
         mapper.AddMapping((s, d) =>
@@ -77,7 +80,7 @@ public partial class TvDbWrapper
         return mapper.CreateMappedObject(banner);
     }
 
-    private Models.Actor Map(Dto.Series.Actor actor)
+    private static Models.Actor Map(Dto.Series.Actor actor)
     {
         var mapper = new Mapper<Dto.Series.Actor, Models.Actor>();
         mapper.AddMapping((s, d) => d.SortOrder = s.SortOrder ?? 1);

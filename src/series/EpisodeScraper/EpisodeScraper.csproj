@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
@@ -7,18 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WVN.Configuration" Version="$(WVNConfiguration)" />
-    <PackageReference Include="WVN.WinForms" Version="$(WVNWinForms)" />
+    <PackageReference Include="WVN.Configuration" />
+    <PackageReference Include="WVN.WinForms" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\EpisodeScraper.TvDbSharper\EpisodeScraper.TvDbSharper.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="appsettings.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

@@ -1,15 +1,8 @@
 ﻿namespace MovieCollection.Common;
 
-public class ImageResizedEventArgs : EventArgs
+public class ImageResizedEventArgs(string imageName, long originalSize, long newSize) : EventArgs
 {
-    public ImageResizedEventArgs(string imageName, long originalSize, long newSize)
-    {
-        ImageName = imageName;
-        OriginalSize = originalSize;
-        NewSize = newSize;
-    }
-
-    public string ImageName { get; set; }
-    public long OriginalSize { get; set; }
-    public long NewSize { get; set; }
+    public string ImageName { get; set; } = imageName;
+    public long OriginalSize { get; set; } = originalSize;
+    public long NewSize { get; set; } = newSize;
 }

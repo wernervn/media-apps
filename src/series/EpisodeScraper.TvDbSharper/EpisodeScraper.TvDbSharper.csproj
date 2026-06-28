@@ -1,12 +1,12 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>$(DotnetVersion)</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="WVN.SimpleMapper" Version="$(WVNSimpleMapper)" />
-    <PackageReference Include="WVN.TvDb.API" Version="$(WVNTvDbApi)" />
+    <PackageReference Include="WVN.SimpleMapper" />
+    <PackageReference Include="WVN.TvDb.API" />
   </ItemGroup>
 
   <ItemGroup>

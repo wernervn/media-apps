@@ -3,14 +3,9 @@ using MovieCollection.Common.Models;
 
 namespace Movies.TmDb;
 
-public class TmDbData : IMovieData
+public class TmDbData(string apiKey) : IMovieData
 {
-    private readonly TmDbWrapperHelper _wrapper;
-
-    public TmDbData(string apiKey)
-    {
-        _wrapper = new TmDbWrapperHelper(apiKey);
-    }
+    private readonly TmDbWrapperHelper _wrapper = new(apiKey);
 
     public async Task<List<MovieSearchResult>> Search(string criteria)
         => await _wrapper.Search(criteria);

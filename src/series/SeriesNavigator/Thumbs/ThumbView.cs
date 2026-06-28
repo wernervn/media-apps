@@ -1,4 +1,6 @@
-﻿namespace SeriesNavigator.Thumbs;
+﻿using System.ComponentModel;
+
+namespace SeriesNavigator.Thumbs;
 
 public partial class ThumbView : UserControl
 {
@@ -15,6 +17,7 @@ public partial class ThumbView : UserControl
         : this()
         => ThumbImage = thumb;
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public ThumbImage ThumbImage
     {
         get => _thumb;
@@ -69,11 +72,6 @@ public partial class ThumbView : UserControl
 
     protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
     {
-        //if (keyData == (Keys.Control | Keys.F))
-        //{
-        //    DoSomething();   // Implement the Ctrl+F short-cut keystroke
-        //    return true;     // This keystroke was handled, don't pass to the control with the focus
-        //}
         switch (keyData)
         {
             case Keys.Enter:
@@ -116,6 +114,7 @@ public partial class ThumbView : UserControl
         }
     }
 
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public bool IsSelected
     {
         get => _isSelected;
@@ -129,7 +128,11 @@ public partial class ThumbView : UserControl
     public int Index => _thumb.Index;
     public string Description => _thumb.Description;
     public string Title => _thumb.Name;
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int Row { get; set; }
+
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int Column { get; set; }
 
     private void StyleSelected()

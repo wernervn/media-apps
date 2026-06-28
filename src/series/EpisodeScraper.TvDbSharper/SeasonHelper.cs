@@ -7,24 +7,24 @@ using WVN.IO.Helpers;
 
 namespace EpisodeScraper.TvDbSharper;
 
-public static partial class SeasonHelper
+public static class SeasonHelper
 {
     public static async Task GetEpisodeMetadata(TvDbWrapper api, string seasonPath)
     {
         var parent = new DirectoryInfo(seasonPath).Parent;
         var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
-        await GetEpisodeMetadata(api, seriesId, seasonPath).ConfigureAwait(false);
+        await GetEpisodeMetadata(api, seriesId, seasonPath);
     }
 
     public static async Task GetEpisodeMetadata(TvDbWrapper api, string seriesId, string seasonPath)
     {
-        var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
+        var fullRec = await api.GetSeriesFullRecord(seriesId);
 
         var seasonName = new DirectoryInfo(seasonPath).Name;
         var seasonNo = seasonName.Split(" ".ToCharArray())[1];
-        var banners = await api.GetArtwork(fullRec.Series.Id, BannerType.season).ConfigureAwait(false);
+        var banners = await api.GetArtwork(fullRec.Series.Id, BannerType.season);
 
-        await GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo).ConfigureAwait(false);
+        await GetEpisodeMetadata(api, fullRec, seasonPath, banners, seasonNo);
     }
 
     public static async Task GetEpisodeMetadata(TvDbWrapper api, SeriesFull fullRec, string seasonPath, IEnumerable<Banner> banners, string seasonNo)
@@ -39,45 +39,7 @@ public static partial class SeasonHelper
             return;
         }
 
-        var bytesSaved = 0;
-        foreach (var key in thumbs.Keys)
-        {
-            //key sample : C:\BT\Series\Ray Donovan\Season 5\Ray Donovan.S05E06.Shelley Duvall.mkv
-            var episodeNo = SeriesIOHelper.GetSeasonEpisodeFromName(key);
-            //resolve episode from seasonEpisodes
-            var episode = seasonEpisodes.First(ep => ep.EpisodeNumber == episodeNo);
-            var episodeFileName = episode.FileName;
-
-            // thumbnails
-            if (thumbs[key]?.Length == 0 && !string.IsNullOrEmpty(episodeFileName))
-            {
-                //get banner TVDB filename
-                //get image using filename
-                var data = await api.GetImage(episodeFileName).ConfigureAwait(false);
-                if (data?.Length > 0)
-                {
-                    var reduced = ImageHelper.ReduceImageSize(data);
-
-                    if (reduced?.Length > 0)
-                    {
-                        bytesSaved += data.Length - reduced.Length;
-                        //save image using episode name
-                        var newExtension = Path.GetExtension(episodeFileName);
-                        var imgFile = Path.ChangeExtension(key, newExtension);
-                        await File.WriteAllBytesAsync(imgFile, reduced).ConfigureAwait(false);
-                    }
-                }
-            }
-
-            // xml content
-            var xmlPath = Path.ChangeExtension(key, Constants.CONTENT_EXTENSION);
-            if (!File.Exists(xmlPath))
-            {
-                var xml = GetEpisodeXml(fullRec.Series, episode, bannerImages);
-                await File.WriteAllTextAsync(xmlPath, xml).ConfigureAwait(false);
-            }
-        }
-        Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
+        await WriteEpisodeData(thumbs, seasonEpisodes, api, fullRec, bannerImages);
 
         //get season thumb
         var seasonThumb = Path.Combine(seasonPath, Constants.SERIES_SEASON_THUMB);
@@ -92,12 +54,12 @@ public static partial class SeasonHelper
             var seasonBanner = banners.ToList().Find(banner => banner.BannerType == "season" && banner.Season == epi.CombinedSeason);
             if (seasonBanner is not null)
             {
-                var img = await api.GetImage(seasonBanner.BannerPath).ConfigureAwait(false) ?? await api.GetImage(seasonBanner.ThumbnailPath).ConfigureAwait(false);
+                var img = await api.GetImage(seasonBanner.BannerPath) ?? await api.GetImage(seasonBanner.ThumbnailPath);
 
                 if (img is not null)
                 {
                     var reduced = ImageHelper.ReduceImageSize(img);
-                    await File.WriteAllBytesAsync(seasonThumb, reduced).ConfigureAwait(false);
+                    await File.WriteAllBytesAsync(seasonThumb, reduced);
                 }
             }
         }
@@ -106,15 +68,74 @@ public static partial class SeasonHelper
         var viewFile = Path.Combine(seasonPath, Constants.SEASON_VIEW);
         if (!File.Exists(viewFile))
         {
-            await api.WriteSeasonViewXml(viewFile).ConfigureAwait(false);
+            await api.WriteSeasonViewXml(viewFile);
         }
+    }
+
+    private static async Task WriteEpisodeData(Dictionary<string, string> thumbs, IEnumerable<Episode> seasonEpisodes, TvDbWrapper api, SeriesFull fullRec, IEnumerable<string> bannerImages)
+    {
+        const int BatchSize = 10;
+
+        int bytesSaved = 0;
+        var tasks = new List<Task>();
+        foreach (var key in thumbs.Keys)
+        {
+            var task = Task.Run(async () =>
+            {
+                //key sample : C:\BT\Series\Ray Donovan\Season 5\Ray Donovan.S05E06.Shelley Duvall.mkv
+                var episodeNo = SeriesIOHelper.GetSeasonEpisodeFromName(key);
+                //resolve episode from seasonEpisodes
+                var episode = seasonEpisodes.First(ep => ep.EpisodeNumber == episodeNo);
+                var episodeFileName = episode.FileName;
+
+                // get episode thumbnails
+                if (thumbs[key]?.Length == 0 && !string.IsNullOrEmpty(episodeFileName))
+                {
+                    //get banner TVDB filename
+                    //get image using filename
+                    var data = await api.GetImage(episodeFileName);
+                    if (data?.Length > 0)
+                    {
+                        var reduced = ImageHelper.ReduceImageSize(data);
+
+                        if (reduced?.Length > 0)
+                        {
+                            //save image using episode name
+                            Interlocked.Add(ref bytesSaved, data.Length - reduced.Length);
+                            var newExtension = Path.GetExtension(episodeFileName);
+                            var imgFile = Path.ChangeExtension(key, newExtension);
+                            await File.WriteAllBytesAsync(imgFile, reduced);
+                        }
+                    }
+                }
+
+                // get episode xml content
+                var xmlPath = Path.ChangeExtension(key, Constants.CONTENT_EXTENSION);
+                if (!File.Exists(xmlPath))
+                {
+                    var xml = GetEpisodeXml(fullRec.Series, episode, bannerImages);
+                    await File.WriteAllTextAsync(xmlPath, xml);
+                }
+            });
+            tasks.Add(task);
+        }
+
+        var start = Stopwatch.GetTimestamp();
+        int i = 0;
+        while (i < tasks.Count)
+        {
+            await Task.WhenAll([.. tasks.Skip(i).Take(BatchSize)]);
+            i += BatchSize;
+        }
+
+        Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved} and time taken: {Stopwatch.GetElapsedTime(start)}");
     }
 
     public static async Task<IEnumerable<Episode>> GetEpisodes(TvDbWrapper api, string seasonPath)
     {
         var parent = new DirectoryInfo(seasonPath).Parent;
         var seriesId = SeriesIOHelper.GetSeriesIdFromFile(parent.FullName);
-        var fullRec = await api.GetSeriesFullRecord(seriesId).ConfigureAwait(false);
+        var fullRec = await api.GetSeriesFullRecord(seriesId);
 
         var seasonName = new DirectoryInfo(seasonPath).Name;
         var seasonNo = seasonName.Split(" ".ToCharArray())[1];
@@ -192,7 +213,7 @@ public static partial class SeasonHelper
             ? series.Actors
             : episode.GuestStars;
         m.cast = SeriesIOHelper.ToArray(cast);
-        m.image = bannerImages.ToArray();
+        m.image = [.. bannerImages];
 
         metadata.Movie = m;
         return metadata.AsXml();
@@ -206,7 +227,8 @@ public static partial class SeasonHelper
 
     public static async Task RenameFiles(TvDbWrapper api, string seriesName, string seasonPath)
     {
-        var episodes = await GetEpisodes(api, seasonPath).ConfigureAwait(false);
+        var episodes = await GetEpisodes(api, seasonPath);
+
         var files = GetEpisodeFiles(seasonPath).Select(f => new FileInfo(f).Name);
         var subtitles = GetSubtitleFiles(seasonPath);
 

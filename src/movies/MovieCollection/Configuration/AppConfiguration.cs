@@ -58,8 +58,8 @@ public class AppConfiguration
     public List<string> RemovalValues { get; set; } = DefaultRemovalValues;
 
     private static List<string> DefaultSpaceCharacters
-        => new() { ".", "_", "(", ")", "[", "]" };
+        => [".", "_", "(", ")", "[", "]"];
 
     private static List<string> DefaultRemovalValues
-        => new() { "Extended", "DVDRip", "BDRip", "BRRip", "HDTV", "Xvid", @"\d{4}p", @"\d{4}", @"\d{3}p", "dvdscr", "limited", "hdrip", "x264", "r5", "bluray", "unrated", "directors cut", "AC3", "webrip", "webdl", "remastered", "YTS AG", "-EVO", "-ETRG", "AAC", "READNFO", "YTS PE", "-RARBG", "H264", "YTS.ME", "YTS.AM", "5.1", "YTS.MX" };
+        => ["Extended", "DVDRip", "BDRip", "BRRip", "HDTV", "Xvid", @"\d{4}p", @"\d{4}", @"\d{3}p", "dvdscr", "limited", "hdrip", "x264", "x265", "r5", "bluray", "unrated", "directors cut", "AC3", "webrip", "webdl", "remastered", "YTS AG", "-EVO", "-ETRG", "AAC", "READNFO", "YTS PE", "-RARBG", "H264", "YTS.ME", "YTS.AM", "5.1", "YTS.MX"];
 }

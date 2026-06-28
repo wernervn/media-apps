@@ -17,7 +17,7 @@ public static class Helpers
     {
         if (!extension.StartsWith(".", StringComparison.CurrentCulture))
         {
-            extension = string.Concat(".", extension);
+            extension = $".{extension}";
         }
 
         return string.Concat(Path.GetTempPath(), Guid.NewGuid().ToString(), extension);
@@ -25,22 +25,13 @@ public static class Helpers
 
     public static string GetSize(long size)
     {
-        if (size > SIZE_GB)
+        return size switch
         {
-            return Math.Round((decimal)size / SIZE_GB, 2) + " GB";
-        }
-        else if (size > SIZE_MB)
-        {
-            return Math.Round((decimal)size / SIZE_MB, 2) + " MB";
-        }
-        else if (size > SIZE_KB)
-        {
-            return Math.Round((decimal)size / SIZE_KB, 0) + " KB";
-        }
-        else
-        {
-            return size + " Bytes";
-        }
+            > SIZE_GB => Math.Round((decimal)size / SIZE_GB, 2) + " GB",
+            > SIZE_MB => Math.Round((decimal)size / SIZE_MB, 2) + " MB",
+            > SIZE_KB => Math.Round((decimal)size / SIZE_KB, 0) + " KB",
+            _ => size + " Bytes"
+        };
     }
 
     public static string ScrubMovieName(string name, List<string> spaceChars, List<string> removals)
@@ -73,25 +64,25 @@ public static class Helpers
     /// <summary>
     /// System.Drawing.Image.FromFile locks the file, this method doesn't
     /// </summary>
-    /// <param name="fileName"></param>
     /// <returns>Image</returns>
     public static Image ImageFromFile(string fileName)
     {
-        if (fileName == null) throw new ArgumentNullException(nameof(fileName));
+        ArgumentNullException.ThrowIfNull(fileName);
 
-        using (FileStream lStream = new FileStream(fileName, FileMode.Open, FileAccess.Read))
-        {
-            return Image.FromStream(lStream);
-        }
+        using FileStream lStream = new FileStream(fileName, FileMode.Open, FileAccess.Read);
+        return Image.FromStream(lStream);
     }
 
     #region File searching
-    public static List<string> GetFolderImages(string path) => FileUtil.GetFiles(path, Constants.IMAGE_VALUES, SearchOption.TopDirectoryOnly).ToList();
+    public static List<string> GetFolderImages(string path)
+        => FileUtil.GetFiles(path, Constants.IMAGE_VALUES, SearchOption.TopDirectoryOnly).ToList();
     #endregion
 
-    public static bool IsImageFile(string extension) => Constants.IMAGE_VALUES.Contains(extension.ToLower());
+    public static bool IsImageFile(string extension)
+        => Constants.IMAGE_VALUES.Contains(extension.ToLower());
 
-    public static bool IsMovieFile(string extension) => Constants.MOVIE_VALUES.Contains(extension.ToLower());
+    public static bool IsMovieFile(string extension)
+        => Constants.MOVIE_VALUES.Contains(extension.ToLower());
 
     public static void Launch(string fileName, string args = null)
     {
@@ -108,7 +99,7 @@ public static class Helpers
     #region Imaging
     public static byte[] ResizeImage(byte[] inputImage, int desiredWidth, int desiredHeight)
     {
-        byte[] outputImage = { };
+        byte[] outputImage = [];
         var image = Image.FromStream(new MemoryStream(inputImage));
         var bmp = new Bitmap(desiredWidth, desiredHeight);
         using (Graphics grfx = Graphics.FromImage(bmp))
@@ -130,7 +121,6 @@ public static class Helpers
             }
         }
 
-        //return imageStream == null ? null : Image.FromStream(imageStream);
         return outputImage;
     }
 
@@ -157,7 +147,9 @@ public static class Helpers
 
     #endregion
 
-    public static bool FolderContainsInfo(string path) => FileUtil.GetFiles(path, Constants.MOVIE_DATA, SearchOption.AllDirectories).Any();
+    public static bool FolderContainsInfo(string path)
+        => FileUtil.GetFiles(path, Constants.MOVIE_DATA, SearchOption.AllDirectories).Any();
 
-    public static string CleanSQL(string text) => text.Replace("'", "''");
+    public static string CleanSQL(string text)
+        => text.Replace("'", "''");
 }

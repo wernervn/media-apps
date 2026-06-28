@@ -17,8 +17,8 @@ public class RenameContainer
     {
         SeriesName = seriesName;
         Folder = folder;
-        Episodes = episodes.ToList();
-        FoundFiles = files.ToList();
+        Episodes = [.. episodes];
+        FoundFiles = [.. files];
 
         LoadEpisodes();
     }
@@ -53,7 +53,7 @@ public class RenameContainer
 
     private void LoadEpisodes()
     {
-        _renameItems = new RenameItems();
+        _renameItems = [];
         Episodes.ForEach(LoadEpisode);
     }
 

@@ -1,7 +1,9 @@
 ﻿using System.Reflection;
 using MovieCollection.Common;
+using MovieCollection.Common.Extensions;
 using MovieCollection.Common.Interfaces;
 using MovieCollection.Common.Models;
+using MovieCollection.Common.Winforms;
 using MovieCollection.Configuration;
 using Movies.TmDb;
 using WVN.Configuration;
@@ -32,7 +34,7 @@ public partial class MovieBrowser : Form
     private const string XML_KEY = "Xml";
     private readonly IMovieData _wrapper;
     private FileFilter _fileFilter;
-    private Assembly _executingAssembly = Assembly.GetExecutingAssembly();
+    private readonly Assembly _executingAssembly = Assembly.GetExecutingAssembly();
 
     public MovieBrowser()
     {
@@ -115,10 +117,11 @@ public partial class MovieBrowser : Form
         var movieFolder = tvwFolder.SelectedNode.Tag.ToString();
         var movieName = new DirectoryInfo(tvwFolder.SelectedNode.Tag.ToString()).Name;
         frm.Show(_settings.AppConfiguration, _wrapper, movieName, this);
+
         if (frm.DialogResult == DialogResult.OK)
         {
             await PersistMovieInfoAsync(movieFolder, frm.SelectedMovie);
-            FixFolderNameAsync(frm.SelectedMovie);
+            FixFolderName(frm.SelectedMovie);
         }
     }
 
@@ -132,23 +135,19 @@ public partial class MovieBrowser : Form
     {
         const string IMDB_URL = @"http://www.imdb.com/title/{0}/";
 
-        var infoFile = CurrentMovieInfoFile();
-        if (!string.IsNullOrEmpty(infoFile))
+        var dbFile = CurrentMovieInfoFile();
+        if (!string.IsNullOrEmpty(dbFile))
         {
             //write nfo file from movie info
-            var movie = await GetMovieDetailsAsync(infoFile);
+            var movie = await GetMovieDetailsAsync(dbFile);
             var movieURL = string.Format(IMDB_URL, movie.ImdbId);
 
-            var searchFiles = new List<string>(Constants.MOVIE_VALUES.ToArray());
-            var movieFiles = FileUtil.GetFiles(Path.GetDirectoryName(infoFile), searchFiles, SearchOption.AllDirectories).ToList();
-
-            movieFiles.ForEach(file =>
+            var movieFile = FileUtil.GetFiles(Path.GetDirectoryName(dbFile), Constants.MOVIE_VALUES, SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (movieFile != null)
             {
-                var dir = Path.GetDirectoryName(file);
-                var nfo = Path.GetFileNameWithoutExtension(file);
-                var nfoFile = string.Concat(nfo, ".nfo");
-                File.WriteAllText(Path.Combine(dir, nfoFile), movieURL);
-            });
+                var nfoFile = Path.ChangeExtension(movieFile, ".nfo");
+                await File.WriteAllTextAsync(nfoFile, movieURL);
+            }
         }
     }
 
@@ -156,9 +155,12 @@ public partial class MovieBrowser : Form
     {
         //launch with path as filename
         var path = tvwFolder.Nodes[0].Text;
-        var exe = "BatchMovieInfoGetter.exe";
+        const string Exe = "BatchMovieInfoGetter.exe";
 
-        Helpers.Launch(exe, path);
+        if (File.Exists(Exe))
+        {
+            Helpers.Launch(Exe, path);
+        }
     }
 
     [Obsolete]
@@ -345,18 +347,20 @@ public partial class MovieBrowser : Form
     private void FolderContainsMovie()
     {
         var root = RootNode();
-        if (root != null)
+        if (root == null)
         {
-            foreach (TreeNode node in root.Nodes)
-            {
-                FolderContainsMovie(node);
-            }
+            return;
+        }
+
+        foreach (TreeNode node in root.Nodes)
+        {
+            FolderContainsMovie(node);
         }
     }
 
-    private void FolderContainsMovie(TreeNode node)
+    private static void FolderContainsMovie(TreeNode node)
     {
-        if (node.Tag != null && GetMovieFiles(node.Tag.ToString()).Any())
+        if (node.Tag != null && GetMovieFiles(node.Tag.ToString()).Count != 0)
         {
             node.ImageKey = MOVIE_KEY;
             node.SelectedImageKey = MOVIE_KEY;
@@ -365,15 +369,15 @@ public partial class MovieBrowser : Form
 
     private TreeNode RootNode() => tvwFolder.Nodes.Count > 0 ? tvwFolder.Nodes[0] : null;
 
-    private List<string> GetMovieFiles(string folderPath)
+    private static List<string> GetMovieFiles(string folderPath)
     {
         var extensions = (from ext in Constants.MOVIE_VALUES
                           select "*" + ext).ToList();
-        return FileUtil.GetFiles(folderPath, extensions, SearchOption.AllDirectories).ToList();
+        return [.. FileUtil.GetFiles(folderPath, extensions, SearchOption.AllDirectories)];
     }
 
-    private List<string> GetInfoFiles(string folderPath)
-        => FileUtil.GetFiles(folderPath, new string[] { Constants.MOVIE_DATA }, SearchOption.TopDirectoryOnly).ToList();
+    private static List<string> GetInfoFiles(string folderPath)
+        => [.. FileUtil.GetFiles(folderPath, [Constants.MOVIE_DATA], SearchOption.TopDirectoryOnly)];
 
     private void FolderContainsInfo()
     {
@@ -387,7 +391,7 @@ public partial class MovieBrowser : Form
         }
     }
 
-    private void FolderContainsInfo(TreeNode node)
+    private static void FolderContainsInfo(TreeNode node)
     {
         if (node.Tag != null && GetInfoFiles(node.Tag.ToString()).Count > 0)
         {
@@ -408,9 +412,9 @@ public partial class MovieBrowser : Form
         }
     }
 
-    private void MovieWatched(TreeNode node)
+    private static void MovieWatched(TreeNode node)
     {
-        if (node.Tag != null && GetWatchedFiles(node.Tag.ToString()).Any())
+        if (node.Tag != null && GetWatchedFiles(node.Tag.ToString()).Count != 0)
         {
             node.ImageKey = WATCHED_KEY;
             node.SelectedImageKey = WATCHED_KEY;
@@ -429,28 +433,29 @@ public partial class MovieBrowser : Form
         }
     }
 
-    private void FolderContainsPoster(TreeNode node)
+    private static void FolderContainsPoster(TreeNode node)
     {
-        if (node.Tag != null && GetImageFiles(node.Tag.ToString()).Any())
+        if (node.Tag != null && GetImageFiles(node.Tag.ToString()).Count != 0)
         {
             node.ImageKey = POSTER_KEY;
             node.SelectedImageKey = POSTER_KEY;
         }
     }
 
-    private List<string> GetWatchedFiles(string folderPath)
-        => FileUtil.GetFiles(folderPath, new string[] { "*.t" }, SearchOption.AllDirectories).ToList();
+    private static List<string> GetWatchedFiles(string folderPath)
+        => [.. FileUtil.GetFiles(folderPath, ["*.t"], SearchOption.AllDirectories)];
 
-    private List<string> GetImageFiles(string folderPath)
-        => FileUtil.GetFiles(folderPath, Constants.IMAGE_VALUES, SearchOption.TopDirectoryOnly).ToList();
+    private static List<string> GetImageFiles(string folderPath)
+        => [.. FileUtil.GetFiles(folderPath, Constants.IMAGE_VALUES, SearchOption.TopDirectoryOnly)];
 
-    private List<string> GetXmlFiles(string folderPath)
-        => FileUtil.GetFiles(folderPath, new List<string>(new string[] { ".xml" }), SearchOption.TopDirectoryOnly).ToList();
+    private static List<string> GetXmlFiles(string folderPath)
+        => [.. FileUtil.GetFiles(folderPath, [".xml"], SearchOption.TopDirectoryOnly)];
 
     private async Task PersistMovieInfoAsync(string path, MovieDetails movie)
     {
         await Common.DB.MovieFile.WriteFile(path, movie);
         await LoadFilesByFilterAsync(path);
+        await CreateNFOAsync();
     }
 
     private async Task LoadFilesByFilterAsync(string path)
@@ -571,7 +576,7 @@ public partial class MovieBrowser : Form
             //show movie.txt content if present
             if (fi.Name.Equals(MOVIE_TEXT, StringComparison.InvariantCultureIgnoreCase))
             {
-                movieText = File.ReadAllText(file);
+                movieText = await File.ReadAllTextAsync(file);
             }
 
             //set movie.info if present
@@ -600,7 +605,7 @@ public partial class MovieBrowser : Form
             catch (Exception ex)
             {
                 var message = $"Error occurred during movie DB load. OK to delete db file?\r\n{ex.Message}";
-                if (MessageBox.Show(message, "Delete movie db file?", MessageBoxButtons.YesNo) == DialogResult.Yes && File.Exists(movieInfo))
+                if (WinFormHelper.Ask(message, "Delete movie db file?") == DialogResult.Yes && File.Exists(movieInfo))
                 {
                     File.Delete(movieInfo);
                 }
@@ -627,7 +632,7 @@ public partial class MovieBrowser : Form
         }
     }
 
-    private async Task<MovieDetails> GetMovieDetailsAsync(string path)
+    private static async Task<MovieDetails> GetMovieDetailsAsync(string path)
         => await Common.DB.MovieFile.GetMovieDetailsAsync(path);
 
     private async Task ShowMovieInfoAsync()
@@ -763,7 +768,7 @@ public partial class MovieBrowser : Form
             {
                 var folder = Path.GetDirectoryName(movieFile);
                 var poster = Path.Combine(folder, "poster.jpg");
-                File.WriteAllBytes(poster, movie.Poster);
+                await File.WriteAllBytesAsync(poster, movie.Poster);
                 await LoadFilesByFilterAsync(GetCurrentFolder());
             }
         }
@@ -772,7 +777,7 @@ public partial class MovieBrowser : Form
     /// <summary>
     /// renames the current folder name to MOVIE_NAME (YEAR)
     /// </summary>
-    private void FixFolderNameAsync(MovieDetails movie)
+    private void FixFolderName(MovieDetails movie)
     {
         if (!Directory.Exists(tvwFolder.SelectedNode.Tag.ToString()))
         {
@@ -787,7 +792,7 @@ public partial class MovieBrowser : Form
             var dirInfo = new DirectoryInfo(folder);
 
             var title = movie.Title;
-            var year = !string.IsNullOrWhiteSpace(movie.Released) ?  DateTime.Parse(movie.Released).Year.ToString() : "(0000)";
+            var year = !string.IsNullOrWhiteSpace(movie.Released) ? DateTime.Parse(movie.Released).Year.ToString() : "(0000)";
             var newName = IOHelper.CleanFileName(string.Format("{0} ({1})", title, year));
             var fixedName = Path.Combine(dirInfo.Parent.FullName, newName);
 
@@ -839,7 +844,7 @@ public partial class MovieBrowser : Form
         }
     }
 
-    private void ContainsXml(TreeNode node)
+    private static void ContainsXml(TreeNode node)
     {
         if (node.Tag != null && GetXmlFiles(node.Tag.ToString()).Count > 0)
         {
@@ -884,9 +889,6 @@ public partial class MovieBrowser : Form
 
     private async void btnMakePoster_Click(object sender, EventArgs e)
         => await CreatePosterAsync();
-
-    #region Search
-    #endregion Search
 
     #endregion Toolbar
 
@@ -995,7 +997,7 @@ public partial class MovieBrowser : Form
         if (IsMovieFolder())
         {
             var folder = GetCurrentFolder();
-            if (MessageBox.Show($"Do you really want to delete folder '{folder}'?", "OK to delete folder?", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (WinFormHelper.Ask($"Do you really want to delete folder '{folder}'?", "OK to delete folder?") == DialogResult.Yes)
             {
                 Directory.Delete(folder, true);
 

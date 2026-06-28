@@ -8,7 +8,7 @@ public partial class TvDbWrapper
 {
     private readonly ResourceHelper _resourceHelper = new ResourceHelper();
 
-    public string GetEpisodeMetadata()
+    public static string GetEpisodeMetadata()
     {
         var metadata = new EpisodeMetadata();
         return metadata.AsXml();

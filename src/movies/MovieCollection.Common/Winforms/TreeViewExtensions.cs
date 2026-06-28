@@ -52,18 +52,7 @@ public static class TreeViewExtensions
 
     public static void DeleteGoUp(this TreeNode node)
     {
-        //TreeNode parent = node.Parent;
         TreeView view = node.TreeView;
-        //if (parent != null)
-        //{
-        //    int index = parent.Nodes.IndexOf(node);
-        //    if (index > 0)
-        //    {
-        //        parent.Nodes.RemoveAt(index);
-        //        parent.Nodes.Insert(index - 1, node);
-        //    }
-        //}
-        //else
         if (node.TreeView.Nodes.Contains(node)) //root node
         {
             int index = view.Nodes.IndexOf(node);
