@@ -229,21 +229,6 @@ public static class SeasonHelper
     {
         var episodes = await GetEpisodes(api, seasonPath);
 
-        //var tasks = new List<Task>
-        //{
-        //    new(async () =>
-        //{
-        //    var files = GetEpisodeFiles(seasonPath).Select(f => new FileInfo(f).Name);
-        //    RenameEpisodeFiles(seriesName, seasonPath, episodes, files);
-        //}),
-        //    new(async () =>
-        //    {
-        //        var subtitles = GetSubtitleFiles(seasonPath);
-        //        RenameEpisodeFiles(seriesName, seasonPath, episodes, subtitles);
-        //    })
-        //};
-        //await Task.WhenAll(tasks);
-
         var files = GetEpisodeFiles(seasonPath).Select(f => new FileInfo(f).Name);
         var subtitles = GetSubtitleFiles(seasonPath);
 
