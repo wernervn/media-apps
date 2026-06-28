@@ -1,4 +1,5 @@
-﻿using MediaApps.Series.Core;
+﻿using System.Diagnostics;
+using MediaApps.Series.Core;
 using MediaApps.Series.Core.Mede8er;
 using MediaApps.Series.Core.Models;
 using MediaApps.Series.Core.Rename;
@@ -73,6 +74,8 @@ public static class SeasonHelper
 
     private static async Task WriteEpisodeData(Dictionary<string, string> thumbs, IEnumerable<Episode> seasonEpisodes, TvDbWrapper api, SeriesFull fullRec, IEnumerable<string> bannerImages)
     {
+        const int BatchSize = 10;
+
         int bytesSaved = 0;
         var tasks = new List<Task>();
         foreach (var key in thumbs.Keys)
@@ -117,13 +120,15 @@ public static class SeasonHelper
             tasks.Add(task);
         }
 
-        for (int i = 0; i < tasks.Count; i += 10)
+        var start = Stopwatch.GetTimestamp();
+        int i = 0;
+        while (i < tasks.Count)
         {
-            var batch = tasks.Skip(i).Take(10).ToArray();
-            await Task.WhenAll(batch);
+            await Task.WhenAll([.. tasks.Skip(i).Take(BatchSize)]);
+            i += BatchSize;
         }
 
-        System.Diagnostics.Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
+        Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved} and time taken: {Stopwatch.GetElapsedTime(start)}");
     }
 
     public static async Task<IEnumerable<Episode>> GetEpisodes(TvDbWrapper api, string seasonPath)
