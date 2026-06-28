@@ -135,23 +135,19 @@ public partial class MovieBrowser : Form
     {
         const string IMDB_URL = @"http://www.imdb.com/title/{0}/";
 
-        var infoFile = CurrentMovieInfoFile();
-        if (!string.IsNullOrEmpty(infoFile))
+        var dbFile = CurrentMovieInfoFile();
+        if (!string.IsNullOrEmpty(dbFile))
         {
             //write nfo file from movie info
-            var movie = await GetMovieDetailsAsync(infoFile);
+            var movie = await GetMovieDetailsAsync(dbFile);
             var movieURL = string.Format(IMDB_URL, movie.ImdbId);
 
-            var searchFiles = new List<string>([.. Constants.MOVIE_VALUES]);
-            var movieFiles = FileUtil.GetFiles(Path.GetDirectoryName(infoFile), searchFiles, SearchOption.AllDirectories).ToList();
-
-            movieFiles.ForEach(async file =>
+            var movieFile = FileUtil.GetFiles(Path.GetDirectoryName(dbFile), Constants.MOVIE_VALUES, SearchOption.TopDirectoryOnly).FirstOrDefault();
+            if (movieFile != null)
             {
-                var dir = Path.GetDirectoryName(file);
-                var nfo = Path.GetFileNameWithoutExtension(file);
-                var nfoFile = $"{nfo}.nfo";
-                await File.WriteAllTextAsync(Path.Combine(dir, nfoFile), movieURL);
-            });
+                var nfoFile = Path.ChangeExtension(movieFile, ".nfo");
+                await File.WriteAllTextAsync(nfoFile, movieURL);
+            }
         }
     }
 
