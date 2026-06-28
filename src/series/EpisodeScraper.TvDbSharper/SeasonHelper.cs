@@ -1,6 +1,4 @@
-﻿//#define PARALLEL
-
-using MediaApps.Series.Core;
+﻿using MediaApps.Series.Core;
 using MediaApps.Series.Core.Mede8er;
 using MediaApps.Series.Core.Models;
 using MediaApps.Series.Core.Rename;
@@ -75,50 +73,11 @@ public static class SeasonHelper
 
     private static async Task WriteEpisodeData(Dictionary<string, string> thumbs, IEnumerable<Episode> seasonEpisodes, TvDbWrapper api, SeriesFull fullRec, IEnumerable<string> bannerImages)
     {
-#if !PARALLEL
-        var bytesSaved = 0;
-#else
-        List<Task> tasks = [];
-#endif
+        int bytesSaved = 0;
+        var tasks = new List<Task>();
         foreach (var key in thumbs.Keys)
         {
-#if !PARALLEL
-            //key sample : C:\BT\Series\Ray Donovan\Season 5\Ray Donovan.S05E06.Shelley Duvall.mkv
-            var episodeNo = SeriesIOHelper.GetSeasonEpisodeFromName(key);
-            //resolve episode from seasonEpisodes
-            var episode = seasonEpisodes.First(ep => ep.EpisodeNumber == episodeNo);
-            var episodeFileName = episode.FileName;
-
-            // get episode thumbnails
-            if (thumbs[key]?.Length == 0 && !string.IsNullOrEmpty(episodeFileName))
-            {
-                //get banner TVDB filename
-                //get image using filename
-                var data = await api.GetImage(episodeFileName);
-                if (data?.Length > 0)
-                {
-                    var reduced = ImageHelper.ReduceImageSize(data);
-
-                    if (reduced?.Length > 0 && reduced.Length < data.Length)
-                    {
-                        bytesSaved += data.Length - reduced.Length;
-                        //save image using episode name
-                        var newExtension = Path.GetExtension(episodeFileName);
-                        var imgFile = Path.ChangeExtension(key, newExtension);
-                        await File.WriteAllBytesAsync(imgFile, reduced);
-                    }
-                }
-            }
-
-            // get episode xml content
-            var xmlPath = Path.ChangeExtension(key, Constants.CONTENT_EXTENSION);
-            if (!File.Exists(xmlPath))
-            {
-                var xml = GetEpisodeXml(fullRec.Series, episode, bannerImages);
-                await File.WriteAllTextAsync(xmlPath, xml);
-            }
-#else
-            var task = new Task(async () =>
+            var task = Task.Run(async () =>
             {
                 //key sample : C:\BT\Series\Ray Donovan\Season 5\Ray Donovan.S05E06.Shelley Duvall.mkv
                 var episodeNo = SeriesIOHelper.GetSeasonEpisodeFromName(key);
@@ -139,6 +98,7 @@ public static class SeasonHelper
                         if (reduced?.Length > 0)
                         {
                             //save image using episode name
+                            Interlocked.Add(ref bytesSaved, data.Length - reduced.Length);
                             var newExtension = Path.GetExtension(episodeFileName);
                             var imgFile = Path.ChangeExtension(key, newExtension);
                             await File.WriteAllBytesAsync(imgFile, reduced);
@@ -155,15 +115,15 @@ public static class SeasonHelper
                 }
             });
             tasks.Add(task);
-#endif
         }
 
-#if PARALLEL
-        await Task.WhenAll(tasks);
-#else
-        System.Diagnostics.Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
-#endif
+        for (int i = 0; i < tasks.Count; i += 10)
+        {
+            var batch = tasks.Skip(i).Take(10).ToArray();
+            await Task.WhenAll(batch);
+        }
 
+        System.Diagnostics.Debug.WriteLine($"Total bytes saved on episode images: {bytesSaved}");
     }
 
     public static async Task<IEnumerable<Episode>> GetEpisodes(TvDbWrapper api, string seasonPath)
