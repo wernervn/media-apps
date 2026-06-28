@@ -2,6 +2,8 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using FolderCleaner.Configuration;
 using MovieCollection.Common;
+using MovieCollection.Common.Extensions;
+using MovieCollection.Common.Winforms;
 using WVN.Configuration;
 using WVN.Extensions;
 using WVN.IO.Helpers;
@@ -13,8 +15,8 @@ namespace FolderCleaner;
 public partial class Cleaner : Form
 {
     private readonly AppSettings _settings;
-    private StringComparer COMPARER = StringComparer.CurrentCultureIgnoreCase;
-    private List<string> _ignoreFiles = new();
+    private readonly StringComparer COMPARER = StringComparer.CurrentCultureIgnoreCase;
+    private readonly List<string> _ignoreFiles = [];
     private readonly Assembly _executingAssembly;
 
     public Cleaner()
@@ -96,7 +98,7 @@ public partial class Cleaner : Form
 
     private void CleanFolder()
     {
-        if (MessageBox.Show("Are you sure you want to perform the outlined actions", "OK to clean folder?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+        if (WinFormHelper.Ask("Are you sure you want to perform the outlined actions", "OK to clean folder?") != DialogResult.Yes)
         {
             return;
         }
@@ -202,8 +204,8 @@ public partial class Cleaner : Form
 
     private static List<string> GetExtensions()
     {
-        return (from x in Constants.RENAME_FILES.Concat(Constants.ONLY_MOVE_FILES).Distinct()
-                select $"*{x}").ToList();
+        return [.. (from x in Constants.RENAME_FILES.Concat(Constants.ONLY_MOVE_FILES).Distinct()
+                select $"*{x}")];
     }
 
     private void LoadAllFiles(string path)
@@ -270,7 +272,6 @@ public partial class Cleaner : Form
 
         var toDelete = (removeDirs.SelectMany(dir => Directory.EnumerateFiles(dir, "*.*", SearchOption.AllDirectories).AsParallel()
                             .Where(file => !Constants.RENAME_FILES.Contains(Path.GetExtension(file), COMPARER))
-                            .Where(file => !Constants.RENAME_FILES.Contains(Path.GetExtension(file), COMPARER)) //?? why duplicate?
                             .Where(file => !Constants.ONLY_MOVE_FILES.Contains(Path.GetExtension(file), COMPARER))
                             )).ToList();
         //add icons

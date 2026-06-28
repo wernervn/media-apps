@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 
-namespace MovieCollection;
+namespace MovieCollection.Common.Extensions;
 
 public static class Extensions
 {

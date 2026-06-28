@@ -245,7 +245,7 @@ public partial class MovieInfo : UserControl
         }
     }
 
-    private void ShowImage(byte[] data)
+    private static void ShowImage(byte[] data)
     {
         string tempFile = Helpers.GetTempFileWithExtension(".jpg");
         File.WriteAllBytes(tempFile, data);

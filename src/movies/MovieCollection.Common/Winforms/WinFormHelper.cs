@@ -4,7 +4,7 @@ namespace MovieCollection.Common.Winforms;
 
 public static class WinFormHelper
 {
-    #region Load treeview
+    #region Load TreeView
 
     public static int LoadFoldersWithoutInfo(TreeView tvw, string path, List<string> existing)
     {
@@ -35,17 +35,13 @@ public static class WinFormHelper
                         string folderName = GetFolderName(folder);
                         string imageKey = existing.Contains(folder) ? Constants.FOLDER_INFO_EXIST : Constants.FOLDER_KEY;
                         TreeNode node = root.Nodes.Add(folder, folderName, imageKey, imageKey);
-                        //node.Tag = folder;
                     }
                 }
             }
-            else
-            {
-
-            }
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            System.Diagnostics.Trace.WriteLine(ex);
             throw;
         }
         finally
@@ -55,5 +51,8 @@ public static class WinFormHelper
     }
 
     #endregion
+
+    public static DialogResult Ask(string message, string title, bool defaultYes = true)
+        => MessageBox.Show(message, title, MessageBoxButtons.YesNo, MessageBoxIcon.Question, defaultYes ? MessageBoxDefaultButton.Button1 : MessageBoxDefaultButton.Button2);
 
 }

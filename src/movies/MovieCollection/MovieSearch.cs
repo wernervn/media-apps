@@ -5,6 +5,7 @@ using MovieCollection.Configuration;
 using WVN.WinForms.Extensions;
 
 namespace MovieCollection;
+
 public partial class MovieSearch : Form
 {
     private IMovieData _wrapper;
@@ -22,7 +23,6 @@ public partial class MovieSearch : Form
 
         txtMovie.Text = Helpers.ScrubMovieName(movieFolder, _settings.SpaceCharacters, _settings.RemovalValues);
         lvwMovies.Columns[0].Width = lvwMovies.ClientSize.Width;
-        //DoSearch().GetAwaiter().GetResult();
         btnSearch.Focus();
         ShowDialog(owner);
     }

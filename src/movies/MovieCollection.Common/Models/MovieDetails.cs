@@ -1,4 +1,6 @@
-﻿namespace MovieCollection.Common.Models;
+﻿// Ignore Spelling: Imdb
+
+namespace MovieCollection.Common.Models;
 
 [Serializable]
 public class MovieDetails
@@ -52,7 +54,7 @@ public class MovieDetails
     {
         get
         {
-            return _posterImage ??= Poster == null ? null : Image.FromStream(new MemoryStream(Poster));
+            return _posterImage ??= Poster != null ? Image.FromStream(new MemoryStream(Poster)) : null;
         }
     }
 
@@ -61,7 +63,7 @@ public class MovieDetails
     {
         get
         {
-            _backdropImage ??= Backdrop == null ? null : Image.FromStream(new MemoryStream(Backdrop));
+            _backdropImage ??= Backdrop != null ? Image.FromStream(new MemoryStream(Backdrop)) : null;
             return _backdropImage;
         }
     }
