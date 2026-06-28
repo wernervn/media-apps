@@ -145,12 +145,12 @@ public partial class MovieBrowser : Form
             var searchFiles = new List<string>([.. Constants.MOVIE_VALUES]);
             var movieFiles = FileUtil.GetFiles(Path.GetDirectoryName(infoFile), searchFiles, SearchOption.AllDirectories).ToList();
 
-            movieFiles.ForEach(file =>
+            movieFiles.ForEach(async file =>
             {
                 var dir = Path.GetDirectoryName(file);
                 var nfo = Path.GetFileNameWithoutExtension(file);
                 var nfoFile = $"{nfo}.nfo";
-                File.WriteAllText(Path.Combine(dir, nfoFile), movieURL);
+                await File.WriteAllTextAsync(Path.Combine(dir, nfoFile), movieURL);
             });
         }
     }
@@ -456,6 +456,7 @@ public partial class MovieBrowser : Form
     {
         await Common.DB.MovieFile.WriteFile(path, movie);
         await LoadFilesByFilterAsync(path);
+        await CreateNFOAsync();
     }
 
     private async Task LoadFilesByFilterAsync(string path)
