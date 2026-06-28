@@ -11,4 +11,8 @@
     <AccelerateBuildsInVisualStudio>true</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
 
+  <ItemGroup Label="Disable security advisory warnings">
+    <!-- Package 'SQLitePCLRaw.lib.e_sqlite3' 2.1.11 has a known high severity vulnerability -->
+    <NuGetAuditSuppress Include="https://github.com/advisories/GHSA-2m69-gcr7-jv3q" />
+  </ItemGroup>
 </Project>
