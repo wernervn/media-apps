@@ -161,7 +161,10 @@ public partial class MovieBrowser : Form
         var path = tvwFolder.Nodes[0].Text;
         const string Exe = "BatchMovieInfoGetter.exe";
 
-        Helpers.Launch(Exe, path);
+        if (File.Exists(Exe))
+        {
+            Helpers.Launch(Exe, path);
+        }
     }
 
     [Obsolete]
