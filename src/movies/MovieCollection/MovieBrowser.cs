@@ -225,7 +225,7 @@ public partial class MovieBrowser : Form
     #region tvwFolder events
     private async void tvwFolder_AfterSelect(object sender, TreeViewEventArgs e)
     {
-        Text = e.Node is not null ? $"Movies - {e.Node}" : "Movies";
+        Text = e.Node is not null ? $"Movies - {e.Node.Text}" : "Movies";
         var folder = e.Node.Tag.ToString();
         if (Directory.Exists(folder))
         {
