@@ -200,6 +200,8 @@ public partial class MovieBrowser : Form
     #region Form events
     private async void MovieBrowser_Load(object sender, EventArgs e)
     {
+        Text = "Movies";
+
         await SetFilterAsync(FileFilter.AllFiles);
         if (_filterActive)
         {
@@ -243,6 +245,7 @@ public partial class MovieBrowser : Form
     #region tvwFolder events
     private async void tvwFolder_AfterSelect(object sender, TreeViewEventArgs e)
     {
+        Text = e.Node is not null ? $"Movies - {e.Node}" : "Movies";
         var folder = e.Node.Tag.ToString();
         if (Directory.Exists(folder))
         {
