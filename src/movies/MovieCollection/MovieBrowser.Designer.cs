@@ -49,9 +49,6 @@
             mniMovieDataCreateNFO = new ToolStripMenuItem();
             mnuBatch = new ToolStripMenuItem();
             mniBatchSettings = new ToolStripMenuItem();
-            mnuMede8er = new ToolStripMenuItem();
-            mniMede8erWatched = new ToolStripMenuItem();
-            mniMede8erCreatePoster = new ToolStripMenuItem();
             mnuClean = new ToolStripMenuItem();
             mniCleanDeleteFolder = new ToolStripMenuItem();
             STB = new StatusStrip();
@@ -95,7 +92,7 @@
             // 
             MNU.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             MNU.ImageScalingSize = new Size(24, 24);
-            MNU.Items.AddRange(new ToolStripItem[] { mnuFile, mnuView, mnuData, mnuBatch, mnuMede8er, mnuClean });
+            MNU.Items.AddRange(new ToolStripItem[] { mnuFile, mnuView, mnuData, mnuBatch, mnuClean });
             MNU.Location = new Point(0, 0);
             MNU.Name = "MNU";
             MNU.Padding = new Padding(8, 2, 0, 2);
@@ -237,29 +234,6 @@
             mniBatchSettings.Size = new Size(131, 22);
             mniBatchSettings.Text = "Settings...";
             mniBatchSettings.Click += mniBatchSettings_Click;
-            // 
-            // mnuMede8er
-            // 
-            mnuMede8er.DropDownItems.AddRange(new ToolStripItem[] { mniMede8erWatched, mniMede8erCreatePoster });
-            mnuMede8er.Name = "mnuMede8er";
-            mnuMede8er.Size = new Size(73, 21);
-            mnuMede8er.Text = "Mede8er";
-            // 
-            // mniMede8erWatched
-            // 
-            mniMede8erWatched.Name = "mniMede8erWatched";
-            mniMede8erWatched.ShortcutKeys = Keys.Control | Keys.W;
-            mniMede8erWatched.Size = new Size(271, 22);
-            mniMede8erWatched.Text = "Mark content as watched";
-            mniMede8erWatched.Click += mniMede8erWatched_Click;
-            // 
-            // mniMede8erCreatePoster
-            // 
-            mniMede8erCreatePoster.Name = "mniMede8erCreatePoster";
-            mniMede8erCreatePoster.ShortcutKeys = Keys.Control | Keys.P;
-            mniMede8erCreatePoster.Size = new Size(271, 22);
-            mniMede8erCreatePoster.Text = "Create poster";
-            mniMede8erCreatePoster.Click += mniMede8erCreatePoster_Click;
             // 
             // mnuClean
             // 
@@ -570,7 +544,6 @@
         private System.Windows.Forms.ToolStripMenuItem mnuView;
         private System.Windows.Forms.ToolStripMenuItem mnuData;
         private System.Windows.Forms.ToolStripMenuItem mnuBatch;
-        private System.Windows.Forms.ToolStripMenuItem mnuMede8er;
         private System.Windows.Forms.ToolStripStatusLabel lblStatus;
         private System.Windows.Forms.SplitContainer SPLIT;
         private System.Windows.Forms.TreeView tvwFolder;
@@ -591,7 +564,6 @@
         private System.Windows.Forms.ToolStripMenuItem mniMovieDataDisplay;
         private System.Windows.Forms.ToolStripMenuItem mniMovieDataCreateNFO;
         private System.Windows.Forms.ToolStripMenuItem mniBatchSettings;
-        private System.Windows.Forms.ToolStripMenuItem mniMede8erWatched;
         private System.Windows.Forms.ToolStrip TOOLS;
         private System.Windows.Forms.ToolStripSplitButton btnSplit;
         private System.Windows.Forms.ToolStripMenuItem splitAllFiles;
@@ -601,7 +573,6 @@
         private System.Windows.Forms.TextBox txtMovieDescription;
         private System.Windows.Forms.ToolStripButton btnMakePoster;
         private System.Windows.Forms.ToolStripMenuItem mniViewPosters;
-        private System.Windows.Forms.ToolStripMenuItem mniMede8erCreatePoster;
         private System.Windows.Forms.ToolStripMenuItem mniViewReload;
         private System.Windows.Forms.ToolStripTextBox txtSearch;
         private System.Windows.Forms.ToolStripSplitButton btnSplitSearch;

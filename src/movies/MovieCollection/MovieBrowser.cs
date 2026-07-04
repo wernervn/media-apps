@@ -55,8 +55,6 @@ public partial class MovieBrowser : Form
         mniViewPosters.Image = GetImageResource(Images.Poster);
         foldersWithXMLToolStripMenuItem.Image = GetImageResource(Images.Xml);
         foldersWithSplitMoviesToolStripMenuItem.Image = GetImageResource(Images.SplitMovie);
-        mniMede8erWatched.Image = GetImageResource(Images.Eyes);
-        mniMede8erCreatePoster.Image = GetImageResource(Images.Poster);
         splitAllFiles.Image = GetImageResource(Images.AllFiles);
         splitMoviesOnly.Image = GetImageResource(Images.Video);
         btnMakePoster.Image = GetImageResource(Images.Poster);
@@ -160,24 +158,6 @@ public partial class MovieBrowser : Form
         if (File.Exists(Exe))
         {
             Helpers.Launch(Exe, path);
-        }
-    }
-
-    [Obsolete]
-    private void mniMede8erWatched_Click(object sender, EventArgs e)
-    {
-        if (tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode())
-        {
-            Mede8erSetWatched(tvwFolder.SelectedNode);
-        }
-    }
-
-    [Obsolete]
-    private async void mniMede8erCreatePoster_Click(object sender, EventArgs e)
-    {
-        if (tvwFolder.SelectedNode != null && tvwFolder.SelectedNode != RootNode())
-        {
-            await CreatePosterAsync();
         }
     }
 
@@ -671,28 +651,6 @@ public partial class MovieBrowser : Form
         else
         {
             MessageBox.Show(archivePath, "The archive no longer exists");
-        }
-    }
-
-    [Obsolete]
-    private void Mede8erSetWatched(TreeNode node)
-    {
-        //get all the movie file in the current folder
-        if (node.Tag != null)
-        {
-            //create .t files for them
-            var movies = GetMovieFiles(node.Tag.ToString());
-            movies.ForEach(m =>
-            {
-                var watched = string.Concat(m, ".t");
-                if (!File.Exists(watched))
-                {
-                    using (var fs = File.Create(watched))
-                    {
-                        fs.Close();
-                    }
-                }
-            });
         }
     }
 
