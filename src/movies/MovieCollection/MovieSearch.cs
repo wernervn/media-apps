@@ -64,6 +64,7 @@ public partial class MovieSearch : Form
 
     private async void lvwMovies_SelectedIndexChanged(object sender, EventArgs e)
     {
+        Text = "Movie Search";
         ClearStatus();
         btnAccept.Enabled = false;
         if (lvwMovies.SelectedItems.Count > 0)
@@ -78,12 +79,14 @@ public partial class MovieSearch : Form
                 movieDetails.Backdrop = images.Backdrop;
 
                 lvwMovies.SelectedItems[0].Tag = movieDetails;
+                Text = $"Movie Search - {movieDetails.Title} ({movieDetails.Released})";
             }
 
             if (lvwMovies.SelectedItems[0].Tag is MovieDetails movie)
             {
                 info.MovieDetails = movie;
                 btnAccept.Enabled = true;
+                Text = $"Movie Search - {movie.Title} ({movie.Released})";
             }
         }
     }

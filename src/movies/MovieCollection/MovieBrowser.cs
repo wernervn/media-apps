@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Globalization;
+using System.Reflection;
 using MovieCollection.Common;
 using MovieCollection.Common.Extensions;
 using MovieCollection.Common.Interfaces;
@@ -139,13 +140,8 @@ public partial class MovieBrowser : Form
             //write nfo file from movie info
             var movie = await GetMovieDetailsAsync(dbFile);
             var movieURL = string.Format(IMDB_URL, movie.ImdbId);
-
-            var movieFile = FileUtil.GetFiles(Path.GetDirectoryName(dbFile), Constants.MOVIE_VALUES, SearchOption.TopDirectoryOnly).FirstOrDefault();
-            if (movieFile != null)
-            {
-                var nfoFile = Path.ChangeExtension(movieFile, ".nfo");
-                await File.WriteAllTextAsync(nfoFile, movieURL);
-            }
+            var nfoPath = Path.Combine(Path.GetDirectoryName(dbFile), $"{movie.Title} ({DateTime.ParseExact(movie.Released, "yyyy-MM-dd", CultureInfo.InvariantCulture).Year}).nfo");
+            await File.WriteAllTextAsync(nfoPath, movieURL);
         }
     }
 
