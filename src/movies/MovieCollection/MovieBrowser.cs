@@ -1,11 +1,11 @@
-﻿using System.Globalization;
-using System.Reflection;
+﻿using System.Reflection;
 using MovieCollection.Common;
 using MovieCollection.Common.Extensions;
 using MovieCollection.Common.Interfaces;
 using MovieCollection.Common.Models;
 using MovieCollection.Common.Winforms;
 using MovieCollection.Configuration;
+using MovieCollection.Extensions;
 using Movies.TmDb;
 using WVN.Configuration;
 using WVN.Extensions;
@@ -17,6 +17,8 @@ namespace MovieCollection;
 
 public partial class MovieBrowser : Form
 {
+    internal const string IMDB_URL = @"http://www.imdb.com/title/{0}/";
+
     private readonly AppSettings _settings;
 
     private enum FileFilter
@@ -102,11 +104,7 @@ public partial class MovieBrowser : Form
 
     private void RefreshView()
     {
-        lvwFiles.Items.Clear();
-        PIC.Image = null;
-        picBackdrop.Image = null;
-        txtMovieDescription.Text = string.Empty;
-        txtMovieScore.Text = string.Empty;
+        ClearMovieInfo();
         LoadFolders(_settings.AppConfiguration.LastPath);
     }
 
@@ -132,17 +130,19 @@ public partial class MovieBrowser : Form
 
     private async Task CreateNFOAsync()
     {
-        const string IMDB_URL = @"http://www.imdb.com/title/{0}/";
-
         var dbFile = CurrentMovieInfoFile();
         if (!string.IsNullOrEmpty(dbFile))
         {
-            //write nfo file from movie info
             var movie = await GetMovieDetailsAsync(dbFile);
-            var movieURL = string.Format(IMDB_URL, movie.ImdbId);
-            var nfoPath = Path.Combine(Path.GetDirectoryName(dbFile), $"{movie.Title} ({DateTime.ParseExact(movie.Released, "yyyy-MM-dd", CultureInfo.InvariantCulture).Year}).nfo");
-            await File.WriteAllTextAsync(nfoPath, movieURL);
+            var nfoPath = Path.Combine(Path.GetDirectoryName(dbFile), movie.FolderName());
+            await CreateNFOAsync(nfoPath, movie);
         }
+    }
+
+    private static async Task CreateNFOAsync(string movieFileName, MovieDetails movie)
+    {
+        var movieURL = string.Format(IMDB_URL, movie.ImdbId);
+        await File.WriteAllTextAsync($"{movieFileName}.nfo", movieURL);
     }
 
     private void mniBatchSettings_Click(object sender, EventArgs e)
@@ -221,6 +221,16 @@ public partial class MovieBrowser : Form
     #region tvwFolder events
     private async void tvwFolder_AfterSelect(object sender, TreeViewEventArgs e)
     {
+        if (tvwFolder.SelectedNode == RootNode())
+        {
+            Text = "Movies - " + e.Node.Text;
+            // clear movie info display
+            ClearMovieInfo();
+            lblStatus.Text = $"'{e.Node.Text}' contains {e.Node.Nodes.Count} movie folder(s)";
+
+            return;
+        }
+
         Text = e.Node is not null ? $"Movies - {e.Node.Text}" : "Movies";
         var folder = e.Node.Tag.ToString();
         if (Directory.Exists(folder))
@@ -355,6 +365,13 @@ public partial class MovieBrowser : Form
         return [.. FileUtil.GetFiles(folderPath, extensions, SearchOption.AllDirectories)];
     }
 
+    private static List<string> GetSubtitleFiles(string folderPath)
+    {
+        var extensions = (from ext in Constants.SUBTITLE_FILES
+                          select "*" + ext).ToList();
+        return [.. FileUtil.GetFiles(folderPath, extensions, SearchOption.AllDirectories)];
+    }
+
     private static List<string> GetInfoFiles(string folderPath)
         => [.. FileUtil.GetFiles(folderPath, [Constants.MOVIE_DATA], SearchOption.TopDirectoryOnly)];
 
@@ -433,8 +450,27 @@ public partial class MovieBrowser : Form
     private async Task PersistMovieInfoAsync(string path, MovieDetails movie)
     {
         await Common.DB.MovieFile.WriteFile(path, movie);
+        var moviefileName = Path.Combine(path, movie.FolderName());
+        RenameMovieFiles(path, moviefileName);
         await LoadFilesByFilterAsync(path);
-        await CreateNFOAsync();
+        await CreateNFOAsync(moviefileName, movie);
+    }
+
+    private static void RenameMovieFiles(string path, string moviefileName)
+    {
+        // rename first movie file
+        var movieFile = GetMovieFiles(path).FirstOrDefault();
+        if (!string.IsNullOrEmpty(movieFile))
+        {
+            File.Move(movieFile, movieFile.ToMovieFileName(moviefileName));
+        }
+
+        // rename first subtitle file
+        var subtitleFile = GetSubtitleFiles(path).FirstOrDefault();
+        if (!string.IsNullOrEmpty(subtitleFile))
+        {
+            File.Move(subtitleFile, subtitleFile.ToMovieFileName(moviefileName));
+        }
     }
 
     private async Task LoadFilesByFilterAsync(string path)
@@ -467,9 +503,9 @@ public partial class MovieBrowser : Form
             var files = FileUtil.GetFiles(path, searchFiles, SearchOption.AllDirectories).ToList();
 
             lvwFiles.BeginUpdate();
-            lvwFiles.Items.Clear();
 
-            PIC.Image = null;
+            ClearMovieInfo();
+
             var movieText = string.Empty;
             var movieInfo = string.Empty;
 
@@ -498,8 +534,6 @@ public partial class MovieBrowser : Form
             }
 
             txtMovieDescription.Text = movieText;
-            picBackdrop.Image = null;
-
             if (File.Exists(movieInfo))
             {
                 var movie = await GetMovieDetailsAsync(movieInfo);
@@ -810,6 +844,15 @@ public partial class MovieBrowser : Form
         }
     }
 
+    private void ClearMovieInfo()
+    {
+        lvwFiles.Items.Clear();
+        PIC.Image = null;
+        picBackdrop.Image = null;
+        txtMovieDescription.Text = string.Empty;
+        txtMovieScore.Text = string.Empty;
+        lblStatus.Text = string.Empty;
+    }
     #endregion Private methods
 
     #region Toolbar
