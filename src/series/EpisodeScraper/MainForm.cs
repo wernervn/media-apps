@@ -174,6 +174,13 @@ public partial class MainForm : Form
     {
         var folder = tvwFolder.SelectedNode.Tag.ToString();
         var seriesName = new DirectoryInfo(folder).Name;
+        // see if we can get an imdb.txt file, then read the first line and use that as the series name
+        var imdbFile = Path.Combine(folder, "imdb.txt");
+        if (File.Exists(imdbFile))
+        {
+            seriesName = await File.ReadAllTextAsync(imdbFile);
+        }
+
         using (var search = new SearchForm(_tvdb, seriesName))
         {
             if (search.ShowDialog() == DialogResult.OK)
@@ -183,7 +190,7 @@ public partial class MainForm : Form
                 //override selected poster
                 var posterFile = Path.Combine(folder, "folder.jpg");
                 var image = ImageHelper.ReduceImageSize(search.Poster);
-                File.WriteAllBytes(posterFile, image);
+                await File.WriteAllBytesAsync(posterFile, image);
                 LoadAllFiles(folder);
 
                 tvwFolder.SelectedNode.ImageKey = HAS_ID_KEY;

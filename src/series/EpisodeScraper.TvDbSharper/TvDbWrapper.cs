@@ -17,9 +17,15 @@ public partial class TvDbWrapper
     }
 
     #region Get series
-    public async Task<IEnumerable<SearchResultItem>> SearchSeries(string criteria)
+    //public async Task<IEnumerable<SearchResultItem>> SearchSeries(string criteria)
+    //{
+    //    var found = (await _client.SearchSeriesByNameAsync(criteria)/**/).Data;
+    //    return found.Select(Map).ToList();
+    //}
+
+    public async Task<IEnumerable<SearchResultItem>> SearchSeriesByImdbId(string imdbId)
     {
-        var found = (await _client.SearchSeriesByNameAsync(criteria)/**/).Data;
+        var found = (await _client.SearchSeriesByImdbIdAsync(imdbId)).Data;
         return found.Select(Map).ToList();
     }
 

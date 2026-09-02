@@ -7,11 +7,11 @@ namespace EpisodeScraper;
 public partial class SearchForm : Form
 {
     private readonly TvDbWrapper _api;
-    private List<string> _posters = new();
-    private List<byte[]> _posterData = new();
+    private List<string> _posters = [];
+    private List<byte[]> _posterData = [];
     private int _posterIndex = 0;
-    private List<string> _fanart = new();
-    private List<byte[]> _fanartData = new();
+    private List<string> _fanart = [];
+    private List<byte[]> _fanartData = [];
     private int _fanartIndex = 0;
 
     public SearchForm(TvDbWrapper api, string series)
@@ -35,7 +35,7 @@ public partial class SearchForm : Form
         var search = txtName.Text;
         try
         {
-            var result = await _api.SearchSeries(search).ConfigureAwait(true);
+            var result = await _api.SearchSeriesByImdbId(search);
             foreach (var item in result)
             {
                 var i = lvwResult.Items.Add(item.SeriesName);
